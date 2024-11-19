@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+#cosas nuevas que tuve que instalar
+.properties
