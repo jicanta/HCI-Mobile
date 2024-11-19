@@ -7,11 +7,11 @@
     <string name="bottom_navigation_home">Home</string>
     <string name="bottom_navigation_user">User</string>
     <string name="home">Home</string>
-    <string name="movements">Movements</string>
+    <string name="movements">Movimientos</string>
     <string name="cards">Cards</string>
     <string name="options">Options</string>
     <string name="qr">QR</string>
-    <string name="data">Data</string>
+    <string name="data">Datos</string>
     <string name="deposit">Ingresar</string>
     <string name="send">Transferir</string>
 </resources>

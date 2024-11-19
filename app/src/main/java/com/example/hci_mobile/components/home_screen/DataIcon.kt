@@ -16,7 +16,7 @@ enum class DataIcon(
     val route: String
 ) {
     DEPOSIT(R.string.deposit, Icons.Default.Add, "deposit"),
-    DATA(R.string.data, Icons.Default.AccountCircle, "data"),
+    SEND(R.string.send, Icons.Default.ArrowForward, "send"),
     MOVEMENTS(R.string.movements, Icons.Default.Refresh, "movements"),
-    SEND(R.string.send, Icons.Default.ArrowForward, "send")
+    DATA(R.string.data, Icons.Default.AccountCircle, "data")
 }

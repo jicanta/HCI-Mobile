@@ -36,10 +36,6 @@ fun TopBar(){
                     tint = AppTheme.colorScheme.textColor,
                     modifier = Modifier.fillMaxSize())
             }
-            /*Text(
-                text = stringResource(R.string.app_name)
-            ,
-            style = AppTheme.typography.title)*/
         },
         modifier = Modifier,
         colors = TopAppBarDefaults.smallTopAppBarColors(
