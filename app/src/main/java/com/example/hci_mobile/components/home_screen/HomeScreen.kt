@@ -2,6 +2,7 @@ package com.example.hci_mobile.components.home_screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,7 +32,8 @@ fun HomeScreen(
                 .padding(bottom = 16.dp)
                 .shadow(shape = AppTheme.shape.container, elevation = 4.dp)
             )
-            //TileRow(Modifier.padding(top = 16.dp))
+            TileRow(modifier = Modifier.padding(top = 16.dp))
+            CardContainer(modifier = Modifier.padding(top = 16.dp))
         }
     }
 }

@@ -11,6 +11,7 @@
     <string name="cards">Cards</string>
     <string name="options">Options</string>
     <string name="qr">QR</string>
-    <string name="deposit">Deposit</string>
     <string name="data">Data</string>
+    <string name="deposit">Ingresar</string>
+    <string name="send">Transferir</string>
 </resources>

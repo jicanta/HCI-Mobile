@@ -34,7 +34,7 @@ fun NavigationApp(){
                     }
                     launchSingleTop = true
                     restoreState = true
-                }
+                    }
                 }
             }
         ){  //aca abajo esta el contenido de la pantalla

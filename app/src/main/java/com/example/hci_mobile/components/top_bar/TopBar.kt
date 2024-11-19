@@ -27,19 +27,19 @@ import com.example.hci_mobile.ui.theme.AppTheme
 fun TopBar(){
     TopAppBar(
         title = {
-            /*IconButton( onClick = { /*TODO*/ },
-                modifier = Modifier.size(75.dp))
+            IconButton( onClick = { /*TODO*/ },
+                modifier = Modifier.size(85.dp))
             {
                 Icon(
                     painter = painterResource(id = R.drawable.paygo),
                     contentDescription = "Paygo",
                     tint = AppTheme.colorScheme.textColor,
                     modifier = Modifier.fillMaxSize())
-            }*/
-            Text(
+            }
+            /*Text(
                 text = stringResource(R.string.app_name)
             ,
-            style = AppTheme.typography.title)
+            style = AppTheme.typography.title)*/
         },
         modifier = Modifier,
         colors = TopAppBarDefaults.smallTopAppBarColors(

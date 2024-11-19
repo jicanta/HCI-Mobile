@@ -16,7 +16,8 @@ private val lightColorScheme = AppColorScheme(
     primary = DarkPurple,
     secondary = LightPurpleGrey,
     onPrimary = White,
-    textColor = Black
+    textColor = Black,
+    tertiary = LightPink
 )
 
 private val darkColorScheme = AppColorScheme(
@@ -24,7 +25,8 @@ private val darkColorScheme = AppColorScheme(
     primary = DarkBlue,
     secondary = LightBlue,
     onPrimary = White,
-    textColor = White
+    textColor = White,
+    tertiary = LightPink
 )
 
 private val typography = AppTypography(

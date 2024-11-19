@@ -25,11 +25,13 @@ fun MoneyShower(
     modifier: Modifier = Modifier
 ){
     Surface(
-        color = AppTheme.colorScheme.secondary
+        color = AppTheme.colorScheme.secondary,
+        modifier = modifier,
+        shape = AppTheme.shape.container
     ) {
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp), // Ocupa todo el ancho
-            horizontalAlignment = Alignment.Start
+            horizontalAlignment = Alignment.End
         ) {
             Text("Disponible", color = AppTheme.colorScheme.textColor)
             Row(

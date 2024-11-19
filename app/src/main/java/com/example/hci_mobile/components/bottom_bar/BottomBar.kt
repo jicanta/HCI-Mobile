@@ -3,6 +3,7 @@ package com.example.hci_mobile.components.bottom_bar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -34,12 +35,19 @@ fun BottomBar(
                         Icon(
                             imageVector = item.icon,
                             contentDescription = stringResource(item.label),
-                            tint = AppTheme.colorScheme.onPrimary
+                            tint = if (currentRoute == item.route) 
+                                AppTheme.colorScheme.tertiary
+                            else 
+                                AppTheme.colorScheme.onPrimary
                         )
                     },
                     onClick = { onNavigateToRoute(item.route) },
                     selected = currentRoute == item.route,
-                    //label = { Text(text = stringResource(item.label)) },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = AppTheme.colorScheme.secondary,
+                        unselectedIconColor = AppTheme.colorScheme.onPrimary,
+                        indicatorColor = AppTheme.colorScheme.primary
+                    ),
                     alwaysShowLabel = false
                 )
             }
