@@ -1,6 +1,7 @@
 package com.example.hci_mobile.components.top_bar
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,17 +29,17 @@ fun TopBar(){
     TopAppBar(
         title = {
             IconButton( onClick = { /*TODO*/ },
-                modifier = Modifier.size(85.dp))
+                modifier = Modifier.size(120.dp))
             {
                 Icon(
                     painter = painterResource(id = R.drawable.paygo),
                     contentDescription = "Paygo",
-                    tint = AppTheme.colorScheme.textColor,
+                    tint = Color.Unspecified,
                     modifier = Modifier.fillMaxSize())
             }
         },
-        modifier = Modifier,
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        modifier = Modifier.height(110.dp),
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = AppTheme.colorScheme.primary,
             titleContentColor = AppTheme.colorScheme.onPrimary)
     )

@@ -1,6 +1,7 @@
 package com.example.hci_mobile.components.home_screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,9 +10,14 @@ import com.example.hci_mobile.ui.theme.AppTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import com.example.hci_mobile.R
 
 @Composable
 fun SmallCard(
@@ -27,29 +33,40 @@ fun SmallCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = number,
                 style = AppTheme.typography.body,
                 color = Color.White
             )
-            Text(
-                text = type,
-                style = AppTheme.typography.body,
-                color = Color.White
+            Icon(
+                painter = painterResource(id = getCardIcon(type)),
+                contentDescription = "Ícono de $type",
+                modifier = Modifier.size(36.dp),
+                tint = Color.Unspecified
             )
         }
     }
 }
 
 fun getCardColor(type: String): Color {
-    return when (type) {
-        "Visa" -> Color(0xFF000000)
-        "Mastercard" -> Color(0xFF2196F3)
-        "American Express" -> Color(0xFFB1A78D)
+    return when (type.lowercase()) {
+        "visa" -> Color(0xFF000000)
+        "mastercard" -> Color(0xFF2196F3)
+        "american express" -> Color(0xFFEF6C00)
         else -> Color(0xFF9E9E9E)
+    }
+}
+
+fun getCardIcon(type: String): Int {
+    return when (type.lowercase()) {
+        "visa" -> R.drawable.visa
+        "mastercard" -> R.drawable.mastercard
+        "american express" -> R.drawable.amex
+        else -> R.drawable.paygo
     }
 }
 
@@ -57,9 +74,19 @@ fun getCardColor(type: String): Color {
 @Composable
 fun SmallCardPreview() {
     AppTheme {
-        SmallCard(
-            number = "**** 1234",
-            type = "American Express"
-        )
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            SmallCard(
+                number = "**** 1234",
+                type = "visa"
+            )
+            SmallCard(
+                number = "**** 5678",
+                type = "mastercard"
+            )
+            SmallCard(
+                number = "**** 9012",
+                type = "american express"
+            )
+        }
     }
 }

@@ -18,28 +18,81 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.hci_mobile.ui.theme.AppTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.IconButton
+import androidx.lint.kotlin.metadata.Visibility
 
 @Composable
 fun MoneyShower(
     modifier: Modifier = Modifier
 ){
+    var isMoneyVisible by remember { mutableStateOf(true) }
+    val availableMoney = 150000
+    val gain = 37.2
+
     Surface(
         color = AppTheme.colorScheme.secondary,
         modifier = modifier,
         shape = AppTheme.shape.container
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp), // Ocupa todo el ancho
-            horizontalAlignment = Alignment.End
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.Start
         ) {
-            Text("Disponible", color = AppTheme.colorScheme.textColor)
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Text(
+                    "Disponible", 
+                    color = AppTheme.colorScheme.textColor, 
+                    style = AppTheme.typography.body
+                )
+                Text(
+                    text = "+$gain% (TNA)",
+                    color = Color(0xFF4CAF50), // Color verde
+                    style = AppTheme.typography.body,
+                    fontSize = 14.sp
+                )
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Column {
-                    Text("$1000", color = AppTheme.colorScheme.textColor)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(
+                            text = if (isMoneyVisible) "$ $availableMoney" else "$ ****",
+                            color = AppTheme.colorScheme.textColor, 
+                            style = AppTheme.typography.title.copy(
+                                fontSize = 28.sp
+                            ),
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+                        IconButton(
+                            onClick = { isMoneyVisible = !isMoneyVisible }
+                        ) {
+                            Icon(
+                                imageVector = if (isMoneyVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                contentDescription = if (isMoneyVisible) "Ocultar saldo" else "Mostrar saldo",
+                                tint = AppTheme.colorScheme.textColor
+                            )
+                        }
+                    }
                 }
                 Column(
                     verticalArrangement = Arrangement.Center
