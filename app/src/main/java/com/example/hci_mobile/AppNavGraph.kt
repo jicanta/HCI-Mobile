@@ -8,7 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.hci_mobile.components.PaymentMethods.PaymentMethodsScreen
 import com.example.hci_mobile.components.home_screen.HomeScreen
+import com.example.hci_mobile.components.more.SettingsScreen
+import com.example.hci_mobile.components.movements.MovementsScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController, padding: PaddingValues) {
@@ -22,13 +25,13 @@ fun AppNavGraph(navController: NavHostController, padding: PaddingValues) {
             HomeScreen()
         }
         composable(route = AppDestinations.MOVEMENTS.route) {
-            Text("movements")
+            MovementsScreen()
         }
         composable(route = AppDestinations.CARDS.route) {
-            Text("cards")
+            PaymentMethodsScreen()
         }
         composable(route = AppDestinations.OPTIONS.route) {
-            Text("options")
+            SettingsScreen()
         }
         composable(route = AppDestinations.QR.route) {
             Text("qr")

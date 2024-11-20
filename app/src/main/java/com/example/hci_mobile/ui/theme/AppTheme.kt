@@ -13,12 +13,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 private val lightColorScheme = AppColorScheme(
-    background = LightPurple,
+    background = Grey,
     primary = DarkPurple,
-    secondary = LightPurpleGrey,
+    secondary = White,
     onPrimary = White,
     textColor = Black,
-    tertiary = LightPink
+    tertiary = LightPink,
+    onSecondary = DarkGrey
 )
 
 private val darkColorScheme = AppColorScheme(
@@ -27,7 +28,8 @@ private val darkColorScheme = AppColorScheme(
     secondary = LightBlue,
     onPrimary = White,
     textColor = White,
-    tertiary = LightPink
+    tertiary = LightPink,
+    onSecondary = Black
 )
 
 private val typography = AppTypography(

@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hci_mobile.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +44,8 @@ fun MovementsScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFEDEDED))
-            //.padding(16.dp)
+            .background(AppTheme.colorScheme.background)
     ) {
-        TopBar(title = "Consultar movimientos")
         Spacer(modifier = Modifier.height(16.dp))
         MovementList()
     }
@@ -92,6 +91,7 @@ fun MovementList() {
         movements.groupBy { it.date }.forEach { (date, items) ->
             Text(
                 text = date,
+                style = AppTheme.typography.body,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp))
@@ -105,11 +105,11 @@ fun MovementList() {
 @Composable
 fun MovementItem(movement: Movement) {
     Card(
-        shape = RoundedCornerShape(8.dp),
+        shape = AppTheme.shape.container,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -118,7 +118,7 @@ fun MovementItem(movement: Movement) {
             Icon(
                 imageVector = Icons.Default.ShoppingCart,
                 contentDescription = null,
-                tint = Color.Gray,
+                tint = AppTheme.colorScheme.textColor,
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -126,12 +126,14 @@ fun MovementItem(movement: Movement) {
                 Text(
                     text = movement.name,
                     fontWeight = FontWeight.Bold,
+                    style = AppTheme.typography.body,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = movement.description,
-                    color = Color.Gray,
+                    color = AppTheme.colorScheme.onSecondary,
+                    style = AppTheme.typography.body,
                     fontSize = 12.sp
                 )
             }

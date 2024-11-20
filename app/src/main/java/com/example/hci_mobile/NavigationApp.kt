@@ -38,7 +38,7 @@ fun NavigationApp(){
                 }
             }
         ){  //aca abajo esta el contenido de la pantalla
-            AppNavGraph(navController = navController, padding = it)  //el padding esta para sacar un error
+            AppNavGraph(navController = navController, padding = it)
     }
 }
 

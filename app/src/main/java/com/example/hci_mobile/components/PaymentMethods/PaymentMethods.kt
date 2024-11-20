@@ -29,6 +29,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hci_mobile.R
+import com.example.hci_mobile.components.home_screen.getCardColor
+import com.example.hci_mobile.components.home_screen.getCardIcon
+import com.example.hci_mobile.ui.theme.AppTheme
 
 
 @Composable
@@ -36,17 +39,12 @@ fun PaymentMethodsScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFEDEDED)) // Fondo gris claro
-            //.padding(16.dp) // Padding general
+            .background(AppTheme.colorScheme.background)
     ) {
-        // TopBar con título
-        TopBar(title = "Logo")
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Lista de tarjetas
         PaymentMethodList()
 
-        // Botón para añadir método de pago
         AddPaymentMethodButton()
     }
 }
@@ -78,19 +76,30 @@ fun TopBar(title: String) {
 @Composable
 fun PaymentMethodList() {
     val paymentMethods = listOf(
-        PaymentMethod("Mastercard", "Birsa Juan Pablo", "4444", Color(0xFFB38B59), R.drawable.mastercard),
-        PaymentMethod("Visa", "Birsa Juan Pablo", "4444", Color(0xFF4B4B8B), R.drawable.visa),
-        PaymentMethod("American Express", "Birsa Juan Pablo", "4444", Color(0xFF000000), R.drawable.amex)
+        PaymentMethod("Mastercard", "Birsa Juan Pablo", "4444"),
+        PaymentMethod("Visa", "Birsa Juan Pablo", "4444"),
+        PaymentMethod("American Express", "Birsa Juan Pablo", "4444")
     )
-    Column(
+    
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 8.dp),
+        shape = AppTheme.shape.container,
+        color = AppTheme.colorScheme.secondary
     ) {
-        paymentMethods.forEach { paymentMethod ->
-            PaymentMethodItem(paymentMethod)
-            Spacer(modifier = Modifier.height(8.dp)) // Separación entre tarjetas
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+        ) {
+            paymentMethods.forEach { paymentMethod ->
+                PaymentMethodItem(paymentMethod)
+                if (paymentMethod != paymentMethods.last()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
         }
     }
 }
@@ -100,12 +109,12 @@ fun PaymentMethodItem(paymentMethod: PaymentMethod) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(paymentMethod.backgroundColor, RoundedCornerShape(8.dp))
-            .padding(16.dp), // Padding interno de la tarjeta
+            .background(getCardColor(type = paymentMethod.type), AppTheme.shape.container)
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = painterResource(id = paymentMethod.iconRes),
+            painter = painterResource(id = getCardIcon(type = paymentMethod.type)),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier.size(24.dp)
@@ -116,12 +125,14 @@ fun PaymentMethodItem(paymentMethod: PaymentMethod) {
                 text = "•••• ${paymentMethod.lastFourDigits}",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                style = AppTheme.typography.body
             )
             Text(
                 text = paymentMethod.ownerName,
-                color = Color.White.copy(alpha = 0.8f),
-                fontSize = 14.sp
+                color = Color.White,
+                fontSize = 14.sp,
+                style = AppTheme.typography.body
             )
         }
         IconButton(onClick = { /* Acción para eliminar */ }) {
@@ -140,9 +151,9 @@ fun AddPaymentMethodButton() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp, horizontal = 8.dp)
-            .background(Color(0xFFFFEDED), RoundedCornerShape(8.dp))
-            .border(2.dp, Color(0xFFFF4081), RoundedCornerShape(8.dp))
-            .clickable { /* Acción para añadir */ }
+            .background(Color(0xFFFFEDED), AppTheme.shape.container)
+            .border(2.dp, Color(0xFFFF4081), AppTheme.shape.container)
+            .clickable { /* onClick -> HAGO ALGO */ }
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -158,7 +169,8 @@ fun AddPaymentMethodButton() {
                 text = "Añadir un nuevo método de pago",
                 color = Color(0xFFFF4081),
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                style = AppTheme.typography.body
             )
         }
     }
@@ -167,7 +179,5 @@ fun AddPaymentMethodButton() {
 data class PaymentMethod(
     val type: String,
     val ownerName: String,
-    val lastFourDigits: String,
-    val backgroundColor: Color,
-    val iconRes: Int
+    val lastFourDigits: String
 )

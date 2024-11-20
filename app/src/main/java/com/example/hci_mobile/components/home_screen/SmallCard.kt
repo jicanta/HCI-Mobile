@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import com.example.hci_mobile.R
 
 @Composable
@@ -40,7 +41,8 @@ fun SmallCard(
             Text(
                 text = number,
                 style = AppTheme.typography.body,
-                color = Color.White
+                color = Color.White,
+                fontWeight = FontWeight.Bold
             )
             Icon(
                 painter = painterResource(id = getCardIcon(type)),
