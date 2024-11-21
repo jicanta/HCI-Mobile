@@ -54,8 +54,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.ui.res.stringResource
 import java.util.Locale
 
+// Primero creamos una data class para los campos editables
+data class EditableField(
+    val id: String,
+    val label: String,
+    var value: String,
+    val icon: ImageVector = Icons.Default.Edit
+)
 
 @Composable
 fun SettingsScreen(
@@ -64,18 +73,37 @@ fun SettingsScreen(
     currentLocale: Locale,
     onLanguageChanged: (Locale) -> Unit
 ) {
-    var name by remember { mutableStateOf("Juan") }
-    var lastName by remember { mutableStateOf("Pérez") }
-    var email by remember { mutableStateOf("juan.perez@gmail.com") }
-    var phone by remember { mutableStateOf("+54 11 1234-5678") }
+    // Estado para los campos editables
+    val fields = listOf(
+        "name" to R.string.name,
+        "lastName" to R.string.apellido,
+        "email" to R.string.email,
+        "telephone" to R.string.telephone
+    )
     
-    var editingName by remember { mutableStateOf(false) }
-    var editingLastName by remember { mutableStateOf(false) }
-    var editingEmail by remember { mutableStateOf(false) }
-    var editingPhone by remember { mutableStateOf(false) }
+    val editableFields = fields.map { (id, stringRes) ->
+        EditableField(
+            id = id,
+            label = stringResource(stringRes),
+            value = when(id) {
+                "name" -> "Juan"
+                "lastName" -> "Pérez"
+                "email" -> "juan.perez@gmail.com"
+                else -> "+54 11 1234-5678"
+            }
+        )
+    }.toMutableList()
+    
+    // Mapa para mantener el estado de edición de cada campo
+    val editingStates = remember {
+        mutableStateMapOf<String, Boolean>().apply {
+            fields.forEach { (id, _) ->
+                this[id] = false
+            }
+        }
+    }
     
     var showLanguageDialog by remember { mutableStateOf(false) }
-    var selectedLanguage by remember { mutableStateOf("Español") }
 
     Column(
         modifier = Modifier
@@ -83,54 +111,23 @@ fun SettingsScreen(
             .background(AppTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
     ) {
-        
-        // Campo Nombre
-        EditableItem(
-            label = "Nombre",
-            value = name,
-            isEditing = editingName,
-            onEditClick = { editingName = true },
-            onValueChange = { name = it },
-            onDone = { editingName = false },
-            icon = Icons.Default.Edit
-        )
-        Divider(color = Color.LightGray, thickness = 1.dp)
-        
-        // Campo Apellido
-        EditableItem(
-            label = "Apellido",
-            value = lastName,
-            isEditing = editingLastName,
-            onEditClick = { editingLastName = true },
-            onValueChange = { lastName = it },
-            onDone = { editingLastName = false },
-            icon = Icons.Default.Edit
-        )
-        Divider(color = Color.LightGray, thickness = 1.dp)
-        
-        // Campo Email
-        EditableItem(
-            label = "Email",
-            value = email,
-            isEditing = editingEmail,
-            onEditClick = { editingEmail = true },
-            onValueChange = { email = it },
-            onDone = { editingEmail = false },
-            icon = Icons.Default.Edit
-        )
-        Divider(color = Color.LightGray, thickness = 1.dp)
-        
-        // Campo Teléfono
-        EditableItem(
-            label = "Teléfono",
-            value = phone,
-            isEditing = editingPhone,
-            onEditClick = { editingPhone = true },
-            onValueChange = { phone = it },
-            onDone = { editingPhone = false },
-            icon = Icons.Default.Edit
-        )
-        Divider(color = Color.LightGray, thickness = 1.dp)
+        // Renderizar campos editables
+        editableFields.forEach { field ->
+            EditableItem(
+                label = field.label,
+                value = field.value,
+                isEditing = editingStates[field.id] ?: false,
+                onEditClick = { editingStates[field.id] = true },
+                onValueChange = { newValue -> 
+                    val index = editableFields.indexOfFirst { it.id == field.id }
+                    if (index != -1) {
+                        editableFields[index] = field.copy(value = newValue)
+                    }
+                },
+                onDone = { editingStates[field.id] = false }
+            )
+            Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
+        }
 
         // Modo oscuro
         Row(
@@ -141,7 +138,7 @@ fun SettingsScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Modo oscuro",
+                text = stringResource(R.string.dark_mode),
                 color = AppTheme.colorScheme.textColor,
                 fontSize = 16.sp
             )
@@ -166,7 +163,7 @@ fun SettingsScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Idioma",
+                text = stringResource(R.string.language),
                 color = AppTheme.colorScheme.textColor,
                 fontSize = 16.sp
             )
@@ -234,8 +231,7 @@ private fun EditableItem(
     isEditing: Boolean,
     onEditClick: () -> Unit,
     onValueChange: (String) -> Unit,
-    onDone: () -> Unit,
-    icon: ImageVector
+    onDone: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -278,7 +274,7 @@ private fun EditableItem(
                 )
                 IconButton(onClick = onEditClick) {
                     Icon(
-                        imageVector = icon,
+                        imageVector = Icons.Default.Edit,
                         contentDescription = "Editar $label",
                         tint = Color(0xFF5A2A82)
                     )

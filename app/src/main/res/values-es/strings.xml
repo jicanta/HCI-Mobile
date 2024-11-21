@@ -11,4 +11,18 @@
     <string name="data">Datos</string>
     <string name="deposit">Ingresar</string>
     <string name="send">Transferir</string>
+    <string name="available">Disponible</string>
+    <string name="gain_percentage">+%.1f%% (TNA)</string>
+    <string name="hidden_money">$ ****</string>
+    <string name="hide_balance">Ocultar saldo</string>
+    <string name="show_balance">Mostrar saldo</string>
+    <string name="available_money">$ %s</string>
+    <string name="payment_methods">Métodos de pago</string>
+    <string name="add_payment_method">Añadir un nuevo método de pago</string>
+    <string name="name">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="email">Email</string>
+    <string name="telephone">Teléfono</string>
+    <string name="dark_mode">Modo Oscuro</string>
+    <string name="language">Idioma</string>"
 </resources>

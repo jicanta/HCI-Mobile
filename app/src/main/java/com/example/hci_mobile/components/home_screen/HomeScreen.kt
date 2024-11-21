@@ -33,7 +33,7 @@ fun HomeScreen(
             .fillMaxHeight(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            MoneyShower(modifier
+            MoneyDisplay(modifier
                 .padding(bottom = 16.dp)
                 .shadow(shape = AppTheme.shape.container, elevation = 4.dp)
             )

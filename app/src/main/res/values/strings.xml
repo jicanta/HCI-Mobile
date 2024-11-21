@@ -11,4 +11,18 @@
     <string name="data">Data</string>
     <string name="deposit">Deposit</string>
     <string name="send">Send</string>
+    <string name="available">Available</string>
+    <string name="gain_percentage">+%.1f%% (APR)</string>
+    <string name="hidden_money">$ ****</string>
+    <string name="hide_balance">Hide balance</string>
+    <string name="show_balance">Show balance</string>
+    <string name="available_money">$ %s</string>
+    <string name="payment_methods">Payment Methods</string>
+    <string name="add_payment_method">Add a new payment method</string>
+    <string name="name">Name</string>
+    <string name="apellido">Surname</string>
+    <string name="email">Email</string>
+    <string name="telephone">Telephone</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="language">Language</string>"
 </resources>

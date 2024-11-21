@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.hci_mobile.R
 
 @Composable
 fun CardContainer(
@@ -26,7 +28,7 @@ fun CardContainer(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Medios de Pago",
+                text = stringResource(R.string.payment_methods),
                 style = AppTheme.typography.title,
                 color = AppTheme.colorScheme.textColor,
                 modifier = Modifier.padding(bottom = 12.dp)

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,14 +30,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.IconButton
 import androidx.lint.kotlin.metadata.Visibility
+import com.example.hci_mobile.R
+import java.text.NumberFormat
+import java.util.Locale
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
-fun MoneyShower(
+fun MoneyDisplay(
     modifier: Modifier = Modifier
 ){
     var isMoneyVisible by remember { mutableStateOf(true) }
-    val availableMoney = 150000
+    val availableMoney = 150000.0
     val gain = 37.2
+
+    val locale = LocalContext.current.resources.configuration.locales[0]
+    val numberFormatter = NumberFormat.getNumberInstance(locale).apply {
+        maximumFractionDigits = 0
+        minimumFractionDigits = 0
+    }
+    val formattedMoney = numberFormatter.format(availableMoney)
 
     Surface(
         color = AppTheme.colorScheme.secondary,
@@ -55,13 +67,13 @@ fun MoneyShower(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Disponible", 
+                    text = stringResource(R.string.available),
                     color = AppTheme.colorScheme.textColor, 
                     style = AppTheme.typography.body
                 )
                 Text(
-                    text = "+$gain% (TNA)",
-                    color = Color(0xFF4CAF50), // Color verde
+                    text = stringResource(R.string.gain_percentage, gain),
+                    color = Color(0xFF4CAF50),
                     style = AppTheme.typography.body,
                     fontSize = 14.sp
                 )
@@ -76,7 +88,10 @@ fun MoneyShower(
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         Text(
-                            text = if (isMoneyVisible) "$ $availableMoney" else "$ ****",
+                            text = if (isMoneyVisible) 
+                                stringResource(R.string.available_money, formattedMoney)
+                            else 
+                                stringResource(R.string.hidden_money),
                             color = AppTheme.colorScheme.textColor, 
                             style = AppTheme.typography.title.copy(
                                 fontSize = 28.sp
@@ -87,21 +102,20 @@ fun MoneyShower(
                             onClick = { isMoneyVisible = !isMoneyVisible }
                         ) {
                             Icon(
-                                imageVector = if (isMoneyVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                contentDescription = if (isMoneyVisible) "Ocultar saldo" else "Mostrar saldo",
+                                imageVector = if (isMoneyVisible) 
+                                    Icons.Default.Visibility 
+                                else 
+                                    Icons.Default.VisibilityOff,
+                                contentDescription = stringResource(
+                                    if (isMoneyVisible) 
+                                        R.string.hide_balance 
+                                    else 
+                                        R.string.show_balance
+                                ),
                                 tint = AppTheme.colorScheme.textColor
                             )
                         }
                     }
-                }
-                Column(
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    /*Icon(
-                        painter = painterResource(R.drawable.estudio),
-                        contentDescription = null,
-                        Modifier.size(40.dp)
-                    )*/
                 }
             }
         }
@@ -110,8 +124,8 @@ fun MoneyShower(
 
 @Preview(showBackground = true)
 @Composable
-fun MoneyShowerPreview(){
+fun MoneyDisplayPreview(){
     AppTheme(darkTheme = false){
-        MoneyShower()
+        MoneyDisplay()
     }
 }
