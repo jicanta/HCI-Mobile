@@ -2,10 +2,14 @@ package com.example.hci_mobile.components
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.CreditCard
+import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.sharp.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.hci_mobile.R
 
@@ -14,9 +18,9 @@ enum class AppDestinations(
     val icon: ImageVector,
     val route: String
 ){
-    HOME(R.string.home, Icons.Filled.Home, "home"),
-    MOVEMENTS(R.string.movements, Icons.Filled.Refresh, "movements"),
-    CARDS(R.string.cards, Icons.Filled.MailOutline, "cards"),
+    HOME(R.string.home, Icons.Outlined.Home, "home"),
+    MOVEMENTS(R.string.movements, Icons.Filled.History, "movements"),
+    CARDS(R.string.cards, Icons.Filled.CreditCard, "cards"),
     OPTIONS(R.string.options, Icons.Filled.Menu, "options"),
     QR(R.string.qr, Icons.Filled.Menu, "qr")
 

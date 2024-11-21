@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PayGo</string>
+    <string name="bottom_navigation_home">Inicio</string>
+    <string name="bottom_navigation_user">Usuario</string>
+    <string name="home">Inicio</string>
+    <string name="movements">Movimientos</string>
+    <string name="cards">Tarjetas</string>
+    <string name="options">Opciones</string>
+    <string name="qr">QR</string>
+    <string name="data">Datos</string>
+    <string name="deposit">Ingresar</string>
+    <string name="send">Transferir</string>
+</resources>

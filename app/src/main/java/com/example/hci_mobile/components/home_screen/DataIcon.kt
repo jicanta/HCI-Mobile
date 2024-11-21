@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.hci_mobile.R
+import com.example.hci_mobile.components.AppDestinations
 
 enum class DataIcon(
     @StringRes val label: Int,
@@ -17,6 +18,6 @@ enum class DataIcon(
 ) {
     DEPOSIT(R.string.deposit, Icons.Default.Add, "deposit"),
     SEND(R.string.send, Icons.Default.ArrowForward, "send"),
-    MOVEMENTS(R.string.movements, Icons.Default.Refresh, "movements"),
+    MOVEMENTS(R.string.movements, Icons.Default.Refresh, AppDestinations.MOVEMENTS.route),
     DATA(R.string.data, Icons.Default.AccountCircle, "data")
 }
