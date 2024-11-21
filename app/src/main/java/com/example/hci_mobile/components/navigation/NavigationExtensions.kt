@@ -1,4 +1,4 @@
-package com.example.hci_mobile
+package com.example.hci_mobile.components.navigation
 
 import androidx.navigation.NavHostController
 

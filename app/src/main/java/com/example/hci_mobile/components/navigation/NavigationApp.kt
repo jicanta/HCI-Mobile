@@ -1,8 +1,6 @@
-package com.example.hci_mobile
+package com.example.hci_mobile.components.navigation
 
-import android.view.Surface
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,14 +13,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.hci_mobile.components.bottom_bar.BottomBar
 import com.example.hci_mobile.components.top_bar.TopBar
 import com.example.hci_mobile.ui.theme.AppTheme
-import android.os.Build
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import java.util.Locale
 import android.content.Context
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import android.content.Intent
+import com.example.hci_mobile.MainActivity
 
 // Creamos un CompositionLocal para el idioma
 val LocalLanguage = compositionLocalOf { Locale.getDefault() }

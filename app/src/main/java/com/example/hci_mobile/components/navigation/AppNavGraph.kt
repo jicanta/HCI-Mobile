@@ -1,4 +1,4 @@
-package com.example.hci_mobile
+package com.example.hci_mobile.components.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -8,16 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.hci_mobile.components.AppDestinations
 import com.example.hci_mobile.components.PaymentMethods.PaymentMethodsScreen
 import com.example.hci_mobile.components.home_screen.HomeScreen
 import com.example.hci_mobile.components.more.SettingsScreen
 import com.example.hci_mobile.components.movements.MovementsScreen
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.navigation.compose.rememberNavController
 import java.util.Locale
 
 @Composable

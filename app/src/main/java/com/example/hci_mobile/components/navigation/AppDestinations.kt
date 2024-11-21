@@ -1,15 +1,11 @@
-package com.example.hci_mobile.components
+package com.example.hci_mobile.components.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CreditCard
-import androidx.compose.material.icons.filled.House
-import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.sharp.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.hci_mobile.R
 

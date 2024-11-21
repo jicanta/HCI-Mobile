@@ -26,4 +26,6 @@
     <string name="dark_mode">Modo Oscuro</string>
     <string name="language">Idioma</string>
     <string name="select_language">Seleccionar un idioma</string>
+    <string name="loading_failed">Carga fallida</string>
+    <string name="loading">Cargando</string>
 </resources>
