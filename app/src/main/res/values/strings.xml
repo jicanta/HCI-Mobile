@@ -28,4 +28,14 @@
     <string name="select_language">Select a Language</string>
     <string name="loading_failed">Loading failed</string>
     <string name="loading">Loading</string>
+    <string name="copy">Copy</string>
+    <string name="fullName">full name</string>
+    <string name="userName">user name</string>
+    <string name="phoneNumber">phone number</string>
+    <string name="password">password</string>
+    <string name="usserOrPhoneNumber">usser or phone number</string>
+    <string name="welcome">Welcome! Enter your username or phone number to continue</string>
+    <string name="forgotPassword">Forgot password? Recover</string>
+    <string name="continuar">Continue</string>">
+    <string name="register">Register</string>">
 </resources>

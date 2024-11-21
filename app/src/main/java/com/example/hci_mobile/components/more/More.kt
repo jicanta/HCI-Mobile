@@ -151,7 +151,7 @@ fun SettingsScreen(
                 )
             )
         }
-        Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
+        HorizontalDivider(thickness = 1.dp, color = AppTheme.colorScheme.onSecondary)
 
         // Selector de idioma
         Row(
@@ -180,7 +180,7 @@ fun SettingsScreen(
                     style = AppTheme.typography.body
                 )
                 Icon(
-                    imageVector = Icons.Default.ArrowForward,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = null,
                     tint = AppTheme.colorScheme.primary
                 )
@@ -314,7 +314,7 @@ private fun LanguageOption(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
     SettingsScreen(

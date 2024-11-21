@@ -28,4 +28,14 @@
     <string name="select_language">Seleccionar un idioma</string>
     <string name="loading_failed">Carga fallida</string>
     <string name="loading">Cargando</string>
+    <string name="copy">Copiar</string>
+    <string name="fullName">nombre completo</string>
+    <string name="userName">nombre de usuario</string>
+    <string name="phoneNumber">numero de telefono</string>
+    <string name="password">contraseña</string>
+    <string name="usserOrPhoneNumber">usuario o numero de telefono</string>
+    <string name="welcome">¡Bienvenido! Ingrese su usuario o número de teléfono para continuar</string>
+    <string name="forgotPassword">Olvido su contraseña? Recuperar</string>
+    <string name="continuar">Continuar</string>">
+    <string name="register">Registrarse</string>
 </resources>
