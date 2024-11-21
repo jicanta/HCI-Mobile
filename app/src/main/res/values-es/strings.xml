@@ -24,5 +24,6 @@
     <string name="email">Email</string>
     <string name="telephone">Teléfono</string>
     <string name="dark_mode">Modo Oscuro</string>
-    <string name="language">Idioma</string>"
+    <string name="language">Idioma</string>
+    <string name="select_language">Seleccionar un idioma</string>
 </resources>

@@ -140,18 +140,18 @@ fun SettingsScreen(
             Text(
                 text = stringResource(R.string.dark_mode),
                 color = AppTheme.colorScheme.textColor,
-                fontSize = 16.sp
+                style = AppTheme.typography.body
             )
             Switch(
                 checked = darkTheme,
                 onCheckedChange = { onThemeUpdated(it) },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = AppTheme.colorScheme.primary,
-                    uncheckedThumbColor = Color.LightGray
+                    uncheckedThumbColor = AppTheme.colorScheme.background
                 )
             )
         }
-        Divider(color = Color.LightGray, thickness = 1.dp)
+        Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
 
         // Selector de idioma
         Row(
@@ -165,7 +165,7 @@ fun SettingsScreen(
             Text(
                 text = stringResource(R.string.language),
                 color = AppTheme.colorScheme.textColor,
-                fontSize = 16.sp
+                style = AppTheme.typography.body
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -176,8 +176,8 @@ fun SettingsScreen(
                         "en" -> "English"
                         else -> "Español"
                     },
-                    color = Color.Gray,
-                    fontSize = 16.sp
+                    color = AppTheme.colorScheme.textColor,
+                    style = AppTheme.typography.body
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowForward,
@@ -186,14 +186,14 @@ fun SettingsScreen(
                 )
             }
         }
-        Divider(color = Color.LightGray, thickness = 1.dp)
+        Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
     }
 
     // Diálogo de idioma (mantener el código existente)
     if (showLanguageDialog) {
         AlertDialog(
             onDismissRequest = { showLanguageDialog = false },
-            title = { Text("Seleccionar idioma") },
+            title = { Text(stringResource(R.string.select_language)) },
             text = {
                 Column {
                     LanguageOption(
@@ -243,7 +243,7 @@ private fun EditableItem(
         Text(
             text = label,
             color = AppTheme.colorScheme.textColor,
-            fontSize = 16.sp,
+            style = AppTheme.typography.body,
             modifier = Modifier.weight(1f)
         )
         
@@ -252,13 +252,18 @@ private fun EditableItem(
                 value = value,
                 onValueChange = onValueChange,
                 singleLine = true,
-                modifier = Modifier.weight(2f),
+                modifier = Modifier
+                    .weight(2f)
+                    .height(50.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    cursorColor = AppTheme.colorScheme.primary,
                     focusedBorderColor = AppTheme.colorScheme.primary,
-                    unfocusedBorderColor = Color.Gray
+                    focusedContainerColor = AppTheme.colorScheme.onTertiary,
+                    unfocusedContainerColor = AppTheme.colorScheme.onTertiary
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { onDone() })
+                keyboardActions = KeyboardActions(onDone = { onDone() }),
+                textStyle = AppTheme.typography.body
             )
         } else {
             Row(
@@ -268,8 +273,8 @@ private fun EditableItem(
             ) {
                 Text(
                     text = value,
-                    color = Color.Gray,
-                    fontSize = 16.sp,
+                    color = AppTheme.colorScheme.textColor,
+                    style = AppTheme.typography.body,
                     modifier = Modifier.weight(1f)
                 )
                 IconButton(onClick = onEditClick) {

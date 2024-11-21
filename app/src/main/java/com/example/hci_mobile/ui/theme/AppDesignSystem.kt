@@ -14,7 +14,8 @@ data class AppColorScheme(
     val onPrimary: Color,
     val textColor: Color,
     val tertiary: Color,
-    val onSecondary: Color
+    val onSecondary: Color,
+    val onTertiary: Color
 )
 
 data class AppTypography(
@@ -42,7 +43,8 @@ val LocalAppColorScheme = staticCompositionLocalOf {
         onPrimary = Color.Unspecified,
         textColor = Color.Unspecified,
         tertiary = Color.Unspecified,
-        onSecondary = Color.Unspecified
+        onSecondary = Color.Unspecified,
+        onTertiary = Color.Unspecified
     )
 }
 
