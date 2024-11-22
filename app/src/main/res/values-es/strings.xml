@@ -56,4 +56,12 @@
     <string name="investment_intro_description">
         Podés invertir tu dinero y comenzar a generar rendimientos desde hoy, con un solo click.
     </string>
+    <string name="generate_payment_link">Ingresar dinero</string>
+    <string name="generate_payment_link_title">Generar link de pago</string>
+    <string name="amount">Monto</string>
+    <string name="description">Descripción</string>
+    <string name="generate">Generar</string>
+    <string name="generate_payment_link_note">También podés transferir dinero desde otra cuenta bancaria.</string>
+    <string name="link_note_prefix">Encontrarás tus datos</string>
+    <string name="here">acá</string>
 </resources>

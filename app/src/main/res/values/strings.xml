@@ -56,4 +56,12 @@
     <string name="investment_intro_description">
         You can invest your money and start generating income from today, with a single click.
     </string>
+    <string name="generate_payment_link">Insert Amount</string>
+    <string name="generate_payment_link_title">Generate payment link</string>
+    <string name="amount">amount</string>
+    <string name="description">Description</string>
+    <string name="generate">Generate</string>
+    <string name="generate_payment_link_note">You can also transfer money from another bank account.</string>
+    <string name="link_note_prefix">You will find your data</string>
+    <string name="here">here</string>
 </resources>
