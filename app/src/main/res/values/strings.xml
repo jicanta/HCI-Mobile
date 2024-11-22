@@ -40,4 +40,8 @@
     <string name="register">Register</string>">
     <string name="lastName">Surname</string>">
     <string name="welcomeRegister">Welcome! Enter your data to continue</string>
+    <string name="add_card">add card</string>
+    <string name="login">login</string>
+    <string name="customize">customize</string>
+    <string name="back">back</string>
 </resources>

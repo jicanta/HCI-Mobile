@@ -15,18 +15,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hci_mobile.R
+import com.example.hci_mobile.components.register.RegisterCard
 import com.example.hci_mobile.components.top_bar.TopBar
 import com.example.hci_mobile.ui.theme.AppTheme
 
 @Composable
 fun LoginScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppTheme.colorScheme.background),
-        contentAlignment = Alignment.Center
-    ) {
-        LoginCard()
+    Scaffold(
+        topBar = { TopBar() }, // Reutiliza tu TopBar
+        containerColor = Color(0xFFF5F5F5) // Fondo gris claro
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.Center
+        ) {
+            LoginCard()
+        }
     }
 }
 

@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hci_mobile.R
 import com.example.hci_mobile.components.top_bar.TopBar
+import com.example.hci_mobile.ui.theme.AppTheme
 
 @Composable
 fun RegisterScreen() {
@@ -51,7 +52,7 @@ fun RegisterCard() {
         ) {
             // Título principal
             Text(
-                text = "¡Bienvenido! Ingrese su usuario o número de teléfono para continuar",
+                text = stringResource(R.string.welcomeRegister),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -121,5 +122,7 @@ fun RegisterCard() {
 @Preview(showBackground = true)
 @Composable
 fun RegisterScreenPreview() {
-    RegisterScreen()
+    AppTheme(darkTheme = false) {
+        RegisterScreen()
+    }
 }

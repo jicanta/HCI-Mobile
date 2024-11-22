@@ -40,4 +40,8 @@
     <string name="register">Registrarse</string>
     <string name="lastName">Apellido</string>">
     <string name="welcomeRegister">Bienvenido! Ingrese sus datos para continuar</string>
+    <string name="add_card">Añadir tarjeta</string>
+    <string name="login">Ingresar</string>
+    <string name="customize">editar</string>
+    <string name="back">atras</string>
 </resources>
