@@ -47,7 +47,7 @@ fun LoginCard() {
         ) {
             // Título principal
             Text(
-                text = stringResource(R.string.welcome),
+                text = stringResource(R.string.welcomeLogin),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
