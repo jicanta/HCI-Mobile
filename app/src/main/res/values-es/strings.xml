@@ -44,4 +44,16 @@
     <string name="login">Ingresar</string>
     <string name="customize">editar</string>
     <string name="back">atras</string>
+    <string name="investment">Inversión</string>
+    <string name="invest">Invertir</string>
+    <string name="rescue">Rescatar</string>
+    <string name="amount_to_invest">Monto a invertir</string>
+    <string name="amount_to_rescue">Monto a rescatar</string>
+    <string name="available_amount">Disponible: %1$s</string>
+    <string name="invested">Invertido</string>
+    <string name="tna">%1$s (TNA)</string>
+    <string name="investment_intro_title">¡Comenzá a hacer crecer tus ahorros!</string>
+    <string name="investment_intro_description">
+        Podés invertir tu dinero y comenzar a generar rendimientos desde hoy, con un solo click.
+    </string>
 </resources>

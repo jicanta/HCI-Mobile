@@ -44,4 +44,16 @@
     <string name="login">login</string>
     <string name="customize">customize</string>
     <string name="back">back</string>
+    <string name="investment">Investment</string>
+    <string name="invest">Invest</string>
+    <string name="rescue">Rescue</string>
+    <string name="amount_to_invest">Amount to  invest</string>
+    <string name="amount_to_rescue">Amount to rescue</string>
+    <string name="available_amount">Available amount: %1$s</string>
+    <string name="invested">Invested</string>
+    <string name="tna">%1$s (TNA)</string>
+    <string name="investment_intro_title">Start to grow your savings!</string>
+    <string name="investment_intro_description">
+        You can invest your money and start generating income from today, with a single click.
+    </string>
 </resources>
