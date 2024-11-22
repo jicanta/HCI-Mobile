@@ -29,17 +29,15 @@
     <string name="loading_failed">Carga fallida</string>
     <string name="loading">Cargando</string>
     <string name="copy">Copiar</string>
-    <string name="fullName">Nombre completo</string>
-    <string name="userName">Nombre de usuario</string>
-    <string name="phoneNumber">Número de telefono</string>
-    <string name="password">Contraseña</string>
-    <string name="usserOrPhoneNumber">Usuario o numero de telefono</string>
-    <string name="welcome">¡Bienvenido! Ingrese su usuario o número de teléfono para continuar</string>
+    <string name="fullName">nombre completo</string>
+    <string name="userName">nombre de usuario</string>
+    <string name="phoneNumber">numero de telefono</string>
+    <string name="password">contraseña</string>
+    <string name="usserOrPhoneNumber">usuario o numero de telefono</string>
+    <string name="welcomeLogin">¡Bienvenido! Ingrese su usuario o número de teléfono para continuar</string>
     <string name="forgotPassword">Olvido su contraseña? Recuperar</string>
-    <string name="continuar">Continuar</string>
+    <string name="continuar">Continuar</string>">
     <string name="register">Registrarse</string>
-    <string name="login">Iniciar Sesión</string>
-    <string name="add_card">Agregar una Tarjeta de Credito</string>
-    <string name="back">Ir hacia atrás</string>
-    <string name="customize">Personalizar</string>
+    <string name="lastName">Apellido</string>">
+    <string name="welcomeRegister">Bienvenido! Ingrese sus datos para continuar</string>
 </resources>
