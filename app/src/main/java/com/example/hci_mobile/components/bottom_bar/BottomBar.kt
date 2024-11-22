@@ -34,15 +34,17 @@ fun BottomBar(
         items.forEach { item ->
             NavigationBarItem(
                 icon = {
-                    Icon(
-                        modifier = Modifier.size(36.dp),
-                        imageVector = item.icon,
-                        contentDescription = stringResource(item.label),
-                        tint = if (currentRoute == item.route) 
-                            AppTheme.colorScheme.tertiary
-                        else 
-                            AppTheme.colorScheme.textColor
-                    )
+                    item.icon?.let {
+                        Icon(
+                            modifier = Modifier.size(36.dp),
+                            imageVector = it,
+                            contentDescription = stringResource(item.label),
+                            tint = if (currentRoute == item.route)
+                                AppTheme.colorScheme.tertiary
+                            else
+                                AppTheme.colorScheme.textColor
+                        )
+                    }
                 },
                 onClick = { onNavigateToRoute(item.route) },
                 selected = currentRoute == item.route,

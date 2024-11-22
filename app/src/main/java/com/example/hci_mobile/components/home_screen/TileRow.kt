@@ -16,7 +16,7 @@ import com.example.hci_mobile.ui.theme.AppTheme
 @Composable
 fun TileRow(
     modifier: Modifier,
-    navController: NavHostController? = null
+    onNavigateToRoute: (String) -> Unit = {}
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -25,7 +25,7 @@ fun TileRow(
             .padding(vertical = 16.dp)
     ) {
         DataIcon.entries.forEach { dataIcon ->
-            Tile(dataIcon = dataIcon, navController = navController)
+            Tile(dataIcon = dataIcon, onNavigateToRoute = onNavigateToRoute)
         }
     }
 }

@@ -20,18 +20,13 @@ import com.example.hci_mobile.ui.theme.AppTheme
 
 @Composable
 fun LoginScreen() {
-    Scaffold(
-        topBar = { TopBar() },
-        containerColor = Color(0xFFF5F5F5) // Fondo gris claro
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentAlignment = Alignment.Center
-        ) {
-            LoginCard()
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
+    ) {
+        LoginCard()
     }
 }
 
@@ -41,7 +36,7 @@ fun LoginCard() {
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .wrapContentHeight(),
-        shape = RoundedCornerShape(16.dp),
+        shape = AppTheme.shape.container,
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(
@@ -89,8 +84,9 @@ fun LoginCard() {
             ) {
                 Text(
                     text = stringResource(R.string.forgotPassword),
-                    color = Color(0xFF9C27B0), // Color púrpura
-                    fontSize = 14.sp
+                    color = AppTheme.colorScheme.primary, // Color púrpura
+                    fontSize = 14.sp,
+                    style = AppTheme.typography.body
                 )
             }
 
@@ -102,26 +98,27 @@ fun LoginCard() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
-                shape = RoundedCornerShape(8.dp),
+                shape = AppTheme.shape.button,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5E2A84))
             ) {
                 Text(
                     text = stringResource(R.string.continuar),
-                    color = Color.White,
+                    color = AppTheme.colorScheme.onPrimary,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    style = AppTheme.typography.body
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Enlace para registrarse
             TextButton(onClick = { /* Acción para registrarse */ }) {
                 Text(
                     text = stringResource(R.string.register),
-                    color = Color(0xFF5E2A84), // Púrpura oscuro
+                    color = AppTheme.colorScheme.primary, // Púrpura oscuro
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    style = AppTheme.typography.body
                 )
             }
         }

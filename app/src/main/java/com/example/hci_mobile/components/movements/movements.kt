@@ -22,6 +22,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hci_mobile.R
+import com.example.hci_mobile.components.bottom_bar.BottomBar
+import com.example.hci_mobile.components.top_bar.TopBar
+import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
@@ -40,41 +44,27 @@ fun MovementsScreenPreview() {
 }
 
 @Composable
-fun MovementsScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppTheme.colorScheme.background)
+fun MovementsScreen(
+    modifier: Modifier = Modifier,
+    currentRoute: String? = null,
+    onNavigateToRoute: (String) -> Unit = {},
+    onNavigateBack: () -> Unit = {}
+) {
+    Scaffold(
+        topBar = { TopBarWithBack(R.string.movements, onNavigateBack = onNavigateBack) },
+        bottomBar = { BottomBar(currentRoute = currentRoute, onNavigateToRoute = onNavigateToRoute) }
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        MovementList()
-    }
-}
-
-@Composable
-fun TopBar(title: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFF5A2A82))
-            .padding(vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = { /* Acción para ir atrás */ }) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Volver",
-                tint = Color.White
-            )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(AppTheme.colorScheme.background)
+                .padding(it)
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            MovementList()
         }
-        Text(
-            text = title,
-            color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 8.dp)
-        )
     }
+
 }
 
 @Composable

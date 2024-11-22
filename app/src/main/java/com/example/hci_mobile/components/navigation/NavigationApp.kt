@@ -18,6 +18,7 @@ import java.util.Locale
 import android.content.Context
 import androidx.compose.ui.platform.LocalContext
 import android.content.Intent
+import androidx.compose.ui.unit.dp
 import com.example.hci_mobile.MainActivity
 
 // Creamos un CompositionLocal para el idioma
@@ -54,41 +55,33 @@ fun NavigationApp() {
     var currentLocale by remember { mutableStateOf(Locale(savedLanguage!!)) }
 
     AppTheme(darkTheme = darkTheme) {
-        Scaffold(
-            topBar = { TopBar() },
-            bottomBar = {
-                BottomBar(
-                    currentRoute = currentDestination,
-                    onNavigateToRoute = { route -> 
-                        navController.navigateToRoute(route)
-                    }
-                )
-            }
-        ) { paddingValues ->
-            AppNavGraph(
-                navController = navController, 
-                padding = paddingValues,
-                darkTheme = darkTheme,
-                onThemeUpdated = { isDark -> 
-                    darkTheme = isDark
-                    sharedPrefs.edit()
-                        .putBoolean("dark_theme", isDark)
-                        .apply()
-                },
-                currentLocale = currentLocale,
-                onLanguageChanged = { newLocale ->
-                    sharedPrefs.edit()
-                        .putString("selected_language", newLocale.language)
-                        .apply()
-                    
-                    if (context is MainActivity) {
-                        val intent = Intent(context, MainActivity::class.java)
-                        context.startActivity(intent)
-                        context.finish()
-                    }
+        AppNavGraph(
+            navController = navController,
+            darkTheme = darkTheme,
+            onThemeUpdated = { isDark ->
+                darkTheme = isDark
+                sharedPrefs.edit()
+                    .putBoolean("dark_theme", isDark)
+                    .apply()
+            },
+            currentLocale = currentLocale,
+            onLanguageChanged = { newLocale ->
+                sharedPrefs.edit()
+                    .putString("selected_language", newLocale.language)
+                    .apply()
+
+                if (context is MainActivity) {
+                    val intent = Intent(context, MainActivity::class.java)
+                    context.startActivity(intent)
+                    context.finish()
                 }
-            )
-        }
+            },
+            onNavigateToRoute =
+            { route ->
+                navController.navigateToRoute(route)
+            },
+            currentRoute = currentDestination
+        )
     }
 }
 
@@ -97,27 +90,5 @@ fun NavigationApp() {
 fun NavigationAppPreview() {
     AppTheme(darkTheme = false) {
         NavigationApp()
-    }
-}
-
-// Función simple para obtener el idioma del sistema
-fun getSystemLocale(context: Context): Locale {
-    return context.resources.configuration.locales[0]
-}
-
-fun updateLocale(context: Context, locale: Locale) {
-    // Guardamos la preferencia
-    context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        .edit()
-        .putString("selected_language", locale.language)
-        .apply()
-    
-    // Reiniciamos la app solo una vez
-    if (context is MainActivity) {
-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-        intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-        context.finish()
     }
 }

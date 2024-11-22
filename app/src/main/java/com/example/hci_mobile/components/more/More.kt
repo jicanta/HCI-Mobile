@@ -56,7 +56,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.res.stringResource
+import com.example.hci_mobile.components.bottom_bar.BottomBar
+import com.example.hci_mobile.components.top_bar.TopBar
 import java.util.Locale
+import androidx.compose.runtime.mutableStateListOf
+import com.example.hci_mobile.components.top_bar.TopBarWithBack
 
 // Primero creamos una data class para los campos editables
 data class EditableField(
@@ -68,125 +72,129 @@ data class EditableField(
 
 @Composable
 fun SettingsScreen(
+    modifier: Modifier = Modifier,
+    currentRoute: String? = null,
+    onNavigateToRoute: (String) -> Unit = {},
     darkTheme: Boolean,
     onThemeUpdated: (Boolean) -> Unit,
     currentLocale: Locale,
-    onLanguageChanged: (Locale) -> Unit
+    onLanguageChanged: (Locale) -> Unit,
+    onNavigateBack: () -> Unit = {}
 ) {
-    // Estado para los campos editables
-    val fields = listOf(
-        "name" to R.string.name,
-        "lastName" to R.string.apellido,
-        "email" to R.string.email,
-        "telephone" to R.string.telephone
-    )
-    
-    val editableFields = fields.map { (id, stringRes) ->
-        EditableField(
-            id = id,
-            label = stringResource(stringRes),
-            value = when(id) {
-                "name" -> "Juan"
-                "lastName" -> "Pérez"
-                "email" -> "juan.perez@gmail.com"
-                else -> "+54 11 1234-5678"
-            }
-        )
-    }.toMutableList()
-    
-    // Mapa para mantener el estado de edición de cada campo
-    val editingStates = remember {
-        mutableStateMapOf<String, Boolean>().apply {
-            fields.forEach { (id, _) ->
-                this[id] = false
-            }
-        }
-    }
-    
+    var editingStates = remember { mutableStateMapOf<String, Boolean>() }
     var showLanguageDialog by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState())
-    ) {
-        // Renderizar campos editables
-        editableFields.forEach { field ->
-            EditableItem(
-                label = field.label,
-                value = field.value,
-                isEditing = editingStates[field.id] ?: false,
-                onEditClick = { editingStates[field.id] = true },
-                onValueChange = { newValue -> 
-                    val index = editableFields.indexOfFirst { it.id == field.id }
-                    if (index != -1) {
-                        editableFields[index] = field.copy(value = newValue)
-                    }
-                },
-                onDone = { editingStates[field.id] = false }
+    
+    val editableFields = remember {
+        mutableStateListOf(
+            EditableField(
+                id = "name",
+                label = "Nombre",
+                value = "Juan Pablo Birsa",
+                icon = Icons.Default.Person
+            ),
+            EditableField(
+                id = "email",
+                label = "Email",
+                value = "jpbirsa@itba.edu.ar",
+                icon = Icons.Default.Email
+            ),
+            EditableField(
+                id = "phone",
+                label = "Teléfono",
+                value = "+54 9 11 1234-5678",
+                icon = Icons.Default.Phone
             )
-            Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
-        }
+        )
+    }
 
-        // Modo oscuro
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+    Scaffold(
+        topBar = { TopBarWithBack(R.string.customize, onNavigateBack = onNavigateBack) },
+        bottomBar = { BottomBar(currentRoute = currentRoute, onNavigateToRoute = onNavigateToRoute) }
+    ) { paddingValues ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(AppTheme.colorScheme.background)
+                .verticalScroll(rememberScrollState())
+                .padding(paddingValues)
         ) {
-            Text(
-                text = stringResource(R.string.dark_mode),
-                color = AppTheme.colorScheme.textColor,
-                style = AppTheme.typography.body
-            )
-            Switch(
-                checked = darkTheme,
-                onCheckedChange = { onThemeUpdated(it) },
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = AppTheme.colorScheme.primary,
-                    uncheckedThumbColor = AppTheme.colorScheme.background
+            // Renderizar campos editables
+            editableFields.forEach { field ->
+                EditableItem(
+                    label = field.label,
+                    value = field.value,
+                    isEditing = editingStates[field.id] ?: false,
+                    onEditClick = { editingStates[field.id] = true },
+                    onValueChange = { newValue -> 
+                        val index = editableFields.indexOfFirst { it.id == field.id }
+                        if (index != -1) {
+                            editableFields[index] = field.copy(value = newValue)
+                        }
+                    },
+                    onDone = { editingStates[field.id] = false }
                 )
-            )
-        }
-        HorizontalDivider(thickness = 1.dp, color = AppTheme.colorScheme.onSecondary)
+                Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
+            }
 
-        // Selector de idioma
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { showLanguageDialog = true }
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(R.string.language),
-                color = AppTheme.colorScheme.textColor,
-                style = AppTheme.typography.body
-            )
+            // Modo oscuro
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = when (currentLocale.language) {
-                        "es" -> "Español"
-                        "en" -> "English"
-                        else -> "Español"
-                    },
+                    text = stringResource(R.string.dark_mode),
                     color = AppTheme.colorScheme.textColor,
                     style = AppTheme.typography.body
                 )
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = null,
-                    tint = AppTheme.colorScheme.primary
+                Switch(
+                    checked = darkTheme,
+                    onCheckedChange = { onThemeUpdated(it) },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = AppTheme.colorScheme.primary,
+                        uncheckedThumbColor = AppTheme.colorScheme.background
+                    )
                 )
             }
+            HorizontalDivider(thickness = 1.dp, color = AppTheme.colorScheme.onSecondary)
+
+            // Selector de idioma
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showLanguageDialog = true }
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(R.string.language),
+                    color = AppTheme.colorScheme.textColor,
+                    style = AppTheme.typography.body
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = when (currentLocale.language) {
+                            "es" -> "Español"
+                            "en" -> "English"
+                            else -> "Español"
+                        },
+                        color = AppTheme.colorScheme.textColor,
+                        style = AppTheme.typography.body
+                    )
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null,
+                        tint = AppTheme.colorScheme.primary
+                    )
+                }
+            }
+            Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
         }
-        Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
     }
 
     // Diálogo de idioma (mantener el código existente)
@@ -317,10 +325,12 @@ private fun LanguageOption(
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen(
-        darkTheme = false,
-        onThemeUpdated = {},
-        currentLocale = Locale.getDefault(),
-        onLanguageChanged = {}
-    )
+    AppTheme(darkTheme = false) {
+        SettingsScreen(
+            darkTheme = false,
+            onThemeUpdated = {},
+            currentLocale = Locale.getDefault(),
+            onLanguageChanged = {}
+        )
+    }
 }

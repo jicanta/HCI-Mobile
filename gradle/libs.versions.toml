@@ -18,6 +18,7 @@ material3Lint = "1.4.0-alpha04"
 retrofit = "2.11.0"
 serialization = "1.9.0"
 okhttp = "4.12.0"
+media3Datasource = "1.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +45,7 @@ androidx-material3-lint = { group = "androidx.compose.material3", name = "materi
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+androidx-media3-datasource = { group = "androidx.media3", name = "media3-datasource", version.ref = "media3Datasource" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

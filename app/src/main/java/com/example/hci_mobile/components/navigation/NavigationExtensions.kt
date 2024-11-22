@@ -3,11 +3,17 @@ package com.example.hci_mobile.components.navigation
 import androidx.navigation.NavHostController
 
 fun NavHostController.navigateToRoute(route: String) {
-    navigate(route) {
-        popUpTo(graph.startDestinationId) {
-            saveState = true
+    if (AppDestinations.isTabRoute(route)) {
+        navigate(route) {
+            popUpTo(graph.startDestinationId) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
         }
-        launchSingleTop = true
-        restoreState = true
+    } else {
+        navigate(route) {
+            launchSingleTop = true
+        }
     }
 } 

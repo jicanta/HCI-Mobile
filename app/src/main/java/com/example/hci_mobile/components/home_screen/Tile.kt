@@ -23,14 +23,14 @@ import com.example.hci_mobile.ui.theme.AppTheme
 fun Tile(
     dataIcon: DataIcon,
     modifier: Modifier = Modifier,
-    navController: NavHostController? = null
+    onNavigateToRoute: (String) -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(8.dp)
             .clickable { 
-                navController?.navigateToRoute(dataIcon.route)
+                onNavigateToRoute(dataIcon.route)
             }
     ) {
         Box(
@@ -42,12 +42,14 @@ fun Tile(
                     shape = CircleShape
                 )
         ) {
-            Icon(
-                imageVector = dataIcon.icon,
-                contentDescription = null,
-                modifier = Modifier.size(45.dp),
-                tint = AppTheme.colorScheme.onPrimary
-            )
+            dataIcon.icon?.let {
+                Icon(
+                    imageVector = it,
+                    contentDescription = null,
+                    modifier = Modifier.size(45.dp),
+                    tint = AppTheme.colorScheme.onPrimary
+                )
+            }
         }
         Text(
             text = stringResource(id = dataIcon.label),

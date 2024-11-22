@@ -18,20 +18,16 @@ import androidx.compose.ui.unit.sp
 import com.example.hci_mobile.R
 import com.example.hci_mobile.components.bottom_bar.BottomBar
 import com.example.hci_mobile.components.top_bar.TopBar
+import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
 
 @Composable
-fun AccountVerificationScreen() {
+fun AccountDataScreen(
+    onNavigateBack: () -> Unit = {}
+) {
     Scaffold(
-        topBar = { TopBar() }, // Usando tu implementación existente
-        bottomBar = {
-            BottomBar(
-                currentRoute = "currentRoute", // Reemplaza con tu lógica
-                onNavigateToRoute = { route ->
-                    // Navegación personalizada
-                }
-            )
-        }
+        topBar = { TopBarWithBack(R.string.data, onNavigateBack = onNavigateBack) } // Usando tu implementación existente
+
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -114,6 +110,6 @@ fun AccountItem(label: String, value: String, copyOption: Boolean = false) {
 @Composable
 fun AccountVerificationScreenPreview() {
     AppTheme(darkTheme = false) {
-        AccountVerificationScreen()
+        AccountDataScreen()
     }
 }

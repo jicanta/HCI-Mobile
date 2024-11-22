@@ -30,47 +30,44 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hci_mobile.R
+import com.example.hci_mobile.components.bottom_bar.BottomBar
 import com.example.hci_mobile.components.home_screen.getCardColor
 import com.example.hci_mobile.components.home_screen.getCardIcon
+import com.example.hci_mobile.components.navigation.AppDestinations
+import com.example.hci_mobile.components.top_bar.TopBar
+import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
 
 
 @Composable
-fun PaymentMethodsScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppTheme.colorScheme.background)
-    ) {
-        Spacer(modifier = Modifier.height(16.dp))
-
-        PaymentMethodList()
-
-        AddPaymentMethodButton()
+fun PaymentMethodsScreen(
+    modifier: Modifier = Modifier,
+    currentRoute: String? = null,
+    onNavigateToRoute: (String) -> Unit = {},
+    onNavigateBack: () -> Unit = {}
+) {
+    Scaffold(
+        topBar = { TopBarWithBack(R.string.payment_methods, onNavigateBack = onNavigateBack) },
+        bottomBar = { BottomBar(currentRoute = currentRoute, onNavigateToRoute = onNavigateToRoute) }
+    ) { paddingValues ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(AppTheme.colorScheme.background)
+                .padding(paddingValues)
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            PaymentMethodList()
+            AddPaymentMethodButton(onNavigateToRoute = onNavigateToRoute)
+        }
     }
 }
+
 @Preview
 @Composable
 fun PaymentMethodsScreenPreview() {
-    PaymentMethodsScreen()
-}
-
-@Composable
-fun TopBar(title: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFF5A2A82)) // Color púrpura
-            .padding(vertical = 16.dp), // Padding interno
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = title,
-            color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 16.dp) // Espaciado del texto
-        )
+    AppTheme {
+        PaymentMethodsScreen()
     }
 }
 
@@ -147,14 +144,16 @@ fun PaymentMethodItem(paymentMethod: PaymentMethod) {
 }
 
 @Composable
-fun AddPaymentMethodButton() {
+fun AddPaymentMethodButton(
+    onNavigateToRoute: (String) -> Unit = {}
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp, horizontal = 8.dp)
             .background(AppTheme.colorScheme.background, AppTheme.shape.container)
-            .border(2.dp, Color(0xFFFF4081), AppTheme.shape.container)
-            .clickable { /* onClick -> HAGO ALGO */ }
+            .border(2.dp, AppTheme.colorScheme.tertiary, AppTheme.shape.container)
+            .clickable { onNavigateToRoute(AppDestinations.ADDCARD.route) }
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {

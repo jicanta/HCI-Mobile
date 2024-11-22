@@ -10,20 +10,19 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hci_mobile.R
+import com.example.hci_mobile.components.top_bar.TopBar
+import com.example.hci_mobile.components.top_bar.TopBarWithBack
+import com.example.hci_mobile.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPaymentMethodScreen() {
+fun AddPaymentMethodScreen(
+    onNavigateBack: () -> Unit = {}
+) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Añadir método de pago", color = Color.White, fontSize = 18.sp)
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF5E2A84) // Color del TopAppBar
-                )
-            )
+            TopBarWithBack(title = R.string.add_payment_method, onNavigateBack = onNavigateBack)
         },
         content = { innerPadding ->
             Column(
@@ -75,12 +74,13 @@ fun AddPaymentMethodScreen() {
                 // Botón Guardar
                 Button(
                     onClick = { /* Acción al guardar */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5E2A84)),
+                    colors = ButtonDefaults.buttonColors(containerColor = AppTheme.colorScheme.primary),
+                    shape = AppTheme.shape.button,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)
                 ) {
-                    Text("Guardar", color = Color.White)
+                    Text("Guardar", color = AppTheme.colorScheme.secondary)
                 }
             }
         }
@@ -90,7 +90,9 @@ fun AddPaymentMethodScreen() {
 @Preview(showBackground = true)
 @Composable
 fun AddPaymentMethodScreenPreview() {
-    AddPaymentMethodScreen()
+    AppTheme(darkTheme = false){
+        AddPaymentMethodScreen()
+    }
 }
 
 @Composable
@@ -111,10 +113,10 @@ fun CustomOutlinedTextField(
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         visualTransformation = visualTransformation,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Color(0xFF5E2A84),
-            unfocusedBorderColor = Color.Gray,
-            focusedLabelColor = Color(0xFF5E2A84),
-            cursorColor = Color(0xFF5E2A84)
+            focusedBorderColor = AppTheme.colorScheme.primary,
+            unfocusedBorderColor = AppTheme.colorScheme.background,
+            focusedLabelColor = AppTheme.colorScheme.primary,
+            cursorColor = AppTheme.colorScheme.primary
         ),
         modifier = modifier
             .fillMaxWidth()
