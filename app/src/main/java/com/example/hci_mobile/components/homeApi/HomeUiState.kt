@@ -1,8 +1,10 @@
 package com.example.hci_mobile.components.homeApi
 
 import com.example.hci_mobile.api.data.model.ApiError
+import com.example.hci_mobile.api.data.model.Balance
 import com.example.hci_mobile.api.data.model.Card
 import com.example.hci_mobile.api.data.model.User
+import com.example.hci_mobile.api.data.network.model.NetworkBalance
 
 data class HomeUiState(
     val isAuthenticated: Boolean = false,
@@ -10,7 +12,8 @@ data class HomeUiState(
     val currentUser: User? = null,
     val cards: List<Card>? = null,
     val currentCard: Card? = null,
-    val error: ApiError? = null
+    val error: ApiError? = null,
+    val balance: Balance? = null
 )
 
 val HomeUiState.canGetCurrentUser: Boolean get() = isAuthenticated

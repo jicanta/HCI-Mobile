@@ -31,6 +31,16 @@ class HomeViewModel(
     var uiState by mutableStateOf(HomeUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
         private set
 
+    fun register(firstName: String, lastName: String, birthDate: String , email: String, password: String) = runOnViewModelScope(
+        { userRepository.register(firstName, lastName, birthDate, email, password) },
+        { state, response -> state.copy(currentUser = response) }
+    )
+
+    fun verify(token: String) = runOnViewModelScope(
+        { userRepository.verify(token) },
+        { state, response -> state.copy(currentUser = response) }
+    )
+
     fun login(username: String, password: String) = runOnViewModelScope(
         { userRepository.login(username, password) },
         { state, _ -> state.copy(isAuthenticated = true) }
@@ -78,6 +88,16 @@ class HomeViewModel(
                 cards = null
             )
         }
+    )
+
+    fun getBalance() = runOnViewModelScope(
+        { walletRepository.getBalance() },
+        { state, response -> state.copy(balance = response) }
+    )
+
+    fun recharge(amount: Double) = runOnViewModelScope(
+        { walletRepository.recharge(amount)},
+        {state, _ -> state}
     )
 
     private fun <R> runOnViewModelScope(

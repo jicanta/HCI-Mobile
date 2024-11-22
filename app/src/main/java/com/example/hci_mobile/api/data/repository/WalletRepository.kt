@@ -1,5 +1,6 @@
 package com.example.hci_mobile.api.data.repository
 
+import com.example.hci_mobile.api.data.model.Balance
 import com.example.hci_mobile.api.data.model.Card
 import com.example.hci_mobile.api.data.network.WalletRemoteDataSource
 import kotlinx.coroutines.sync.Mutex
@@ -39,4 +40,14 @@ class WalletRepository(
             this.cards = emptyList()
         }
     }
+
+    suspend fun getBalance(): Balance {
+        val result =  remoteDataSource.getBalance()
+        return result.asModel()
+    }
+
+    suspend fun recharge(amount: Double) {
+        remoteDataSource.recharge(amount)
+    }
+
 }
