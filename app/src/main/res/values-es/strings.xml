@@ -64,4 +64,9 @@
     <string name="generate_payment_link_note">También podés transferir dinero desde otra cuenta bancaria.</string>
     <string name="link_note_prefix">Encontrarás tus datos</string>
     <string name="here">acá</string>
+    <string name="add_money">Ingresar dinero</string>
+    <string name="select_card">Seleccionar tarjeta</string>
+    <string name="selected_card">Tarjeta seleccionada</string>
+    <string name="enter_amount">Ingrese el monto</string>
+    <string name="enter_description">Ingrese una descripción</string>
 </resources>

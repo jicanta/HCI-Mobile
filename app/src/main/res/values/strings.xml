@@ -64,4 +64,9 @@
     <string name="generate_payment_link_note">You can also transfer money from another bank account.</string>
     <string name="link_note_prefix">You will find your data</string>
     <string name="here">here</string>
+    <string name="add_money">Add money</string>
+    <string name="select_card">Select card</string>
+    <string name="selected_card">Selected card</string>
+    <string name="enter_amount">Enter the amount</string>
+    <string name="enter_description">Enter a description</string>
 </resources>
