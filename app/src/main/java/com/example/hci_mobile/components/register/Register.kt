@@ -37,8 +37,7 @@ fun RegisterScreen(
         contentAlignment = Alignment.Center
     ) {
         RegisterCard(
-            onRegister = {
-                firstName, lastName, birthDate, email, password ->
+            onRegister = { firstName, lastName, birthDate, email, password ->
                 viewModel.register(firstName, lastName, birthDate, email, password)
             },
             onNavigateToRoute = onNavigateToRoute
@@ -54,7 +53,8 @@ fun RegisterCard(
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(0.9f)
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp) // Margen adaptativo para que se vea bien en cualquier tamaño de pantalla
             .wrapContentHeight(),
         shape = AppTheme.shape.container,
         colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary),
@@ -68,7 +68,7 @@ fun RegisterCard(
         ) {
             Text(
                 text = stringResource(R.string.welcomeRegister),
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 style = AppTheme.typography.body,
@@ -81,61 +81,53 @@ fun RegisterCard(
             var email by remember { mutableStateOf("") }
             var password by remember { mutableStateOf("") }
 
+            // Campo de Nombre
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text(
-                    text = stringResource(R.string.name),
-                    style = AppTheme.typography.body
-                ) },
+                label = { Text(text = stringResource(R.string.name), style = AppTheme.typography.body) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = AppTheme.colorScheme.onTertiary,
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
-                    disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
                     unfocusedTextColor = AppTheme.colorScheme.textColor
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Campo de Apellido
             OutlinedTextField(
                 value = lastName,
                 onValueChange = { lastName = it },
-                label = { Text(
-                    text = stringResource(R.string.lastName),
-                    style = AppTheme.typography.body
-                ) },
+                label = { Text(text = stringResource(R.string.lastName), style = AppTheme.typography.body) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = AppTheme.colorScheme.onTertiary,
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
-                    disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
                     unfocusedTextColor = AppTheme.colorScheme.textColor
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Campo de Correo Electrónico
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text(
-                    text = stringResource(R.string.email),
-                    style = AppTheme.typography.body
-                ) },
+                label = { Text(text = stringResource(R.string.email), style = AppTheme.typography.body) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = AppTheme.colorScheme.onTertiary,
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
-                    disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
                     unfocusedTextColor = AppTheme.colorScheme.textColor
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Campo de Fecha de Nacimiento
             OutlinedTextField(
                 value = birthDate,
                 onValueChange = { input ->
@@ -144,51 +136,43 @@ fun RegisterCard(
                         input.length == 7 && birthDate.length == 6 -> "$input-"
                         else -> input
                     }
-                    
                     if (formattedInput.isEmpty() || formattedInput.matches(Regex("^\\d{0,4}(-\\d{0,2}(-\\d{0,2})?)?$"))) {
                         birthDate = formattedInput
                     }
                 },
-                label = { Text(
-                    text = stringResource(R.string.birth_date),
-                    style = AppTheme.typography.body
-                ) },
+                label = { Text(text = stringResource(R.string.birth_date), style = AppTheme.typography.body) },
                 placeholder = { Text("YYYY-MM-DD") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = AppTheme.colorScheme.onTertiary,
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
-                    disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
                     unfocusedTextColor = AppTheme.colorScheme.textColor
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Campo de Contraseña
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text(
-                    text = stringResource(R.string.password),
-                    style = AppTheme.typography.body
-                ) },
+                label = { Text(text = stringResource(R.string.password), style = AppTheme.typography.body) },
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = AppTheme.colorScheme.onTertiary,
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
-                    disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
                     unfocusedTextColor = AppTheme.colorScheme.textColor
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Botón de Registro
             Button(
                 onClick = {
                     onRegister(name, lastName, birthDate, email, password)
-                    //TODO: hacer algo para ver si no dio error
                     onNavigateToRoute(AppDestinations.VERIFY.route)
                 },
                 modifier = Modifier
@@ -208,6 +192,7 @@ fun RegisterCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Botón de navegación a Iniciar Sesión
             TextButton(
                 onClick = { onNavigateToRoute(AppDestinations.LOGIN.route) }
             ) {
