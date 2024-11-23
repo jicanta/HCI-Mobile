@@ -37,10 +37,10 @@ import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun MoneyDisplay(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    availableMoney: Double = 0.0
 ){
     var isMoneyVisible by remember { mutableStateOf(true) }
-    val availableMoney = 150000.0
     val gain = 37.2
 
     val locale = LocalContext.current.resources.configuration.locales[0]

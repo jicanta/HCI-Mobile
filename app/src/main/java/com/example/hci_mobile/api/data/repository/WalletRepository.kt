@@ -2,6 +2,7 @@ package com.example.hci_mobile.api.data.repository
 
 import com.example.hci_mobile.api.data.model.Balance
 import com.example.hci_mobile.api.data.model.Card
+import com.example.hci_mobile.api.data.model.Wallet
 import com.example.hci_mobile.api.data.network.WalletRemoteDataSource
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -48,6 +49,11 @@ class WalletRepository(
 
     suspend fun recharge(amount: Double) {
         remoteDataSource.recharge(amount)
+    }
+
+    suspend fun getWalletDetails(): Wallet {
+        val result =  remoteDataSource.getWalletDetails()
+        return result.asModel()
     }
 
 }

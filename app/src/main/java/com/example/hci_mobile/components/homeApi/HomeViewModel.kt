@@ -110,6 +110,11 @@ class HomeViewModel(
         )
     }
 
+    fun getWalletDetails() = runOnViewModelScope(
+        { walletRepository.getWalletDetails() },
+        { state, response -> state.copy(wallet = response) }
+    )
+
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
         updateState: (HomeUiState, R) -> HomeUiState

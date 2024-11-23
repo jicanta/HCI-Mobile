@@ -4,6 +4,7 @@ import com.example.hci_mobile.api.data.network.api.WalletApiService
 import com.example.hci_mobile.api.data.network.model.NetworkAmount
 import com.example.hci_mobile.api.data.network.model.NetworkBalance
 import com.example.hci_mobile.api.data.network.model.NetworkCard
+import com.example.hci_mobile.api.data.network.model.NetworkWallet
 
 
 class WalletRemoteDataSource(
@@ -36,5 +37,11 @@ class WalletRemoteDataSource(
 
     suspend fun recharge(amount: Double){
         walletApiService.recharge(NetworkAmount(amount))
+    }
+
+    suspend fun getWalletDetails(): NetworkWallet {
+        return handleApiResponse {
+            walletApiService.getWalletDetails()
+        }
     }
 }

@@ -4,6 +4,7 @@ package com.example.hci_mobile.api.data.network.api
 import com.example.hci_mobile.api.data.network.model.NetworkAmount
 import com.example.hci_mobile.api.data.network.model.NetworkBalance
 import com.example.hci_mobile.api.data.network.model.NetworkCard
+import com.example.hci_mobile.api.data.network.model.NetworkWallet
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -29,4 +30,7 @@ interface WalletApiService {
 
     @POST("wallet/recharge")
     suspend fun recharge(@Body amount: NetworkAmount): Response<Unit>
+
+    @GET("wallet/details")
+    suspend fun getWalletDetails(): Response<NetworkWallet>
 }

@@ -88,4 +88,8 @@
     <string name="credit">Credit</string>
     <string name="debit">Debit</string>
     <string name="save">Save</string>
+    <string name="alias">Alias</string>
+    <string name="change_alias">Change alias</string>
+    <string name="cbu">CBU</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
 </resources>

@@ -81,11 +81,15 @@
     <string name="logout">Cerrar sesión</string>
     <string name="card_type">Tipo de tarjeta</string>
     <string name="month">Mes</string>
-    <string name="year">año</string>
+    <string name="year">Año</string>
     <string name="cvv">CVV</string>
     <string name="owner_name">Nombre del propietario</string>
     <string name="card_number">Número de tarjeta</string>
     <string name="credit">Crédito</string>
     <string name="debit">Débito</string>
     <string name="save">Guardar</string>
+    <string name="alias">Alias</string>
+    <string name="change_alias">Modificar alias</string>
+    <string name="cbu">CBU</string>
+    <string name="copied_to_clipboard">Copiado al portapapeles</string>
 </resources>
