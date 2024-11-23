@@ -234,7 +234,7 @@ fun PaymentMethodItem(
                         style = AppTheme.typography.body
                     )
                     Text(
-                        text = "Vence: ${card.expirationDate}",
+                        text = "${stringResource(R.string.expiration)}: ${card.expirationDate}",
                         color = Color.White,
                         fontSize = 12.sp,
                         style = AppTheme.typography.body
@@ -254,12 +254,12 @@ fun PaymentMethodItem(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Eliminar tarjeta",
+                        contentDescription = stringResource(R.string.delete_card),
                         tint = Color.White
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Eliminar tarjeta",
+                        text = stringResource(R.string.delete_card),
                         color = Color.White
                     )
                 }
