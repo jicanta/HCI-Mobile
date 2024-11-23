@@ -57,7 +57,7 @@ fun AccountCard() {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            AccountItem(label = stringResource(R.string.fullName), value = "Juan Pablo Birsa")
+            AccountItem(label = stringResource(R.string.full_name), value = "Juan Pablo Birsa")
             AccountItem(label = stringResource(R.string.userName), value = "jpincha2009")
             AccountItem(
                 label = "CVU",

@@ -1,9 +1,7 @@
-package com.example.hci_mobile.components.AddMoney
+package com.example.hci_mobile.components.deposit_money
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,7 +10,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,7 +21,7 @@ import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
 
 @Composable
-fun AddMoneyScreen(
+fun DepositMoneyScreen(
     onNavigateBack: () -> Unit,
     cards: List<String>,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
@@ -44,7 +41,7 @@ fun AddMoneyScreen(
                 .background(AppTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            AddMoneyCard(
+            DepositMoneyCard(
                 cards = listOf(stringResource(R.string.external_funds)) + cards,
                 onRecharge = {
                     viewModel.recharge(it)
@@ -56,7 +53,7 @@ fun AddMoneyScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddMoneyCard(
+fun DepositMoneyCard(
     modifier: Modifier = Modifier,
     cards: List<String>,
     onRecharge: (Double) -> Unit
@@ -188,9 +185,9 @@ fun AddMoneyCard(
 
 @Preview
 @Composable
-fun AddMoneyScreenPreview() {
+fun DepositMoneyScreenPreview() {
     val cards = listOf("Tarjeta 1", "Tarjeta 2", "Tarjeta 3")
     AppTheme(darkTheme = false) {
-        AddMoneyScreen(onNavigateBack = {}, cards = cards)
+        DepositMoneyScreen(onNavigateBack = {}, cards = cards)
     }
 }

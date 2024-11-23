@@ -16,6 +16,8 @@ import kotlinx.coroutines.launch
 import com.example.hci_mobile.api.data.model.Card
 import com.example.hci_mobile.api.data.model.ApiError
 import com.example.hci_mobile.api.data.DataSourceException
+import com.example.hci_mobile.api.data.repository.PaymentRepository
+import com.example.hci_mobile.api.data.network.model.PaymentType
 
 private val Throwable.code: Int?    //TODO: a chequear si esta bien, lo
     get() {
@@ -25,7 +27,8 @@ private val Throwable.code: Int?    //TODO: a chequear si esta bien, lo
 class HomeViewModel(
     sessionManager: SessionManager,
     private val userRepository: UserRepository,
-    private val walletRepository: WalletRepository
+    private val walletRepository: WalletRepository,
+    private val paymentRepository: PaymentRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf(HomeUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
@@ -100,6 +103,13 @@ class HomeViewModel(
         {state, _ -> state}
     )
 
+    fun makePayment(amount: Double, description: String, type: PaymentType, cardId: Int? = null, receiverEmail: String? = null) {
+        runOnViewModelScope(
+            { paymentRepository.makePayment(amount, description, type, cardId, receiverEmail) },
+            {state, _ -> state}
+        )
+    }
+
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
         updateState: (HomeUiState, R) -> HomeUiState
@@ -134,7 +144,8 @@ class HomeViewModel(
                 return HomeViewModel(
                     application.sessionManager,
                     application.userRepository,
-                    application.walletRepository) as T
+                    application.walletRepository,
+                    application.paymentRepository) as T
             }
         }
     }

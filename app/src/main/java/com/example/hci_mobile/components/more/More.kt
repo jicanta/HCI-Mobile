@@ -1,74 +1,31 @@
 package com.example.hci_mobile.components.more
-import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.hci_mobile.MyApplication
 import com.example.hci_mobile.R
-import com.example.hci_mobile.ui.theme.White
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.material3.Divider
-import androidx.compose.material3.IconButton
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.ui.text.input.ImeAction
-import com.example.hci_mobile.ui.theme.AppTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.navigation.compose.rememberNavController
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.ui.res.stringResource
 import com.example.hci_mobile.components.bottom_bar.BottomBar
-import com.example.hci_mobile.components.top_bar.TopBar
-import java.util.Locale
-import androidx.compose.runtime.mutableStateListOf
+import com.example.hci_mobile.components.homeApi.HomeViewModel
+import com.example.hci_mobile.components.navigation.AppDestinations
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
-
-// Primero creamos una data class para los campos editables
-data class EditableField(
-    val id: String,
-    val label: String,
-    var value: String,
-    val icon: ImageVector = Icons.Default.Edit
-)
+import com.example.hci_mobile.ui.theme.AppTheme
+import kotlinx.coroutines.delay
+import java.util.Locale
+import java.text.SimpleDateFormat
 
 @Composable
 fun SettingsScreen(
@@ -79,32 +36,17 @@ fun SettingsScreen(
     onThemeUpdated: (Boolean) -> Unit,
     currentLocale: Locale,
     onLanguageChanged: (Locale) -> Unit,
-    onNavigateBack: () -> Unit = {}
+    onNavigateBack: () -> Unit = {},
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
-    var editingStates = remember { mutableStateMapOf<String, Boolean>() }
+    val uiState = viewModel.uiState
     var showLanguageDialog by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(true) }
     
-    val editableFields = remember {
-        mutableStateListOf(
-            EditableField(
-                id = "name",
-                label = "Nombre",
-                value = "Juan Pablo Birsa",
-                icon = Icons.Default.Person
-            ),
-            EditableField(
-                id = "email",
-                label = "Email",
-                value = "jpbirsa@itba.edu.ar",
-                icon = Icons.Default.Email
-            ),
-            EditableField(
-                id = "phone",
-                label = "Teléfono",
-                value = "+54 9 11 1234-5678",
-                icon = Icons.Default.Phone
-            )
-        )
+    LaunchedEffect(Unit) {
+        viewModel.getCurrentUser()
+        delay(1000)
+        isLoading = false
     }
 
     Scaffold(
@@ -112,31 +54,11 @@ fun SettingsScreen(
         bottomBar = { BottomBar(currentRoute = currentRoute, onNavigateToRoute = onNavigateToRoute) }
     ) { paddingValues ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .background(AppTheme.colorScheme.background)
-                .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
         ) {
-            // Renderizar campos editables
-            editableFields.forEach { field ->
-                EditableItem(
-                    label = field.label,
-                    value = field.value,
-                    isEditing = editingStates[field.id] ?: false,
-                    onEditClick = { editingStates[field.id] = true },
-                    onValueChange = { newValue -> 
-                        val index = editableFields.indexOfFirst { it.id == field.id }
-                        if (index != -1) {
-                            editableFields[index] = field.copy(value = newValue)
-                        }
-                    },
-                    onDone = { editingStates[field.id] = false }
-                )
-                Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
-            }
-
-            // Modo oscuro
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -151,16 +73,15 @@ fun SettingsScreen(
                 )
                 Switch(
                     checked = darkTheme,
-                    onCheckedChange = { onThemeUpdated(it) },
+                    onCheckedChange = onThemeUpdated,
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = AppTheme.colorScheme.primary,
                         uncheckedThumbColor = AppTheme.colorScheme.background
                     )
                 )
             }
-            HorizontalDivider(thickness = 1.dp, color = AppTheme.colorScheme.onSecondary)
+            Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
 
-            // Selector de idioma
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -175,7 +96,8 @@ fun SettingsScreen(
                     style = AppTheme.typography.body
                 )
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
                         text = when (currentLocale.language) {
@@ -194,10 +116,84 @@ fun SettingsScreen(
                 }
             }
             Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { 
+                        viewModel.logout()
+                        onNavigateToRoute(AppDestinations.LOGIN.route)
+                    }
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(R.string.logout),
+                    color = AppTheme.colorScheme.tertiary,
+                    style = AppTheme.typography.body
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = null,
+                    tint = AppTheme.colorScheme.tertiary
+                )
+            }
+            Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
+
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.CenterHorizontally),
+                    color = AppTheme.colorScheme.primary
+                )
+            } else if (uiState.currentUser == null) {
+                Text(
+                    text = "No se pudieron cargar los datos del usuario",
+                    modifier = Modifier.padding(16.dp),
+                    color = AppTheme.colorScheme.tertiary
+                )
+            } else {
+                uiState.currentUser?.let { user ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = AppTheme.colorScheme.secondary
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            UserInfoItem(
+                                label = stringResource(R.string.full_name),
+                                value = "${user.firstName} ${user.lastName}"
+                            )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                color = AppTheme.colorScheme.onSecondary
+                            )
+                            UserInfoItem(
+                                label = stringResource(R.string.email),
+                                value = user.email
+                            )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                color = AppTheme.colorScheme.onSecondary
+                            )
+                            UserInfoItem(
+                                label = stringResource(R.string.birth_date),
+                                value = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(user.birthDate)
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 
-    // Diálogo de idioma (mantener el código existente)
     if (showLanguageDialog) {
         AlertDialog(
             onDismissRequest = { showLanguageDialog = false },
@@ -225,7 +221,7 @@ fun SettingsScreen(
             confirmButton = {},
             dismissButton = {
                 TextButton(onClick = { showLanguageDialog = false }) {
-                    Text("Cancelar")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -233,67 +229,29 @@ fun SettingsScreen(
 }
 
 @Composable
-private fun EditableItem(
+private fun UserInfoItem(
     label: String,
-    value: String,
-    isEditing: Boolean,
-    onEditClick: () -> Unit,
-    onValueChange: (String) -> Unit,
-    onDone: () -> Unit
+    value: String
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = label,
-            color = AppTheme.colorScheme.textColor,
             style = AppTheme.typography.body,
+            color = AppTheme.colorScheme.secondary,
             modifier = Modifier.weight(1f)
         )
-        
-        if (isEditing) {
-            OutlinedTextField(
-                value = value,
-                onValueChange = onValueChange,
-                singleLine = true,
-                modifier = Modifier
-                    .weight(2f)
-                    .height(50.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    cursorColor = AppTheme.colorScheme.primary,
-                    focusedBorderColor = AppTheme.colorScheme.primary,
-                    focusedContainerColor = AppTheme.colorScheme.onTertiary,
-                    unfocusedContainerColor = AppTheme.colorScheme.onTertiary
-                ),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { onDone() }),
-                textStyle = AppTheme.typography.body
-            )
-        } else {
-            Row(
-                modifier = Modifier.weight(2f),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = value,
-                    color = AppTheme.colorScheme.textColor,
-                    style = AppTheme.typography.body,
-                    modifier = Modifier.weight(1f)
-                )
-                IconButton(onClick = onEditClick) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Editar $label",
-                        tint = Color(0xFF5A2A82)
-                    )
-                }
-            }
-        }
+        Text(
+            text = value,
+            style = AppTheme.typography.body,
+            color = AppTheme.colorScheme.secondary,
+            modifier = Modifier.weight(2f)
+        )
     }
 }
 

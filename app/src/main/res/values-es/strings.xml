@@ -29,7 +29,7 @@
     <string name="loading_failed">Carga fallida</string>
     <string name="loading">Cargando</string>
     <string name="copy">Copiar</string>
-    <string name="fullName">Nombre completo</string>
+    <string name="full_name">Nombre completo</string>
     <string name="userName">Nombre de usuario</string>
     <string name="phoneNumber">Número de telefono</string>
     <string name="password">Contraseña</string>
@@ -75,4 +75,17 @@
     <string name="external_funds">Fuentes externas</string>
     <string name="verify_title">Verificá tu cuenta! Ingresa el token que recibiste en tu mail</string>
     <string name="token">Token</string>
+    <string name="payment_link">Link de pago</string>
+    <string name="account_balance">Balance en la cuenta</string>
+    <string name="cancel">Cancelar</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="card_type">Tipo de tarjeta</string>
+    <string name="month">Mes</string>
+    <string name="year">año</string>
+    <string name="cvv">CVV</string>
+    <string name="owner_name">Nombre del propietario</string>
+    <string name="card_number">Número de tarjeta</string>
+    <string name="credit">Crédito</string>
+    <string name="debit">Débito</string>
+    <string name="save">Guardar</string>
 </resources>

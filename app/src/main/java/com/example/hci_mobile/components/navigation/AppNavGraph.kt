@@ -1,22 +1,25 @@
 package com.example.hci_mobile.components.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.hci_mobile.components.AddMoney.AddMoneyScreen
+import com.example.hci_mobile.MyApplication
 import com.example.hci_mobile.components.PaymentMethods.AddPaymentMethodScreen
 import com.example.hci_mobile.components.PaymentMethods.PaymentMethodsScreen
+import com.example.hci_mobile.components.deposit_money.DepositMoneyScreen
+import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.home_screen.HomeScreen
 import com.example.hci_mobile.components.login.LoginScreen
 import com.example.hci_mobile.components.more.SettingsScreen
 import com.example.hci_mobile.components.movements.MovementsScreen
 import com.example.hci_mobile.components.my_data.AccountDataScreen
 import com.example.hci_mobile.components.register.RegisterScreen
+import com.example.hci_mobile.components.send.SendScreen
 import com.example.hci_mobile.components.verify.VerifyScreen
 import java.util.Locale
 
@@ -28,18 +31,28 @@ fun AppNavGraph(
     currentLocale: Locale,
     onLanguageChanged: (Locale) -> Unit,
     onNavigateToRoute: (String) -> Unit = {},
-    currentRoute: String? = null
+    currentRoute: String? = null,
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
 ) {
-    // Definir la función de navegación hacia atrás
+    val uiState = viewModel.uiState
+
     val onNavigateBack: () -> Unit = {
         navController.popBackStack()
     }
 
+    var startDestination = AppDestinations.LOGIN.route
+
+    if(uiState.isAuthenticated){
+        startDestination = AppDestinations.HOME.route
+    }
+
+
     NavHost(
         navController = navController,
-        startDestination = AppDestinations.LOGIN.route,
+        startDestination = startDestination,
         modifier = Modifier
     ) {
+
         composable(route = AppDestinations.HOME.route) {
             HomeScreen(
                 onNavigateToRoute = onNavigateToRoute, 
@@ -75,7 +88,7 @@ fun AppNavGraph(
             AccountDataScreen(onNavigateBack = onNavigateBack)
         }
         composable(route = AppDestinations.DEPOSIT.route) {
-            AddMoneyScreen(
+            DepositMoneyScreen(
                 onNavigateBack = onNavigateBack,
                 cards = listOf()  //TODO: poner la lista de las tarjetas
             )
@@ -90,7 +103,7 @@ fun AppNavGraph(
             RegisterScreen(onNavigateToRoute = onNavigateToRoute)
         }
         composable(route = AppDestinations.SEND.route) {
-            Text(text = "Send")
+            SendScreen(onNavigateBack = onNavigateBack, cards = listOf())
         }
         composable(route = AppDestinations.VERIFY.route) {
             VerifyScreen(onNavigateToRoute = onNavigateToRoute)

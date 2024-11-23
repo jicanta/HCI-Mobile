@@ -29,7 +29,7 @@
     <string name="loading_failed">Loading failed</string>
     <string name="loading">Loading</string>
     <string name="copy">Copy</string>
-    <string name="fullName">Full name</string>
+    <string name="full_name">Full name</string>
     <string name="userName">User name</string>
     <string name="phoneNumber">Phone number</string>
     <string name="password">Password</string>
@@ -58,7 +58,7 @@
     </string>
     <string name="generate_payment_link">Insert Amount</string>
     <string name="generate_payment_link_title">Generate payment link</string>
-    <string name="amount">amount</string>
+    <string name="amount">Amount</string>
     <string name="description">Description</string>
     <string name="generate">Generate</string>
     <string name="generate_payment_link_note">You can also transfer money from another bank account.</string>
@@ -75,4 +75,17 @@
     <string name="external_funds">External funds</string>
     <string name="verify_title">Verify your account! Enter the token you just received in your email</string>
     <string name="token">Token</string>
+    <string name="payment_link">Payment link</string>
+    <string name="account_balance">Account balance</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout">Logout</string>
+    <string name="card_type">Card type</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="cvv">CVV</string>
+    <string name="owner_name">Owner´s name</string>
+    <string name="card_number">Card number</string>
+    <string name="credit">Credit</string>
+    <string name="debit">Debit</string>
+    <string name="save">Save</string>
 </resources>
