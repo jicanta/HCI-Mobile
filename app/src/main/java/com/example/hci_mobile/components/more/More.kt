@@ -1,5 +1,6 @@
 package com.example.hci_mobile.components.more
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,11 +24,11 @@ import com.example.hci_mobile.components.bottom_bar.BottomBar
 import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.navigation.AppDestinations
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
+import com.example.hci_mobile.components.verticalBar.VerticalBar
 import com.example.hci_mobile.ui.theme.AppTheme
 import kotlinx.coroutines.delay
 import java.util.Locale
 import java.text.SimpleDateFormat
-
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
@@ -42,7 +44,10 @@ fun SettingsScreen(
     val uiState = viewModel.uiState
     var showLanguageDialog by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
-    
+
+    // Detectar orientación
+    val isPortrait = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+
     LaunchedEffect(Unit) {
         viewModel.getCurrentUser()
         delay(1000)
@@ -51,142 +56,164 @@ fun SettingsScreen(
 
     Scaffold(
         topBar = { TopBarWithBack(R.string.customize, onNavigateBack = onNavigateBack) },
-        bottomBar = { BottomBar(currentRoute = currentRoute, onNavigateToRoute = onNavigateToRoute) }
+        bottomBar = {
+            if (isPortrait) {
+                BottomBar(currentRoute = currentRoute, onNavigateToRoute = onNavigateToRoute)
+            }
+        }
     ) { paddingValues ->
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxSize()
-                .background(AppTheme.colorScheme.background)
-                .padding(paddingValues)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(R.string.dark_mode),
-                    color = AppTheme.colorScheme.textColor,
-                    style = AppTheme.typography.body
-                )
-                Switch(
-                    checked = darkTheme,
-                    onCheckedChange = onThemeUpdated,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = AppTheme.colorScheme.primary,
-                        uncheckedThumbColor = AppTheme.colorScheme.background
-                    )
+            // Mostrar la barra vertical solo en modo horizontal
+            if (!isPortrait) {
+                VerticalBar(
+                    currentRoute = currentRoute,
+                    onNavigateToRoute = onNavigateToRoute,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(paddingValues) // Aplicar el padding calculado por el Scaffold
+                        .width(80.dp) // Ancho fijo para la barra lateral
                 )
             }
-            Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
 
-            Row(
+            // Contenido principal
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { showLanguageDialog = true }
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .padding(paddingValues) // Aplica el padding general para evitar superposición
             ) {
-                Text(
-                    text = stringResource(R.string.language),
-                    color = AppTheme.colorScheme.textColor,
-                    style = AppTheme.typography.body
-                )
                 Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = when (currentLocale.language) {
-                            "es" -> "Español"
-                            "en" -> "English"
-                            else -> "Español"
-                        },
+                        text = stringResource(R.string.dark_mode),
                         color = AppTheme.colorScheme.textColor,
+                        style = AppTheme.typography.body
+                    )
+                    Switch(
+                        checked = darkTheme,
+                        onCheckedChange = onThemeUpdated,
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = AppTheme.colorScheme.primary,
+                            uncheckedThumbColor = AppTheme.colorScheme.background
+                        )
+                    )
+                }
+                Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showLanguageDialog = true }
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.language),
+                        color = AppTheme.colorScheme.textColor,
+                        style = AppTheme.typography.body
+                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = when (currentLocale.language) {
+                                "es" -> "Español"
+                                "en" -> "English"
+                                else -> "Español"
+                            },
+                            color = AppTheme.colorScheme.textColor,
+                            style = AppTheme.typography.body
+                        )
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = null,
+                            tint = AppTheme.colorScheme.primary
+                        )
+                    }
+                }
+                Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            viewModel.logout()
+                            onNavigateToRoute(AppDestinations.LOGIN.route)
+                        }
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.logout),
+                        color = AppTheme.colorScheme.tertiary,
                         style = AppTheme.typography.body
                     )
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
-                        tint = AppTheme.colorScheme.primary
+                        tint = AppTheme.colorScheme.tertiary
                     )
                 }
-            }
-            Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
+                Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { 
-                        viewModel.logout()
-                        onNavigateToRoute(AppDestinations.LOGIN.route)
-                    }
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(R.string.logout),
-                    color = AppTheme.colorScheme.tertiary,
-                    style = AppTheme.typography.body
-                )
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = null,
-                    tint = AppTheme.colorScheme.tertiary
-                )
-            }
-            Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
-
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .align(Alignment.CenterHorizontally),
-                    color = AppTheme.colorScheme.primary
-                )
-            } else if (uiState.currentUser == null) {
-                Text(
-                    text = "No se pudieron cargar los datos del usuario",
-                    modifier = Modifier.padding(16.dp),
-                    color = AppTheme.colorScheme.tertiary
-                )
-            } else {
-                uiState.currentUser?.let { user ->
-                    Card(
+                if (isLoading) {
+                    CircularProgressIndicator(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = AppTheme.colorScheme.secondary
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
+                            .padding(16.dp)
+                            .align(Alignment.CenterHorizontally),
+                        color = AppTheme.colorScheme.primary
+                    )
+                } else if (uiState.currentUser == null) {
+                    Text(
+                        text = "No se pudieron cargar los datos del usuario",
+                        modifier = Modifier.padding(16.dp),
+                        color = AppTheme.colorScheme.tertiary
+                    )
+                } else {
+                    uiState.currentUser?.let { user ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = AppTheme.colorScheme.secondary
+                            )
                         ) {
-                            UserInfoItem(
-                                label = stringResource(R.string.full_name),
-                                value = "${user.firstName} ${user.lastName}"
-                            )
-                            Divider(
-                                modifier = Modifier.padding(vertical = 8.dp),
-                                color = AppTheme.colorScheme.onSecondary
-                            )
-                            UserInfoItem(
-                                label = stringResource(R.string.email),
-                                value = user.email
-                            )
-                            Divider(
-                                modifier = Modifier.padding(vertical = 8.dp),
-                                color = AppTheme.colorScheme.onSecondary
-                            )
-                            UserInfoItem(
-                                label = stringResource(R.string.birth_date),
-                                value = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(user.birthDate)
-                            )
+                            Column(
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                UserInfoItem(
+                                    label = stringResource(R.string.full_name),
+                                    value = "${user.firstName} ${user.lastName}"
+                                )
+                                Divider(
+                                    modifier = Modifier.padding(vertical = 8.dp),
+                                    color = AppTheme.colorScheme.onSecondary
+                                )
+                                UserInfoItem(
+                                    label = stringResource(R.string.email),
+                                    value = user.email
+                                )
+                                Divider(
+                                    modifier = Modifier.padding(vertical = 8.dp),
+                                    color = AppTheme.colorScheme.onSecondary
+                                )
+                                UserInfoItem(
+                                    label = stringResource(R.string.birth_date),
+                                    value = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(user.birthDate)
+                                )
+                            }
                         }
                     }
                 }
@@ -227,6 +254,8 @@ fun SettingsScreen(
         )
     }
 }
+
+
 
 @Composable
 private fun UserInfoItem(
