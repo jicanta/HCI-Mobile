@@ -25,20 +25,29 @@ import com.example.hci_mobile.components.navigation.AppDestinations
 import com.example.hci_mobile.components.register.RegisterCard
 import com.example.hci_mobile.components.top_bar.TopBar
 import com.example.hci_mobile.ui.theme.AppTheme
-
 @Composable
 fun LoginScreen(
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
     onNavigateToRoute: (String) -> Unit = {}
 ) {
     val uiState = viewModel.uiState
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(AppTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
+        val isTablet = maxWidth > 600.dp // Detectar pantallas más anchas
         LoginCard(
+            modifier = if (isTablet) {
+                Modifier
+                    .fillMaxWidth(0.5f) // Más ancho en tablets
+                    .wrapContentHeight()
+            } else {
+                Modifier
+                    .fillMaxWidth(0.9f)
+                    .wrapContentHeight()
+            },
             onLogin = { email, password ->
                 viewModel.login(email, password)
             },
@@ -57,9 +66,7 @@ fun LoginCard(
     var password by remember { mutableStateOf("") }
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth(0.9f)
-            .wrapContentHeight(),
+        modifier = modifier, // Modificador dinámico para diferentes dispositivos
         shape = AppTheme.shape.container,
         colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -67,12 +74,12 @@ fun LoginCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(24.dp), // Padding aumentado para tablets
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = stringResource(R.string.welcome_login),
-                fontSize = 16.sp,
+                fontSize = if (modifier.fillMaxWidth(0.5f) != Modifier) 20.sp else 16.sp, // Tamaño más grande en tablets
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 style = AppTheme.typography.body,
@@ -145,7 +152,7 @@ fun LoginCard(
                 onClick = {
                     onLogin(email, password)
                     onNavigateToRoute(AppDestinations.HOME.route)
-                          },
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -177,6 +184,7 @@ fun LoginCard(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
