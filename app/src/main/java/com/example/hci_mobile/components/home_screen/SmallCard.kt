@@ -46,7 +46,7 @@ fun SmallCard(
             )
             Icon(
                 painter = painterResource(id = getCardIcon(type)),
-                contentDescription = "Ícono de $type",
+                contentDescription = null,
                 modifier = Modifier.size(36.dp),
                 tint = Color.Unspecified
             )

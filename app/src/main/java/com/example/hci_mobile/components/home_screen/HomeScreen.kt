@@ -132,12 +132,13 @@ fun CardContainer(
             // Mostrar las tarjetas usando SmallCard
             uiState.cards?.take(3)?.forEach { card ->
                 SmallCard(
-                    number = "****-${card.number.takeLast(4)}",
+                    number = "**** ${card.number.takeLast(4)}",
                     type = getCardType(card.number),
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
-
+            
+            // Texto clickeable "Ver todos los medios de pago"
             Text(
                 text = stringResource(R.string.view_all_payment_methods),
                 style = AppTheme.typography.body.copy(

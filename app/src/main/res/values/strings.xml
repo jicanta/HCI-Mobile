@@ -92,5 +92,7 @@
     <string name="change_alias">Change alias</string>
     <string name="cbu">CBU</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
-    <string name="view_all_payment_methods">View all payment methods</string>
+    <string name="view_all_payment_methods">View all</string>
+    <string name="delete_card">Eliminar método de pago</string>
+    <string name="expires">Vence en</string>
 </resources>
