@@ -27,7 +27,8 @@ enum class AppDestinations(
     LOGIN(R.string.login, null, "login"),
     ADDCARD(R.string.add_card, null, "addCard"),
     REGISTER(R.string.register, null, "register"),
-    SEND(R.string.send, Icons.Default.ArrowForward, "send");
+    SEND(R.string.send, Icons.Default.ArrowForward, "send"),
+    VERIFY(R.string.verify,null,"verify");
 
     companion object {
         fun isTabRoute(route: String): Boolean {

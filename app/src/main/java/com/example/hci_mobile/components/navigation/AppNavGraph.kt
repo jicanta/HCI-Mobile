@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.hci_mobile.components.AddMoney.AddMoneyScreen
 import com.example.hci_mobile.components.PaymentMethods.AddPaymentMethodScreen
 import com.example.hci_mobile.components.PaymentMethods.PaymentMethodsScreen
 import com.example.hci_mobile.components.home_screen.HomeScreen
@@ -15,6 +16,8 @@ import com.example.hci_mobile.components.login.LoginScreen
 import com.example.hci_mobile.components.more.SettingsScreen
 import com.example.hci_mobile.components.movements.MovementsScreen
 import com.example.hci_mobile.components.my_data.AccountDataScreen
+import com.example.hci_mobile.components.register.RegisterScreen
+import com.example.hci_mobile.components.verify.VerifyScreen
 import java.util.Locale
 
 @Composable
@@ -34,7 +37,7 @@ fun AppNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = AppDestinations.HOME.route,
+        startDestination = AppDestinations.LOGIN.route,
         modifier = Modifier
     ) {
         composable(route = AppDestinations.HOME.route) {
@@ -72,19 +75,27 @@ fun AppNavGraph(
             AccountDataScreen(onNavigateBack = onNavigateBack)
         }
         composable(route = AppDestinations.DEPOSIT.route) {
-            Text(text = "Deposit")
+            AddMoneyScreen(
+                onNavigateBack = onNavigateBack,
+                cards = listOf()  //TODO: poner la lista de las tarjetas
+            )
         }
         composable(route = AppDestinations.LOGIN.route) {
-            LoginScreen()
+            LoginScreen(onNavigateToRoute = onNavigateToRoute)
         }
         composable(route = AppDestinations.ADDCARD.route) {
             AddPaymentMethodScreen(onNavigateBack = onNavigateBack)
         }
         composable(route = AppDestinations.REGISTER.route) {
-            Text(text = "Register")
+            RegisterScreen(onNavigateToRoute = onNavigateToRoute)
         }
         composable(route = AppDestinations.SEND.route) {
             Text(text = "Send")
         }
+        composable(route = AppDestinations.VERIFY.route) {
+            VerifyScreen(onNavigateToRoute = onNavigateToRoute)
+        }
+
+
     }
 }
