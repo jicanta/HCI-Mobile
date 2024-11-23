@@ -45,6 +45,19 @@ import com.example.hci_mobile.ui.theme.AppTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.text.style.TextAlign
 
 
 @Composable
@@ -86,13 +99,19 @@ fun PaymentMethodsScreenPreview() {
 fun PaymentMethodList(
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
+    var selectedCard by remember { mutableStateOf<Card?>(null) }
     val uiState = viewModel.uiState
+    var cards by remember { mutableStateOf<List<Card>>(emptyList()) }
     
+    // Initial load of cards
     LaunchedEffect(Unit) {
         viewModel.getCards()
-        while(true) {
-            delay(30000) // 30 segundos
-            viewModel.getCards()
+    }
+
+    // Update local cards list when uiState.cards changes
+    LaunchedEffect(uiState.cards) {
+        uiState.cards?.let {
+            cards = it
         }
     }
     
@@ -108,10 +127,58 @@ fun PaymentMethodList(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            uiState.cards?.forEach { card ->
-                PaymentMethodItem(card)
-                if (card != uiState.cards.last()) {
-                    Spacer(modifier = Modifier.height(8.dp))
+            AnimatedVisibility(
+                visible = cards.isEmpty(),
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                Text(
+                    text = "No tienes tarjetas registradas",
+                    style = AppTheme.typography.body,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+            
+            AnimatedContent(
+                targetState = cards,
+                transitionSpec = {
+                    fadeIn() + slideInVertically() togetherWith
+                    fadeOut() + slideOutVertically()
+                }
+            ) { currentCards ->
+                Column {
+                    currentCards.forEach { card ->
+                        AnimatedVisibility(
+                            visible = true,
+                            enter = fadeIn() + expandVertically(),
+                            exit = fadeOut() + shrinkVertically()
+                        ) {
+                            Column {
+                                PaymentMethodItem(
+                                    card = card,
+                                    isSelected = selectedCard == card,
+                                    onCardClick = { 
+                                        selectedCard = if (selectedCard == card) null else card 
+                                    },
+                                    onDeleteCard = {
+                                        card.id?.let { cardId ->
+                                            // Update local state immediately
+                                            cards = cards.filter { it.id != cardId }
+                                            selectedCard = null
+                                            // Then update backend
+                                            viewModel.deleteCard(cardId)
+                                        }
+                                    }
+                                )
+                                if (card != currentCards.last()) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -119,50 +186,84 @@ fun PaymentMethodList(
 }
 
 @Composable
-fun PaymentMethodItem(card: Card) {
+fun PaymentMethodItem(
+    card: Card,
+    isSelected: Boolean,
+    onCardClick: () -> Unit,
+    onDeleteCard: () -> Unit
+) {
     val cardType = getCardType(card.number)
+    val cardElevation = if (isSelected) 12.dp else 4.dp
     
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .background(getCardColor(type = cardType), AppTheme.shape.container)
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .clickable { onCardClick() },
+        shape = AppTheme.shape.container,
+        colors = CardDefaults.cardColors(containerColor = getCardColor(type = cardType)),
+        elevation = CardDefaults.cardElevation(defaultElevation = cardElevation)
     ) {
-        Icon(
-            painter = painterResource(id = getCardIcon(type = cardType)),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = formatCardNumber(card.number),
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                style = AppTheme.typography.body
-            )
-            Text(
-                text = card.fullName,
-                color = Color.White,
-                fontSize = 14.sp,
-                style = AppTheme.typography.body
-            )
-            Text(
-                text = "Vence: ${card.expirationDate}",
-                color = Color.White,
-                fontSize = 12.sp,
-                style = AppTheme.typography.body
-            )
-        }
-        IconButton(onClick = { /* TODO: Implementar eliminación */ }) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "Eliminar método de pago",
-                tint = Color.White
-            )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = getCardIcon(type = cardType)),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = formatCardNumber(card.number),
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        style = AppTheme.typography.body
+                    )
+                    Text(
+                        text = card.fullName,
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        style = AppTheme.typography.body
+                    )
+                    Text(
+                        text = "Vence: ${card.expirationDate}",
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        style = AppTheme.typography.body
+                    )
+                }
+            }
+            
+            AnimatedVisibility(visible = isSelected) {
+                Button(
+                    onClick = onDeleteCard,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Red.copy(alpha = 0.8f)
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Eliminar tarjeta",
+                        tint = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Eliminar tarjeta",
+                        color = Color.White
+                    )
+                }
+            }
         }
     }
 }
