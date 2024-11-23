@@ -205,6 +205,20 @@ fun RegisterCard(
                     style = AppTheme.typography.body
                 )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextButton(
+                onClick = { onNavigateToRoute(AppDestinations.LOGIN.route) }
+            ) {
+                Text(
+                    text = stringResource(R.string.login),
+                    color = AppTheme.colorScheme.primary,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    style = AppTheme.typography.body
+                )
+            }
         }
     }
 }
