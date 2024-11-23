@@ -185,7 +185,6 @@ fun LoginCard(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
