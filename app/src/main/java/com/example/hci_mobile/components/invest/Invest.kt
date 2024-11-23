@@ -21,45 +21,23 @@ fun InvestmentScreen(onNavigateBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopBarWithBack(
-                title = R.string.investment, // Título de la pantalla desde los recursos
-                onNavigateBack = onNavigateBack // Acción para navegar hacia atrás
+                title = R.string.investment,
+                onNavigateBack = onNavigateBack
             )
         }
     ) { paddingValues ->
-        Column(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues) // Padding del scaffold
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
+                .padding(paddingValues)
         ) {
-            // Sección: Introducción
-            InvestmentHeader()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Sección: Inversión actual
-            CurrentInvestmentSection()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Sección: Invertir
-            InvestmentActionSection(
-                title = stringResource(id = R.string.invest),
-                inputHint = stringResource(id = R.string.amount_to_invest),
-                available = stringResource(id = R.string.available_amount, "$3000.00"),
-                buttonText = stringResource(id = R.string.invest)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Sección: Rescate
-            InvestmentActionSection(
-                title = stringResource(id = R.string.rescue),
-                inputHint = stringResource(id = R.string.amount_to_rescue),
-                available = stringResource(id = R.string.available_amount, "$8442.56"),
-                buttonText = stringResource(id = R.string.rescue)
-            )
+            if (maxWidth < 600.dp) {
+                // Para pantallas pequeñas (teléfonos)
+                InvestmentContentSingleColumn()
+            } else {
+                // Para pantallas grandes (tabletas)
+                InvestmentContentTwoColumns()
+            }
         }
     }
 }
@@ -170,3 +148,76 @@ fun InvestmentActionSection(
         }
     }
 }
+
+
+
+@Composable
+fun InvestmentContentSingleColumn() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        InvestmentHeader()
+        Spacer(modifier = Modifier.height(16.dp))
+        CurrentInvestmentSection()
+        Spacer(modifier = Modifier.height(16.dp))
+        InvestmentActionSection(
+            title = stringResource(id = R.string.invest),
+            inputHint = stringResource(id = R.string.amount_to_invest),
+            available = stringResource(id = R.string.available_amount, "$3000.00"),
+            buttonText = stringResource(id = R.string.invest)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        InvestmentActionSection(
+            title = stringResource(id = R.string.rescue),
+            inputHint = stringResource(id = R.string.amount_to_rescue),
+            available = stringResource(id = R.string.available_amount, "$8442.56"),
+            buttonText = stringResource(id = R.string.rescue)
+        )
+    }
+}
+
+@Composable
+fun InvestmentContentTwoColumns() {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp), // Más padding para aprovechar el espacio en tablets
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Columna izquierda
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
+            InvestmentHeader()
+            Spacer(modifier = Modifier.height(16.dp))
+            CurrentInvestmentSection()
+        }
+
+        // Columna derecha
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
+            InvestmentActionSection(
+                title = stringResource(id = R.string.invest),
+                inputHint = stringResource(id = R.string.amount_to_invest),
+                available = stringResource(id = R.string.available_amount, "$3000.00"),
+                buttonText = stringResource(id = R.string.invest)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            InvestmentActionSection(
+                title = stringResource(id = R.string.rescue),
+                inputHint = stringResource(id = R.string.amount_to_rescue),
+                available = stringResource(id = R.string.available_amount, "$8442.56"),
+                buttonText = stringResource(id = R.string.rescue)
+            )
+        }
+    }
+}
+
