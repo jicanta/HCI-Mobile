@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,23 +30,31 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.hci_mobile.MyApplication
 import com.example.hci_mobile.R
+import com.example.hci_mobile.api.data.model.Card
 import com.example.hci_mobile.components.bottom_bar.BottomBar
+import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.home_screen.getCardColor
 import com.example.hci_mobile.components.home_screen.getCardIcon
 import com.example.hci_mobile.components.navigation.AppDestinations
 import com.example.hci_mobile.components.top_bar.TopBar
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.LaunchedEffect
 
 
 @Composable
 fun PaymentMethodsScreen(
     modifier: Modifier = Modifier,
-    currentRoute: String? = null,
-    onNavigateToRoute: (String) -> Unit = {},
-    onNavigateBack: () -> Unit = {}
+    currentRoute: String?,
+    onNavigateToRoute: (String) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
+
     Scaffold(
         topBar = { TopBarWithBack(R.string.payment_methods, onNavigateBack = onNavigateBack) },
         bottomBar = { BottomBar(currentRoute = currentRoute, onNavigateToRoute = onNavigateToRoute) }
@@ -55,10 +64,12 @@ fun PaymentMethodsScreen(
                 .fillMaxSize()
                 .background(AppTheme.colorScheme.background)
                 .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(16.dp))
             PaymentMethodList()
             AddPaymentMethodButton(onNavigateToRoute = onNavigateToRoute)
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -67,17 +78,23 @@ fun PaymentMethodsScreen(
 @Composable
 fun PaymentMethodsScreenPreview() {
     AppTheme {
-        PaymentMethodsScreen()
+        //PaymentMethodsScreen()
     }
 }
 
 @Composable
-fun PaymentMethodList() {
-    val paymentMethods = listOf(
-        PaymentMethod("Mastercard", "Birsa Juan Pablo", "4444"),
-        PaymentMethod("Visa", "Birsa Juan Pablo", "4444"),
-        PaymentMethod("American Express", "Birsa Juan Pablo", "4444")
-    )
+fun PaymentMethodList(
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
+) {
+    val uiState = viewModel.uiState
+    
+    LaunchedEffect(Unit) {
+        viewModel.getCards()
+        while(true) {
+            delay(30000) // 30 segundos
+            viewModel.getCards()
+        }
+    }
     
     Surface(
         modifier = Modifier
@@ -92,9 +109,9 @@ fun PaymentMethodList() {
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            paymentMethods.forEach { paymentMethod ->
-                PaymentMethodItem(paymentMethod)
-                if (paymentMethod != paymentMethods.last()) {
+            uiState.cards?.forEach { card ->
+                PaymentMethodItem(card)
+                if (card != uiState.cards.last()) {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -103,16 +120,18 @@ fun PaymentMethodList() {
 }
 
 @Composable
-fun PaymentMethodItem(paymentMethod: PaymentMethod) {
+fun PaymentMethodItem(card: Card) {
+    val cardType = getCardType(card.number)
+    
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(getCardColor(type = paymentMethod.type), AppTheme.shape.container)
+            .background(getCardColor(type = cardType), AppTheme.shape.container)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = painterResource(id = getCardIcon(type = paymentMethod.type)),
+            painter = painterResource(id = getCardIcon(type = cardType)),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier.size(24.dp)
@@ -120,26 +139,56 @@ fun PaymentMethodItem(paymentMethod: PaymentMethod) {
         Spacer(modifier = Modifier.width(8.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = "•••• ${paymentMethod.lastFourDigits}",
+                text = formatCardNumber(card.number),
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 style = AppTheme.typography.body
             )
             Text(
-                text = paymentMethod.ownerName,
+                text = card.fullName,
                 color = Color.White,
                 fontSize = 14.sp,
                 style = AppTheme.typography.body
             )
+            Text(
+                text = "Vence: ${card.expirationDate}",
+                color = Color.White,
+                fontSize = 12.sp,
+                style = AppTheme.typography.body
+            )
         }
-        IconButton(onClick = { /* Acción para eliminar */ }) {
+        IconButton(onClick = { /* TODO: Implementar eliminación */ }) {
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Eliminar método de pago",
                 tint = Color.White
             )
         }
+    }
+}
+
+// Función para formatear el número de tarjeta
+private fun formatCardNumber(number: String): String {
+    val digitsOnly = number.filter { it.isDigit() }
+    return if (digitsOnly.length >= 4) {
+        val lastFourDigits = digitsOnly.takeLast(4)
+        "**** $lastFourDigits"
+    } else {
+        "**** ****"
+    }
+}
+
+// Función para determinar el tipo de tarjeta basado en el BIN
+private fun getCardType(number: String): String {
+    val prefix = number.take(2)
+    return when {
+        number.startsWith("4") -> "VISA"
+        number.startsWith("51") || number.startsWith("52") ||
+        number.startsWith("53") || number.startsWith("54") ||
+        number.startsWith("55") -> "MASTERCARD"
+        number.startsWith("34") || number.startsWith("37") -> "AMERICAN EXPRESS"
+        else -> "UNKNOWN"
     }
 }
 

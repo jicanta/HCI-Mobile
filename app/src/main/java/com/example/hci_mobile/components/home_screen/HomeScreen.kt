@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
@@ -18,6 +19,7 @@ import com.example.hci_mobile.ui.theme.AppTheme
 import com.example.hci_mobile.components.top_bar.TopBar
 import com.example.hci_mobile.components.bottom_bar.BottomBar
 import com.example.hci_mobile.components.homeApi.HomeViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(
@@ -28,7 +30,13 @@ fun HomeScreen(
 ){
     val uiState = viewModel.uiState
 
-    viewModel.getBalance()
+    LaunchedEffect(Unit) {
+        viewModel.getBalance()
+        while(true) {
+            delay(60000) // 1 minuto
+            viewModel.getBalance()
+        }
+    }
 
     Scaffold(
         containerColor = AppTheme.colorScheme.background,

@@ -10,12 +10,12 @@ import com.example.hci_mobile.api.data.network.model.NetworkBalance
 data class HomeUiState(
     val isAuthenticated: Boolean = false,
     val isFetching: Boolean = false,
-    var currentUser: User? = null,  //TODO: chequear xq es var
+    val currentUser: User? = null,
     val cards: List<Card>? = null,
     val currentCard: Card? = null,
     val error: ApiError? = null,
     val balance: Balance? = null,
-    var wallet: Wallet? = null    //TODO: chequear xq es var
+    val wallet: Wallet? = null
 )
 
 val HomeUiState.canGetCurrentUser: Boolean get() = isAuthenticated
