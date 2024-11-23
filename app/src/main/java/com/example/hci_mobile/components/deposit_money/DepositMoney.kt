@@ -16,16 +16,32 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hci_mobile.MyApplication
 import com.example.hci_mobile.R
+import com.example.hci_mobile.api.data.model.Card
+import com.example.hci_mobile.components.PaymentMethods.getCardType
 import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
 
+// Función auxiliar para formatear la información de la tarjeta
+private fun formatCardInfo(card: Card): String {
+    val digitsOnly = card.number.filter { it.isDigit() }
+    val lastFourDigits = digitsOnly.takeLast(4)
+    val cardType = getCardType(card.number)
+    return "****-$lastFourDigits ($cardType)"
+}
+
 @Composable
 fun DepositMoneyScreen(
     onNavigateBack: () -> Unit,
-    cards: List<String>,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
+    val uiState = viewModel.uiState
+    val externalFundsString = stringResource(R.string.external_funds)
+
+    // Crear lista de opciones de pago
+    val paymentOptions = listOf(externalFundsString) + 
+        (uiState.cards?.map { formatCardInfo(it) } ?: emptyList())
+
     Scaffold(
         topBar = {
             TopBarWithBack(
@@ -42,9 +58,9 @@ fun DepositMoneyScreen(
             contentAlignment = Alignment.Center
         ) {
             DepositMoneyCard(
-                cards = listOf(stringResource(R.string.external_funds)) + cards,
-                onRecharge = {
-                    viewModel.recharge(it)
+                cards = paymentOptions,
+                onRecharge = { amount ->
+                    viewModel.recharge(amount)
                 }
             )
         }
@@ -188,6 +204,6 @@ fun DepositMoneyCard(
 fun DepositMoneyScreenPreview() {
     val cards = listOf("Tarjeta 1", "Tarjeta 2", "Tarjeta 3")
     AppTheme(darkTheme = false) {
-        DepositMoneyScreen(onNavigateBack = {}, cards = cards)
+        DepositMoneyScreen(onNavigateBack = {})
     }
 }

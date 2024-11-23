@@ -27,7 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hci_mobile.MyApplication
 import com.example.hci_mobile.R
+import com.example.hci_mobile.api.data.model.Card
 import com.example.hci_mobile.api.data.network.model.PaymentType
+import com.example.hci_mobile.components.PaymentMethods.getCardType
 import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
@@ -36,11 +38,16 @@ import com.example.hci_mobile.ui.theme.AppTheme
 @Composable
 fun SendScreen(
     onNavigateBack: () -> Unit,
-    cards: List<String>,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
+    val uiState = viewModel.uiState
     val accountBalanceString = stringResource(R.string.account_balance)
     val paymentLinkString = stringResource(R.string.payment_link)
+
+    // Crear lista de opciones de pago
+    val paymentOptions = listOf(accountBalanceString) + 
+        (uiState.cards?.map { formatCardInfo(it) } ?: emptyList()) +
+        listOf(paymentLinkString)
 
     Scaffold(
         topBar = {
@@ -58,17 +65,27 @@ fun SendScreen(
             contentAlignment = Alignment.Center
         ) {
             SendMoneyCard(
-                cards = listOf(accountBalanceString) + cards + listOf(paymentLinkString),
+                cards = paymentOptions,
                 onSendMoney = { amount, description, paymentMethod, email ->
-                    when (paymentMethod) {
-                        accountBalanceString -> {
+                    when {
+                        paymentMethod == accountBalanceString -> {
                             viewModel.makePayment(amount = amount, description = description, type = PaymentType.BALANCE, receiverEmail = email)
                         }
-                        paymentLinkString -> {
+                        paymentMethod == paymentLinkString -> {
                             viewModel.makePayment(amount = amount, description = description, type = PaymentType.LINK)
                         }
-                        else -> {//TODO: aclarar el cardId
-                            viewModel.makePayment(amount = amount, description = description, type = PaymentType.CARD, cardId = null, receiverEmail = email)
+                        else -> {
+                            // Obtener el ID de la tarjeta seleccionada
+                            val selectedCard = uiState.cards?.find { 
+                                formatCardInfo(it) == paymentMethod 
+                            }
+                            viewModel.makePayment(
+                                amount = amount, 
+                                description = description, 
+                                type = PaymentType.CARD, 
+                                cardId = selectedCard?.id, 
+                                receiverEmail = email
+                            )
                         }
                     }
                 }
@@ -77,6 +94,13 @@ fun SendScreen(
     }
 }
 
+// Función auxiliar para formatear la información de la tarjeta
+private fun formatCardInfo(card: Card): String {
+    val digitsOnly = card.number.filter { it.isDigit() }
+    val lastFourDigits = digitsOnly.takeLast(4)
+    val cardType = getCardType(card.number)
+    return "****-$lastFourDigits ($cardType)"
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -255,7 +279,7 @@ fun SendMoneyCard(
 @Composable
 fun SendScreenPreview() {
     AppTheme(darkTheme = false) {
-        SendScreen(onNavigateBack = {}, cards = listOf())
+        SendScreen(onNavigateBack = {})
     }
 }
 

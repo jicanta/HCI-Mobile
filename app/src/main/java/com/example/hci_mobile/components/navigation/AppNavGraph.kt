@@ -89,8 +89,7 @@ fun AppNavGraph(
         }
         composable(route = AppDestinations.DEPOSIT.route) {
             DepositMoneyScreen(
-                onNavigateBack = onNavigateBack,
-                cards = listOf()  //TODO: poner la lista de las tarjetas
+                onNavigateBack = onNavigateBack
             )
         }
         composable(route = AppDestinations.LOGIN.route) {
@@ -103,7 +102,7 @@ fun AppNavGraph(
             RegisterScreen(onNavigateToRoute = onNavigateToRoute)
         }
         composable(route = AppDestinations.SEND.route) {
-            SendScreen(onNavigateBack = onNavigateBack, cards = listOf())
+            SendScreen(onNavigateBack = onNavigateBack)
         }
         composable(route = AppDestinations.VERIFY.route) {
             VerifyScreen(onNavigateToRoute = onNavigateToRoute)

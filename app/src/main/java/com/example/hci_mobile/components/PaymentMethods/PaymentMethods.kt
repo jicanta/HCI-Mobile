@@ -106,7 +106,6 @@ fun PaymentMethodList(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
             uiState.cards?.forEach { card ->
@@ -180,7 +179,7 @@ private fun formatCardNumber(number: String): String {
 }
 
 // Función para determinar el tipo de tarjeta basado en el BIN
-private fun getCardType(number: String): String {
+fun getCardType(number: String): String {
     val prefix = number.take(2)
     return when {
         number.startsWith("4") -> "VISA"
