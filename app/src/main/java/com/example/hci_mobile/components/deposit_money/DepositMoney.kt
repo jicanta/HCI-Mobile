@@ -21,6 +21,7 @@ import com.example.hci_mobile.components.PaymentMethods.getCardType
 import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
+import androidx.compose.runtime.LaunchedEffect
 
 // Función auxiliar para formatear la información de la tarjeta
 private fun formatCardInfo(card: Card): String {
@@ -37,6 +38,11 @@ fun DepositMoneyScreen(
 ) {
     val uiState = viewModel.uiState
     val externalFundsString = stringResource(R.string.external_funds)
+
+    // Cargar las tarjetas al iniciar la pantalla
+    LaunchedEffect(Unit) {
+        viewModel.getCards()
+    }
 
     // Crear lista de opciones de pago
     val paymentOptions = listOf(externalFundsString) + 

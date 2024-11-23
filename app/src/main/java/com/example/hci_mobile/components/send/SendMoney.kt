@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +44,11 @@ fun SendScreen(
     val uiState = viewModel.uiState
     val accountBalanceString = stringResource(R.string.account_balance)
     val paymentLinkString = stringResource(R.string.payment_link)
+
+    // Cargar las tarjetas al iniciar la pantalla
+    LaunchedEffect(Unit) {
+        viewModel.getCards()
+    }
 
     // Crear lista de opciones de pago
     val paymentOptions = listOf(accountBalanceString) + 
