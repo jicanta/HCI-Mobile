@@ -28,6 +28,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CreditCard
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import com.example.hci_mobile.components.home_screen.getCardColor
@@ -61,14 +62,14 @@ fun AddPaymentMethodScreen(
     onNavigateBack: () -> Unit = {},
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
-    var cardType by remember { mutableStateOf("") }
-    var displayCardType by remember { mutableStateOf("") }
+    var cardType by rememberSaveable { mutableStateOf("") }
+    var displayCardType by rememberSaveable { mutableStateOf("") }
     var isDropdownExpanded by remember { mutableStateOf(false) }
-    var ownerName by remember { mutableStateOf("") }
-    var cardNumber by remember { mutableStateOf("") }
-    var expirationMonth by remember { mutableStateOf("") }
-    var expirationYear by remember { mutableStateOf("") }
-    var securityCode by remember { mutableStateOf("") }
+    var ownerName by rememberSaveable { mutableStateOf("") }
+    var cardNumber by rememberSaveable { mutableStateOf("") }
+    var expirationMonth by rememberSaveable { mutableStateOf("") }
+    var expirationYear by rememberSaveable { mutableStateOf("") }
+    var securityCode by rememberSaveable { mutableStateOf("") }
     var cardNumberField by remember { mutableStateOf(TextFieldValue()) }
     
     // Variable para ir construyendo la tarjeta
