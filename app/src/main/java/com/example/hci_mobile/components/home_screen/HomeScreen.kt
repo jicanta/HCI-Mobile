@@ -3,6 +3,7 @@ package com.example.hci_mobile.components.home_screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,57 +38,77 @@ import com.example.hci_mobile.R
 import com.example.hci_mobile.components.PaymentMethods.getCardType
 import com.example.hci_mobile.components.home_screen.SmallCard
 import com.example.hci_mobile.components.navigation.AppDestinations
+import androidx.compose.ui.platform.LocalConfiguration
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Row
+import com.example.hci_mobile.components.navigation.ResponsiveNavigation
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    currentRoute: String?,
     onNavigateToRoute: (String) -> Unit,
-    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
-    currentRoute: String? = null
-){
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
+) {
     val uiState = viewModel.uiState
+    val configuration = LocalConfiguration.current
+    val isTablet = configuration.screenWidthDp >= 600
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     LaunchedEffect(Unit) {
         viewModel.getBalance()
         while(true) {
-            delay(60000) // 1 minuto
+            delay(60000)
             viewModel.getBalance()
         }
     }
 
     Scaffold(
         containerColor = AppTheme.colorScheme.background,
-        topBar = {
-            TopBar()
-        },
+        topBar = { TopBar() },
         bottomBar = {
-            BottomBar(
-                currentRoute = currentRoute,
-                onNavigateToRoute = onNavigateToRoute
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = modifier
-                .padding(paddingValues)
-                .padding(16.dp)
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            uiState.balance?.balance?.let {
-                MoneyDisplay(
+            if (!isTablet || !isLandscape) {
+                ResponsiveNavigation(
+                    currentRoute = currentRoute,
+                    onNavigateToRoute = onNavigateToRoute,
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .shadow(shape = AppTheme.shape.container, elevation = 4.dp),
-                    availableMoney = it
                 )
             }
-            TileRow(
-                modifier = Modifier.padding(top = 16.dp),
-                onNavigateToRoute = onNavigateToRoute
-            )
-            CardContainer(modifier = Modifier.padding(top = 16.dp), onNavigateToRoute = onNavigateToRoute)
+        }
+    ) { paddingValues ->
+        Row(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (isTablet && isLandscape) {
+                ResponsiveNavigation(
+                    currentRoute = currentRoute,
+                    onNavigateToRoute = onNavigateToRoute,
+                    modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
+                )
+            }
+            
+            Column(
+                modifier = modifier
+                    .weight(1f)
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                uiState.balance?.balance?.let {
+                    MoneyDisplay(
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .shadow(shape = AppTheme.shape.container, elevation = 4.dp),
+                        availableMoney = it
+                    )
+                }
+                TileRow(
+                    modifier = Modifier.padding(top = 16.dp),
+                    onNavigateToRoute = onNavigateToRoute
+                )
+                CardContainer(modifier = Modifier.padding(top = 16.dp), onNavigateToRoute = onNavigateToRoute)
+            }
         }
     }
 }
