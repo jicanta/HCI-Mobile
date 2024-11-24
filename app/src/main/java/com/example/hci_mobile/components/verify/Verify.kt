@@ -93,25 +93,27 @@ fun VerifyCard(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 style = AppTheme.typography.body,
+                color = AppTheme.colorScheme.textColor,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
             OutlinedTextField(
                 value = token,
                 onValueChange = { token = it },
-                label = { 
-                    Text(
-                        text = stringResource(R.string.token),
-                        style = AppTheme.typography.body
-                    ) 
-                },
+                label = { Text(
+                    text = stringResource(R.string.token),
+                    style = AppTheme.typography.body,
+                    color = AppTheme.colorScheme.textColor
+                ) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = AppTheme.colorScheme.onTertiary,
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                     disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
-                    unfocusedTextColor = AppTheme.colorScheme.textColor
+                    unfocusedTextColor = AppTheme.colorScheme.textColor,
+                    focusedBorderColor = AppTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = AppTheme.colorScheme.tertiary
                 )
             )
 

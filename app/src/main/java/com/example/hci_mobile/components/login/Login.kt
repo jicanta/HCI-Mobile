@@ -88,6 +88,7 @@ fun LoginCard(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 style = AppTheme.typography.body,
+                color = AppTheme.colorScheme.textColor,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
@@ -96,7 +97,8 @@ fun LoginCard(
                 onValueChange = { email = it },
                 label = { Text(
                     text = stringResource(R.string.email),
-                    style = AppTheme.typography.body
+                    style = AppTheme.typography.body,
+                    color = AppTheme.colorScheme.textColor
                 ) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
@@ -106,10 +108,8 @@ fun LoginCard(
                     disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
                     unfocusedTextColor = AppTheme.colorScheme.textColor,
-                    focusedBorderColor = AppTheme.colorScheme.primary,
-                    unfocusedBorderColor = AppTheme.colorScheme.primary,
-                    focusedLabelColor = AppTheme.colorScheme.textColor,
-                    unfocusedLabelColor = AppTheme.colorScheme.textColor
+                    focusedBorderColor = AppTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = AppTheme.colorScheme.tertiary
                 )
             )
 
@@ -120,7 +120,8 @@ fun LoginCard(
                 onValueChange = { password = it },
                 label = { Text(
                     text = stringResource(R.string.password),
-                    style = AppTheme.typography.body
+                    style = AppTheme.typography.body,
+                    color = AppTheme.colorScheme.textColor
                 ) },
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),
@@ -130,10 +131,8 @@ fun LoginCard(
                     disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
                     unfocusedTextColor = AppTheme.colorScheme.textColor,
-                    focusedBorderColor = AppTheme.colorScheme.primary,
-                    unfocusedBorderColor = AppTheme.colorScheme.primary,
-                    focusedLabelColor = AppTheme.colorScheme.textColor,
-                    unfocusedLabelColor = AppTheme.colorScheme.textColor
+                    focusedBorderColor = AppTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = AppTheme.colorScheme.tertiary
                 )
             )
 
@@ -145,7 +144,7 @@ fun LoginCard(
             ) {
                 Text(
                     text = stringResource(R.string.forgotPassword),
-                    color = AppTheme.colorScheme.primary,
+                    color = AppTheme.colorScheme.textColor,
                     fontSize = 14.sp,
                     style = AppTheme.typography.body
                 )
@@ -180,7 +179,7 @@ fun LoginCard(
             ) {
                 Text(
                     text = stringResource(R.string.register),
-                    color = AppTheme.colorScheme.primary,
+                    color = AppTheme.colorScheme.textColor,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     style = AppTheme.typography.body

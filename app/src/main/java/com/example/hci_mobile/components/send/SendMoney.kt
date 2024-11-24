@@ -71,7 +71,7 @@ fun SendScreen(
         ) {
             SendMoneyCard(
                 cards = paymentOptions,
-                onSendMoney = { amount, description, paymentMethod, email ->
+                onSendMoney = { amount, description, paymentMethod, email, onNavigateToRoute ->
                     when {
                         paymentMethod == accountBalanceString -> {
                             viewModel.makePayment(
@@ -124,7 +124,7 @@ private fun formatCardInfo(card: Card): String {
 fun SendMoneyCard(
     modifier: Modifier = Modifier,
     cards: List<String>,
-    onSendMoney: (Double, String, String, String?) -> Unit,
+    onSendMoney: (Double, String, String, String?, () -> Unit) -> Unit,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
     onNavigateToRoute: (String) -> Unit
 ) {
@@ -313,7 +313,8 @@ fun SendMoneyCard(
                                 amount.toDouble(),
                                 description,
                                 selectedPaymentMethod,
-                                if (selectedPaymentMethod != paymentLinkString) email else null
+                                if (selectedPaymentMethod != paymentLinkString) email else null,
+                                { onNavigateToRoute(AppDestinations.HOME.route) }
                             )
                             //onNavigateToRoute(AppDestinations.HOME.route)
                         } catch (e: Exception) {
