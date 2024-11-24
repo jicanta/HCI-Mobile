@@ -2,7 +2,6 @@ package com.example.hci_mobile.api.data.network.model
 
 import com.example.hci_mobile.api.data.model.Movement
 import com.example.hci_mobile.api.data.model.MovementType
-import com.example.hci_mobile.api.data.model.User
 import kotlinx.serialization.Serializable
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -19,8 +18,8 @@ class NetworkMovement(
     val createdAt: String,
     val updatedAt: String,
     val card: NetworkMovementCard?,
-    val payer: NetworkMovementUser,
-    val receiver: NetworkMovementUser
+    val payer: NetworkSimpleUser,
+    val receiver: NetworkSimpleUser
 ){
     fun asModel(): Movement {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault(Locale.Category.FORMAT))

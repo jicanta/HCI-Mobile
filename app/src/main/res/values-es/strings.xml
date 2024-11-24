@@ -42,7 +42,7 @@
     <string name="welcomeRegister">Bienvenido! Ingrese sus datos para continuar</string>
     <string name="add_card">Añadir tarjeta</string>
     <string name="login">Ingresar</string>
-    <string name="customize">Editar</string>
+    <string name="configuration">Configuración</string>
     <string name="back">Atrás</string>
     <string name="investment">Inversión</string>
     <string name="invest">Invertir</string>

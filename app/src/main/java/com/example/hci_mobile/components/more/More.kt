@@ -57,7 +57,7 @@ fun SettingsScreen(
     }
 
     Scaffold(
-        topBar = { TopBarWithBack(R.string.customize, onNavigateBack = onNavigateBack) },
+        topBar = { TopBarWithBack(R.string.configuration, onNavigateBack = onNavigateBack) },
         bottomBar = {
             if (isPortrait) {
                 BottomBar(currentRoute = currentRoute, onNavigateToRoute = onNavigateToRoute)

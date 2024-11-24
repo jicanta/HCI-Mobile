@@ -42,7 +42,7 @@
     <string name="welcomeRegister">Welcome! Enter your data to continue</string>
     <string name="add_card">Add card</string>
     <string name="login">Login</string>
-    <string name="customize">Customize</string>
+    <string name="configuration">Configuration</string>
     <string name="back">Back</string>
     <string name="investment">Investment</string>
     <string name="invest">Invest</string>

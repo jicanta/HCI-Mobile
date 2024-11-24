@@ -3,7 +3,7 @@ package com.example.hci_mobile.api.data.network.api
 
 import com.example.hci_mobile.api.data.network.model.NetworkCode
 import com.example.hci_mobile.api.data.network.model.NetworkCredentials
-import com.example.hci_mobile.api.data.network.model.NetworkMovementUser
+import com.example.hci_mobile.api.data.network.model.NetworkSimpleUser
 import com.example.hci_mobile.api.data.network.model.NetworkToken
 import com.example.hci_mobile.api.data.network.model.NetworkUser
 import retrofit2.Response
@@ -28,5 +28,5 @@ interface UserApiService {
     suspend fun logout(): Response<Unit>
 
     @GET("user")
-    suspend fun getCurrentUser(): Response<NetworkMovementUser>
+    suspend fun getCurrentUser(): Response<NetworkSimpleUser>
 }

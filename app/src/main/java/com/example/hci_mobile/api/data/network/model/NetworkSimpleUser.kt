@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Serializable
-class NetworkMovementUser(
+class NetworkSimpleUser(
     var id: Int?,
     var firstName: String,
     var lastName: String,
