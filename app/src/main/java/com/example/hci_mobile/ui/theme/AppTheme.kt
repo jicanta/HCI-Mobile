@@ -38,7 +38,7 @@ private val darkColorScheme = AppColorScheme(
     secondary = DeepBlue,         // Color para tarjetas y superficies elevadas
     onPrimary = OffWhite,        // Color del texto sobre elementos primary
     textColor = OffWhite,        // Color general del texto
-    tertiary = BrightOrange,     // Color más brillante para "View all" y otros enlaces
+    tertiary = Pink,     // Color más brillante para "View all" y otros enlaces
     onSecondary = OffWhite,      // Color del texto sobre elementos secondary
     onTertiary = DarkGrey2
 )

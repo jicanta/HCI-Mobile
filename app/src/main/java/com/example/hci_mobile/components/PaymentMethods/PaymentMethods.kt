@@ -173,11 +173,12 @@ fun PaymentMethodList(
                 exit = fadeOut() + shrinkVertically()
             ) {
                 Text(
-                    text = "No tienes tarjetas registradas",
+                    text = stringResource( R.string.no_registered_cards),
                     style = AppTheme.typography.body,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
+                    color = AppTheme.colorScheme.textColor,
                     textAlign = TextAlign.Center
                 )
             }
@@ -342,7 +343,7 @@ fun AddPaymentMethodButton(
             .widthIn(max = 600.dp)
             .padding(vertical = 16.dp, horizontal = 8.dp)
             .background(AppTheme.colorScheme.background, AppTheme.shape.container)
-            .border(2.dp, AppTheme.colorScheme.tertiary, AppTheme.shape.container)
+            .border(2.dp, AppTheme.colorScheme.primary, AppTheme.shape.container)
             .clickable { onNavigateToRoute(AppDestinations.ADDCARD.route) }
             .padding(16.dp),
         contentAlignment = Alignment.Center
@@ -351,13 +352,13 @@ fun AddPaymentMethodButton(
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Añadir método de pago",
-                tint = AppTheme.colorScheme.tertiary,
+                tint = AppTheme.colorScheme.primary,
                 modifier = Modifier.size(48.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.add),
-                color = AppTheme.colorScheme.tertiary,
+                color = AppTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 style = AppTheme.typography.body

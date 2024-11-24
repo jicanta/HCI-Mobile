@@ -86,6 +86,7 @@ fun LoginCard(
                 text = stringResource(R.string.welcome_login),
                 fontSize = if (modifier.fillMaxWidth(0.5f) != Modifier) 20.sp else 16.sp, // Tamaño más grande en tablets
                 fontWeight = FontWeight.Bold,
+                color = AppTheme.colorScheme.textColor,
                 textAlign = TextAlign.Center,
                 style = AppTheme.typography.body,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -145,7 +146,7 @@ fun LoginCard(
             ) {
                 Text(
                     text = stringResource(R.string.forgotPassword),
-                    color = AppTheme.colorScheme.primary,
+                    color = AppTheme.colorScheme.tertiary,
                     fontSize = 14.sp,
                     style = AppTheme.typography.body
                 )
@@ -180,7 +181,7 @@ fun LoginCard(
             ) {
                 Text(
                     text = stringResource(R.string.register),
-                    color = AppTheme.colorScheme.primary,
+                    color = AppTheme.colorScheme.tertiary,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     style = AppTheme.typography.body
