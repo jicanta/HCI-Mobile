@@ -18,7 +18,7 @@
     <string name="show_balance">Mostrar saldo</string>
     <string name="available_money">$ %s</string>
     <string name="payment_methods">Métodos de pago</string>
-    <string name="add_payment_method">Añadir un nuevo método de pago</string>
+    <string name="add">Añadir</string>
     <string name="name">Nombre</string>
     <string name="apellido">Apellido</string>
     <string name="email">Email</string>
@@ -93,10 +93,12 @@
     <string name="cbu">CBU</string>
     <string name="copied_to_clipboard">Copiado al portapapeles</string>
     <string name="view_all_payment_methods">Ver todos</string>
-    <string name="delete_card">Eliminar método de pago</string>
+    <string name="delete">Eliminar</string>
     <string name="expires">Vence en</string>
     <string name="confirm">Confirmar</string>
     <string name="enter_new_alias">Ingrese un nuevo alias</string>
     <string name="available_movements">No hay movimientos disponibles</string>
     <string name="birth_date_without_format">Fecha de nacimiento</string>
+    <string name="card_holder">TITULAR</string>
+    <string name="mm_yy">MM/AA</string>
 </resources>

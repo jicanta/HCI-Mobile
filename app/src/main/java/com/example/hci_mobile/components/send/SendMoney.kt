@@ -74,13 +74,23 @@ fun SendScreen(
                 onSendMoney = { amount, description, paymentMethod, email ->
                     when {
                         paymentMethod == accountBalanceString -> {
-                            viewModel.makePayment(amount = amount, description = description, type = PaymentType.BALANCE, receiverEmail = email)
+                            viewModel.makePayment(
+                                amount = amount, 
+                                description = description, 
+                                type = PaymentType.BALANCE, 
+                                receiverEmail = email,
+                                onSucessfullPayment = { onNavigateToRoute(AppDestinations.HOME.route) }
+                            )
                         }
                         paymentMethod == paymentLinkString -> {
-                            viewModel.makePayment(amount = amount, description = description, type = PaymentType.LINK)
+                            viewModel.makePayment(
+                                amount = amount, 
+                                description = description, 
+                                type = PaymentType.LINK,
+                                onSucessfullPayment = { onNavigateToRoute(AppDestinations.HOME.route) }
+                            )
                         }
                         else -> {
-                            // Obtener el ID de la tarjeta seleccionada
                             val selectedCard = uiState.cards?.find { 
                                 formatCardInfo(it) == paymentMethod 
                             }
@@ -89,7 +99,8 @@ fun SendScreen(
                                 description = description, 
                                 type = PaymentType.CARD, 
                                 cardId = selectedCard?.id, 
-                                receiverEmail = email
+                                receiverEmail = email,
+                                onSucessfullPayment = { onNavigateToRoute(AppDestinations.HOME.route) }
                             )
                         }
                     }
@@ -121,7 +132,7 @@ fun SendMoneyCard(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    // Observar errores
+
     LaunchedEffect(uiState.error) {
         uiState.error?.let { error ->
             error.message?.let {
@@ -135,16 +146,16 @@ fun SendMoneyCard(
     }
 
     // Observar el éxito de la llamada
-    LaunchedEffect(uiState.callSuccess) {
+    /*LaunchedEffect(uiState.callSuccess) {
         if (uiState.callSuccess) {
-            Log.d("SendMoneyCard", "Navegando a HOME")
+            //Log.d("SendMoneyCard", "Navegando a HOME")
             try {
                 onNavigateToRoute(AppDestinations.HOME.route)
             } finally {
                 viewModel.clearCallSuccess()
             }
         }
-    }
+    }*/
 
     var selectedPaymentMethod by remember { mutableStateOf("") }
     var isDropdownExpanded by remember { mutableStateOf(false) }
@@ -182,7 +193,8 @@ fun SendMoneyCard(
                     },
                     label = { Text(
                         text = stringResource(R.string.enter_amount),
-                        style = AppTheme.typography.body
+                        style = AppTheme.typography.body,
+                        color = AppTheme.colorScheme.textColor
                     ) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth(),
@@ -191,7 +203,9 @@ fun SendMoneyCard(
                         unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                         disabledContainerColor = AppTheme.colorScheme.onTertiary,
                         focusedTextColor = AppTheme.colorScheme.textColor,
-                        unfocusedTextColor = AppTheme.colorScheme.textColor
+                        unfocusedTextColor = AppTheme.colorScheme.textColor,
+                        focusedBorderColor = AppTheme.colorScheme.tertiary,
+                        unfocusedBorderColor = AppTheme.colorScheme.tertiary
                     )
                 )
 
@@ -202,7 +216,8 @@ fun SendMoneyCard(
                     onValueChange = { description = it },
                     label = { Text(
                         text = stringResource(R.string.description),
-                        style = AppTheme.typography.body
+                        style = AppTheme.typography.body,
+                        color = AppTheme.colorScheme.textColor
                     ) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -210,7 +225,9 @@ fun SendMoneyCard(
                         unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                         disabledContainerColor = AppTheme.colorScheme.onTertiary,
                         focusedTextColor = AppTheme.colorScheme.textColor,
-                        unfocusedTextColor = AppTheme.colorScheme.textColor
+                        unfocusedTextColor = AppTheme.colorScheme.textColor,
+                        focusedBorderColor = AppTheme.colorScheme.tertiary,
+                        unfocusedBorderColor = AppTheme.colorScheme.tertiary
                     )
                 )
 
@@ -226,7 +243,8 @@ fun SendMoneyCard(
                         readOnly = true,
                         label = { Text(
                             text = stringResource(R.string.payment_methods),
-                            style = AppTheme.typography.body
+                            style = AppTheme.typography.body,
+                            color = AppTheme.colorScheme.textColor
                         ) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -237,18 +255,22 @@ fun SendMoneyCard(
                             unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                             disabledContainerColor = AppTheme.colorScheme.onTertiary,
                             focusedTextColor = AppTheme.colorScheme.textColor,
-                            unfocusedTextColor = AppTheme.colorScheme.textColor
+                            unfocusedTextColor = AppTheme.colorScheme.textColor,
+                            focusedBorderColor = AppTheme.colorScheme.tertiary,
+                            unfocusedBorderColor = AppTheme.colorScheme.tertiary
                         )
                     )
                     ExposedDropdownMenu(
                         expanded = isDropdownExpanded,
-                        onDismissRequest = { isDropdownExpanded = false }
+                        onDismissRequest = { isDropdownExpanded = false },
+                        modifier = Modifier.background(AppTheme.colorScheme.onTertiary)
                     ) {
                         cards.forEach { paymentMethod ->
                             DropdownMenuItem(
                                 text = { Text(
                                     text = paymentMethod,
-                                    style = AppTheme.typography.body
+                                    style = AppTheme.typography.body,
+                                    color = AppTheme.colorScheme.textColor
                                 ) },
                                 onClick = {
                                     selectedPaymentMethod = paymentMethod
@@ -275,7 +297,9 @@ fun SendMoneyCard(
                             unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                             disabledContainerColor = AppTheme.colorScheme.onTertiary,
                             focusedTextColor = AppTheme.colorScheme.textColor,
-                            unfocusedTextColor = AppTheme.colorScheme.textColor
+                            unfocusedTextColor = AppTheme.colorScheme.textColor,
+                            focusedBorderColor = AppTheme.colorScheme.tertiary,
+                            unfocusedBorderColor = AppTheme.colorScheme.tertiary
                         )
                     )
                 }
@@ -283,21 +307,20 @@ fun SendMoneyCard(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(
-                    onClick = { 
-                        if (amount.isNotEmpty() && amount.toDoubleOrNull() != null) {
-                            try {
-                                onSendMoney(
-                                    amount.toDouble(),
-                                    description,
-                                    selectedPaymentMethod,
-                                    if (selectedPaymentMethod != paymentLinkString) email else null
-                                )
-                            } catch (e: Exception) {
-                                viewModel.setError(ApiError(
-                                    code = 400, 
-                                    message = e.message ?: "Error al procesar el pago"
-                                ))
-                            }
+                    onClick = {
+                        try {
+                            onSendMoney(
+                                amount.toDouble(),
+                                description,
+                                selectedPaymentMethod,
+                                if (selectedPaymentMethod != paymentLinkString) email else null
+                            )
+                            //onNavigateToRoute(AppDestinations.HOME.route)
+                        } catch (e: Exception) {
+                            viewModel.setError(ApiError(
+                                code = 400,
+                                message = e.message ?: "Error al procesar el pago"
+                            ))
                         }
                     },
                     modifier = Modifier

@@ -98,7 +98,7 @@ fun AddPaymentMethodScreen(
 
     Scaffold(
         topBar = {
-            TopBarWithBack(title = R.string.add_payment_method, onNavigateBack = onNavigateBack)
+            TopBarWithBack(title = R.string.add, onNavigateBack = onNavigateBack)
         }
     ) { paddingValues ->
         Box(
@@ -171,7 +171,7 @@ fun AddPaymentMethodScreen(
                                         )
                                     )
                                     Text(
-                                        text = if (ownerName.isEmpty()) "CARD HOLDER" else ownerName.uppercase(),
+                                        text = if (ownerName.isEmpty()) stringResource(R.string.card_holder) else ownerName.uppercase(),
                                         style = AppTheme.typography.body.copy(
                                             color = AppTheme.colorScheme.onPrimary
                                         )
@@ -181,14 +181,14 @@ fun AddPaymentMethodScreen(
                                 // Expiration Date
                                 Column(horizontalAlignment = Alignment.End) {
                                     Text(
-                                        text = "VALID THRU",
+                                        text = stringResource(R.string.expires),
                                         style = AppTheme.typography.body.copy(
                                             color = AppTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
                                         )
                                     )
                                     Text(
                                         text = if (expirationMonth.isEmpty() || expirationYear.isEmpty()) 
-                                              "MM/YY" else "$expirationMonth/$expirationYear",
+                                              stringResource(R.string.mm_yy) else "$expirationMonth/$expirationYear",
                                         style = AppTheme.typography.body.copy(
                                             color = AppTheme.colorScheme.onPrimary
                                         )

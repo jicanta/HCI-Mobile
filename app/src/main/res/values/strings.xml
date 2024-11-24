@@ -18,7 +18,7 @@
     <string name="show_balance">Show balance</string>
     <string name="available_money">$ %s</string>
     <string name="payment_methods">Payment Methods</string>
-    <string name="add_payment_method">Add a new payment method</string>
+    <string name="add">Add</string>
     <string name="name">Name</string>
     <string name="apellido">Surname</string>
     <string name="email">Email</string>
@@ -93,11 +93,12 @@
     <string name="cbu">CBU</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="view_all_payment_methods">View all</string>
-    <string name="delete_card">Delete payment method</string>
+    <string name="delete">Delete</string>
     <string name="expires">Expires in</string>
     <string name="confirm">Confirm</string>
     <string name="enter_new_alias">Enter a new alias</string>
     <string name="available_movements">There are no available movements</string>
     <string name="birth_date_without_format">Birth date</string>
-
+    <string name="card_holder">CARD HOLDER</string>
+    <string name="mm_yy">MM/YY</string>
 </resources>

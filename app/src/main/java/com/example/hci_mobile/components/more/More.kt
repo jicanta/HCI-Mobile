@@ -206,9 +206,18 @@ fun SettingsScreen(
     if (showLanguageDialog) {
         AlertDialog(
             onDismissRequest = { showLanguageDialog = false },
-            title = { Text(stringResource(R.string.select_language)) },
+            title = { 
+                Text(
+                    text = stringResource(R.string.select_language),
+                    style = AppTheme.typography.body,
+                    color = AppTheme.colorScheme.textColor
+                ) 
+            },
             text = {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
                     LanguageOption(
                         language = "Español",
                         isSelected = currentLocale.language == "es",
@@ -217,6 +226,7 @@ fun SettingsScreen(
                             showLanguageDialog = false
                         }
                     )
+                    Divider(color = AppTheme.colorScheme.onSecondary)
                     LanguageOption(
                         language = "English",
                         isSelected = currentLocale.language == "en",
@@ -229,10 +239,20 @@ fun SettingsScreen(
             },
             confirmButton = {},
             dismissButton = {
-                TextButton(onClick = { showLanguageDialog = false }) {
-                    Text(stringResource(R.string.cancel))
+                TextButton(
+                    onClick = { showLanguageDialog = false },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = AppTheme.colorScheme.textColor
+                    )
+                ) {
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        style = AppTheme.typography.body
+                    )
                 }
-            }
+            },
+            containerColor = AppTheme.colorScheme.secondary,
+            shape = AppTheme.shape.container
         )
     }
 }
@@ -301,11 +321,15 @@ private fun LanguageOption(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(vertical = 12.dp),
+            .padding(vertical = 12.dp, horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(language)
+        Text(
+            text = language,
+            style = AppTheme.typography.body,
+            color = AppTheme.colorScheme.textColor
+        )
         if (isSelected) {
             Icon(
                 imageVector = Icons.Default.Check,

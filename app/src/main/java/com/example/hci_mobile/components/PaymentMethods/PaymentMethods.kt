@@ -294,12 +294,12 @@ fun PaymentMethodItem(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(R.string.delete_card),
+                        contentDescription = stringResource(R.string.delete),
                         tint = Color.White
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = stringResource(R.string.delete_card),
+                        text = stringResource(R.string.delete),
                         color = Color.White
                     )
                 }
@@ -356,7 +356,7 @@ fun AddPaymentMethodButton(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = stringResource(R.string.add_payment_method),
+                text = stringResource(R.string.add),
                 color = AppTheme.colorScheme.tertiary,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,

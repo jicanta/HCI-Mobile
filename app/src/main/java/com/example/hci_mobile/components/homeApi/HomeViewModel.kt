@@ -47,9 +47,10 @@ class HomeViewModel(
         { state, response -> state.copy(currentUser = response) }
     )
 
-    fun login(username: String, password: String) = runOnViewModelScope(
+    fun login(username: String, password: String /*, onSucessfullLogin: () -> Unit*/) = runOnViewModelScope(
         { userRepository.login(username, password) },
         { state, _ -> state.copy(isAuthenticated = true) }
+        //onSucessfullLogin
     )
 
     fun logout() = runOnViewModelScope(
@@ -106,21 +107,17 @@ class HomeViewModel(
         {state, _ -> state}
     )
 
-    fun makePayment(amount: Double, description: String, type: PaymentType, cardId: Int? = null, receiverEmail: String? = null) = 
+    fun makePayment(amount: Double, description: String, type: PaymentType, cardId: Int? = null, receiverEmail: String? = null, onSucessfullPayment: () -> Unit) =
         runOnViewModelScope(
             { 
-                Log.d(TAG, "Iniciando makePayment")
-                paymentRepository.makePayment(amount, description, type, cardId, receiverEmail)
-                Log.d(TAG, "Pago completado exitosamente")
-                setCallSuccess()
-                Log.d(TAG, "CallSuccess establecido a: ${uiState.callSuccess}")
-                true
+                val result = paymentRepository.makePayment(amount, description, type, cardId, receiverEmail)
+                result != null
             },
             { state, success -> 
-                Log.d(TAG, "Actualizando estado después del pago")
-                state.copy(callSuccess = true).also {
-                    Log.d(TAG, "Nuevo estado callSuccess: ${it.callSuccess}")
+                if (success) {
+                    onSucessfullPayment()
                 }
+                state.copy(callSuccess = success)
             }
         )
 
@@ -133,6 +130,10 @@ class HomeViewModel(
         uiState = uiState.copy(error = null)
     }
 
+    fun setError(e: ApiError){
+        uiState = uiState.copy(error = e)
+    }
+
     fun updateAlias(alias: String) = runOnViewModelScope(
         {walletRepository.updateAlias(alias)},
         { state, _ -> state }
@@ -143,31 +144,23 @@ class HomeViewModel(
         { state, response -> state.copy(payments = response) }
     )
 
-    fun setError(e: ApiError){
-        uiState = uiState.copy(error = e)
-    }
-
-    fun setCallSuccess() {
-        Log.d(TAG, "setCallSuccess llamado")
-        uiState = uiState.copy(callSuccess = true)
-        Log.d(TAG, "Nuevo valor de callSuccess: ${uiState.callSuccess}")
-    }
-
     fun clearCallSuccess() {
-        Log.d(TAG, "clearCallSuccess llamado")
+        //Log.d(TAG, "clearCallSuccess llamado")
         uiState = uiState.copy(callSuccess = false)
-        Log.d(TAG, "Valor de callSuccess después de clear: ${uiState.callSuccess}")
+        //Log.d(TAG, "Valor de callSuccess después de clear: ${uiState.callSuccess}")
     }
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
-        updateState: (HomeUiState, R) -> HomeUiState
+        updateState: (HomeUiState, R) -> HomeUiState,
+        callback: () -> Unit = {}
     ): Job = viewModelScope.launch {
         uiState = uiState.copy(isFetching = true, error = null)
         runCatching {
             block()
         }.onSuccess { response ->
             uiState = updateState(uiState, response).copy(isFetching = false)
+            callback()
         }.onFailure { e ->
             uiState = uiState.copy(isFetching = false, error = handleError(e))
             Log.e(TAG, "Coroutine execution failed", e)
