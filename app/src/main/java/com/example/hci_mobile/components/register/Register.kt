@@ -92,7 +92,8 @@ fun RegisterCard(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 style = AppTheme.typography.body,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
+                color = AppTheme.colorScheme.textColor
             )
 
             OutlinedTextField(
@@ -100,7 +101,8 @@ fun RegisterCard(
                 onValueChange = { name = it },
                 label = { Text(
                     text = stringResource(R.string.name),
-                    style = AppTheme.typography.body
+                    style = AppTheme.typography.body,
+                    color = AppTheme.colorScheme.textColor
                 ) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -108,7 +110,9 @@ fun RegisterCard(
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                     disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
-                    unfocusedTextColor = AppTheme.colorScheme.textColor
+                    unfocusedTextColor = AppTheme.colorScheme.textColor,
+                    focusedBorderColor = AppTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = AppTheme.colorScheme.tertiary
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -118,7 +122,8 @@ fun RegisterCard(
                 onValueChange = { lastName = it },
                 label = { Text(
                     text = stringResource(R.string.lastName),
-                    style = AppTheme.typography.body
+                    style = AppTheme.typography.body,
+                    color = AppTheme.colorScheme.textColor
                 ) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -126,7 +131,9 @@ fun RegisterCard(
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                     disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
-                    unfocusedTextColor = AppTheme.colorScheme.textColor
+                    unfocusedTextColor = AppTheme.colorScheme.textColor,
+                    focusedBorderColor = AppTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = AppTheme.colorScheme.tertiary
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -136,7 +143,8 @@ fun RegisterCard(
                 onValueChange = { email = it },
                 label = { Text(
                     text = stringResource(R.string.email),
-                    style = AppTheme.typography.body
+                    style = AppTheme.typography.body,
+                    color = AppTheme.colorScheme.textColor
                 ) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
@@ -145,7 +153,9 @@ fun RegisterCard(
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                     disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
-                    unfocusedTextColor = AppTheme.colorScheme.textColor
+                    unfocusedTextColor = AppTheme.colorScheme.textColor,
+                    focusedBorderColor = AppTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = AppTheme.colorScheme.tertiary
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -165,7 +175,8 @@ fun RegisterCard(
                 },
                 label = { Text(
                     text = stringResource(R.string.birth_date),
-                    style = AppTheme.typography.body
+                    style = AppTheme.typography.body,
+                    color = AppTheme.colorScheme.textColor
                 ) },
                 placeholder = { Text("YYYY-MM-DD") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -175,7 +186,9 @@ fun RegisterCard(
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                     disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
-                    unfocusedTextColor = AppTheme.colorScheme.textColor
+                    unfocusedTextColor = AppTheme.colorScheme.textColor,
+                    focusedBorderColor = AppTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = AppTheme.colorScheme.tertiary
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -185,7 +198,8 @@ fun RegisterCard(
                 onValueChange = { password = it },
                 label = { Text(
                     text = stringResource(R.string.password),
-                    style = AppTheme.typography.body
+                    style = AppTheme.typography.body,
+                    color = AppTheme.colorScheme.textColor
                 ) },
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),
@@ -194,7 +208,9 @@ fun RegisterCard(
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                     disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
-                    unfocusedTextColor = AppTheme.colorScheme.textColor
+                    unfocusedTextColor = AppTheme.colorScheme.textColor,
+                    focusedBorderColor = AppTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = AppTheme.colorScheme.tertiary
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -229,7 +245,7 @@ fun RegisterCard(
                 shape = AppTheme.shape.button,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = AppTheme.colorScheme.secondary,
-                    contentColor = AppTheme.colorScheme.primary
+                    contentColor = AppTheme.colorScheme.textColor
                 )
             ) {
                 Text(
