@@ -13,7 +13,7 @@ class NetworkUser(
     var lastName: String,
     var email: String,
     var birthDate: String,
-    var password: String?
+    var password: String? = null  //TODO:
 ) {
     fun asModel(): User {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault(Locale.Category.FORMAT))

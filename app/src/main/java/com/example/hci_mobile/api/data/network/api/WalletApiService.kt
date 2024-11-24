@@ -5,6 +5,7 @@ import com.example.hci_mobile.api.data.network.model.NetworkAlias
 import com.example.hci_mobile.api.data.network.model.NetworkAmount
 import com.example.hci_mobile.api.data.network.model.NetworkBalance
 import com.example.hci_mobile.api.data.network.model.NetworkCard
+import com.example.hci_mobile.api.data.network.model.NetworkNewBalance
 import com.example.hci_mobile.api.data.network.model.NetworkWallet
 import retrofit2.Response
 import retrofit2.http.Body
@@ -30,7 +31,7 @@ interface WalletApiService {
     suspend fun getBalance(): Response<NetworkBalance>
 
     @POST("wallet/recharge")
-    suspend fun recharge(@Body amount: NetworkAmount): Response<Unit>
+    suspend fun recharge(@Body amount: NetworkAmount): Response<NetworkNewBalance>
 
     @GET("wallet/details")
     suspend fun getWalletDetails(): Response<NetworkWallet>

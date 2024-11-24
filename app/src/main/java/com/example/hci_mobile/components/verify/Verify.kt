@@ -20,7 +20,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,10 +48,19 @@ fun VerifyScreen(
     onNavigateToRoute: (String) -> Unit,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
-
     val uiState = viewModel.uiState
-    if(uiState.isAuthenticated){
-        onNavigateToRoute(AppDestinations.HOME.route)
+
+   /* // Manejo de navegación en caso de éxito
+    LaunchedEffect(uiState.callSuccess) {
+        if (uiState.callSuccess) {
+            //viewModel.clearCallSuccess()
+            onNavigateToRoute(AppDestinations.LOGIN.route)
+        }
+    }*/
+
+    if(uiState.callSuccess){
+        viewModel.clearCallSuccess()
+        onNavigateToRoute(AppDestinations.LOGIN.route)
     }
 
     Box(
@@ -57,7 +71,11 @@ fun VerifyScreen(
     ) {
         VerifyCard(
             onVerify = { token ->
-                viewModel.verify(token)
+                viewModel.verify(token){
+                    onNavigateToRoute(
+                        AppDestinations.LOGIN.route
+                    )
+                }
             },
             onNavigateToRoute = onNavigateToRoute
         )
@@ -68,73 +86,107 @@ fun VerifyScreen(
 fun VerifyCard(
     modifier: Modifier = Modifier,
     onNavigateToRoute: (String) -> Unit,
-    onVerify: (String) -> Unit
+    onVerify: (String) -> Unit,
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
     var token by remember { mutableStateOf("") }
+    val uiState = viewModel.uiState
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(0.9f)
-            .wrapContentHeight(),
-        shape = AppTheme.shape.container,
-        colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = stringResource(R.string.verify_title),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                style = AppTheme.typography.body,
-                color = AppTheme.colorScheme.textColor,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            OutlinedTextField(
-                value = token,
-                onValueChange = { token = it },
-                label = { Text(
-                    text = stringResource(R.string.token),
-                    style = AppTheme.typography.body,
-                    color = AppTheme.colorScheme.textColor
-                ) },
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = AppTheme.colorScheme.onTertiary,
-                    unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
-                    disabledContainerColor = AppTheme.colorScheme.onTertiary,
-                    focusedTextColor = AppTheme.colorScheme.textColor,
-                    unfocusedTextColor = AppTheme.colorScheme.textColor,
-                    focusedBorderColor = AppTheme.colorScheme.tertiary,
-                    unfocusedBorderColor = AppTheme.colorScheme.tertiary
+    // Manejo de errores
+  /*  LaunchedEffect(uiState.error) {
+        uiState.error?.let { error ->
+            error.message?.let {
+                snackbarHostState.showSnackbar(
+                    message = it,
+                    duration = SnackbarDuration.Short
                 )
-            )
+            }
+            viewModel.clearError()
+        }
+    }*/
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    onVerify(token)
-                    //TODO: hacer algo para ver si no dio error
-                    onNavigateToRoute(AppDestinations.LOGIN.route)
-                },
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .wrapContentHeight(),
+            shape = AppTheme.shape.container,
+            colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp),
-                shape = AppTheme.shape.button,
-                colors = ButtonDefaults.buttonColors(containerColor = AppTheme.colorScheme.primary)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(R.string.verify),
-                    color = AppTheme.colorScheme.onPrimary,
+                    text = stringResource(R.string.verify_title),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    style = AppTheme.typography.body,
+                    color = AppTheme.colorScheme.textColor,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    value = token,
+                    onValueChange = { token = it },
+                    label = { Text(
+                        text = stringResource(R.string.token),
+                        style = AppTheme.typography.body,
+                        color = AppTheme.colorScheme.textColor
+                    ) },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = AppTheme.colorScheme.onTertiary,
+                        unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
+                        disabledContainerColor = AppTheme.colorScheme.onTertiary,
+                        focusedTextColor = AppTheme.colorScheme.textColor,
+                        unfocusedTextColor = AppTheme.colorScheme.textColor,
+                        focusedBorderColor = AppTheme.colorScheme.tertiary,
+                        unfocusedBorderColor = AppTheme.colorScheme.tertiary
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        onVerify(token)
+                        // Removemos la navegación directa aquí
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    shape = AppTheme.shape.button,
+                    colors = ButtonDefaults.buttonColors(containerColor = AppTheme.colorScheme.primary)
+                ) {
+                    Text(
+                        text = stringResource(R.string.verify),
+                        color = AppTheme.colorScheme.onPrimary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        style = AppTheme.typography.body
+                    )
+                }
+            }
+        }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp)
+        ) { data ->
+            Snackbar(
+                containerColor = AppTheme.colorScheme.primary,
+                contentColor = AppTheme.colorScheme.onPrimary,
+            ) {
+                Text(
+                    text = data.visuals.message,
                     style = AppTheme.typography.body
                 )
             }

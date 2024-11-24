@@ -37,6 +37,11 @@ fun RegisterScreen(
         onNavigateToRoute(AppDestinations.HOME.route)
     }
 
+    if(uiState.callSuccess){
+        viewModel.clearCallSuccess()
+        onNavigateToRoute(AppDestinations.VERIFY.route)
+    }
+
     val snackbarHostState = remember { SnackbarHostState() }
     var errorShown by remember { mutableStateOf(false) }
 
@@ -52,7 +57,11 @@ fun RegisterScreen(
         ) {
             RegisterCard(
                 onRegister = { firstName, lastName, birthDate, email, password ->
-                    viewModel.register(firstName, lastName, birthDate, email, password)
+                    viewModel.register(firstName, lastName, birthDate, email, password) {
+                        onNavigateToRoute(
+                            AppDestinations.VERIFY.route
+                        )
+                    }
                 },
                 onNavigateToRoute = onNavigateToRoute
             )
@@ -64,8 +73,25 @@ fun RegisterScreen(
 fun RegisterCard(
     modifier: Modifier = Modifier,
     onRegister: (String, String, String, String, String) -> Unit,
-    onNavigateToRoute: (String) -> Unit
+    onNavigateToRoute: (String) -> Unit,
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
+
+    val uiState = viewModel.uiState
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let { error ->
+            error.message?.let {
+                snackbarHostState.showSnackbar(
+                    message = it,
+                    duration = SnackbarDuration.Short
+                )
+            }
+            viewModel.clearError()
+        }
+    }
+
     var name by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var birthDate by remember { mutableStateOf("") }
@@ -218,7 +244,7 @@ fun RegisterCard(
             Button(
                 onClick = {
                     onRegister(name, lastName, birthDate, email, password)
-                    onNavigateToRoute(AppDestinations.VERIFY.route)
+                    //onNavigateToRoute(AppDestinations.VERIFY.route)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
