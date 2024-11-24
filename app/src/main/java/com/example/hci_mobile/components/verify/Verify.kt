@@ -44,6 +44,12 @@ fun VerifyScreen(
     onNavigateToRoute: (String) -> Unit,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
+
+    val uiState = viewModel.uiState
+    if(uiState.isAuthenticated){
+        onNavigateToRoute(AppDestinations.HOME.route)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()

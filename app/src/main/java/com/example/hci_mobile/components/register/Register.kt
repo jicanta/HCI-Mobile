@@ -32,6 +32,11 @@ fun RegisterScreen(
     onNavigateToRoute: (String) -> Unit
 ) {
     val uiState = viewModel.uiState
+
+    if(uiState.isAuthenticated){
+        onNavigateToRoute(AppDestinations.HOME.route)
+    }
+
     val snackbarHostState = remember { SnackbarHostState() }
     var errorShown by remember { mutableStateOf(false) }
 

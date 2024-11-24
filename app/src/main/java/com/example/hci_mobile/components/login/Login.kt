@@ -31,6 +31,11 @@ fun LoginScreen(
     onNavigateToRoute: (String) -> Unit = {}
 ) {
     val uiState = viewModel.uiState
+
+    if(uiState.isAuthenticated){
+        onNavigateToRoute(AppDestinations.HOME.route)
+    }
+
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
