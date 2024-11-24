@@ -72,40 +72,44 @@ fun SendScreen(
         ) {
             SendMoneyCard(
                 cards = paymentOptions,
-                onSendMoney = { amount, description, paymentMethod, email, onNavigateToRoute ->
+                onSendMoney = { amount, description, paymentMethod, email -> // Corregida la sintaxis de la lambda
                     when {
                         paymentMethod == accountBalanceString -> {
-                            viewModel.makePayment(
-                                amount = amount, 
-                                description = description, 
-                                type = PaymentType.BALANCE, 
-                                receiverEmail = email
-
-                            )
-                        }
-                        paymentMethod == paymentLinkString -> {
-                            viewModel.makePayment(
-                                amount = amount, 
-                                description = description, 
-                                type = PaymentType.LINK
-
-                            )
-                        }
-                        else -> {
-                            val selectedCard = uiState.cards?.find { 
-                                formatCardInfo(it) == paymentMethod 
-                            }
-                            viewModel.makePayment(
-                                amount = amount, 
-                                description = description, 
-                                type = PaymentType.CARD, 
-                                cardId = selectedCard?.id, 
-                                receiverEmail = email
-                            )
-                        }
+                        viewModel.makePayment(
+                            amount = amount,
+                            description = description,
+                            type = PaymentType.BALANCE,
+                            receiverEmail = email
+                    ){
+                        onNavigateToRoute(AppDestinations.HOME.route)
                     }
-                },
-                onNavigateToRoute = onNavigateToRoute
+                }
+                paymentMethod == paymentLinkString -> {
+                    viewModel.makePayment(
+                        amount = amount,
+                        description = description,
+                        type = PaymentType.LINK
+                    ){
+                        onNavigateToRoute(AppDestinations.HOME.route)
+                    }
+                }
+                else -> {
+                    val selectedCard = uiState.cards?.find {
+                        formatCardInfo(it) == paymentMethod
+                    }
+                    viewModel.makePayment(
+                        amount = amount,
+                        description = description,
+                        type = PaymentType.CARD,
+                        cardId = selectedCard?.id,
+                        receiverEmail = email
+                    ){
+                        onNavigateToRoute(AppDestinations.HOME.route)
+                    }
+            }
+        }
+    },
+    onNavigateToRoute = onNavigateToRoute
             )
         }
     }
@@ -124,38 +128,13 @@ private fun formatCardInfo(card: Card): String {
 fun SendMoneyCard(
     modifier: Modifier = Modifier,
     cards: List<String>,
-    onSendMoney: (Double, String, String, String?, () -> Unit) -> Unit,
+    onSendMoney: (Double, String, String, String?) -> Unit,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
     onNavigateToRoute: (String) -> Unit
 ) {
     val uiState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-
-
-    LaunchedEffect(uiState.error) {
-        uiState.error?.let { error ->
-            error.message?.let {
-                snackbarHostState.showSnackbar(
-                    message = it,
-                    duration = SnackbarDuration.Short
-                )
-            }
-            viewModel.clearError()
-        }
-    }
-
-    // Observar el éxito de la llamada
-    /*LaunchedEffect(uiState.callSuccess) {
-        if (uiState.callSuccess) {
-            //Log.d("SendMoneyCard", "Navegando a HOME")
-            try {
-                onNavigateToRoute(AppDestinations.HOME.route)
-            } finally {
-                viewModel.clearCallSuccess()
-            }
-        }
-    }*/
 
     var selectedPaymentMethod by rememberSaveable  { mutableStateOf("") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
@@ -308,7 +287,7 @@ fun SendMoneyCard(
 
                 Button(
                     onClick = {
-                        try {
+                       /* try {
                             onSendMoney(
                                 amount.toDouble(),
                                 description,
@@ -322,7 +301,14 @@ fun SendMoneyCard(
                                 code = 400,
                                 message = e.message ?: "Error al procesar el pago"
                             ))
-                        }
+                        }*/
+                        onSendMoney(
+                            amount.toDouble(),
+                            description,
+                            selectedPaymentMethod,
+                            if (selectedPaymentMethod != paymentLinkString) email else null
+                        )
+                        onNavigateToRoute(AppDestinations.HOME.route)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

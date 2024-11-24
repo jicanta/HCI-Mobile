@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import android.content.res.Configuration
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalConfiguration
+import com.example.hci_mobile.components.navigation.AppDestinations
 
 
 private fun formatCardInfo(card: Card): String {
@@ -37,7 +38,8 @@ private fun formatCardInfo(card: Card): String {
 @Composable
 fun DepositMoneyScreen(
     onNavigateBack: () -> Unit,
-    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
+    onNavigateToRoute: (String) -> Unit
 ) {
     val uiState = viewModel.uiState
     val externalFundsString = stringResource(R.string.external_funds)
@@ -69,8 +71,11 @@ fun DepositMoneyScreen(
             DepositMoneyCard(
                 cards = paymentOptions,
                 onRecharge = { amount ->
-                    viewModel.recharge(amount)
-                }
+                    viewModel.recharge(amount){
+                        onNavigateToRoute(AppDestinations.HOME.route)
+                    }
+                },
+                onNavigateToRoute = onNavigateToRoute
             )
         }
     }
@@ -81,7 +86,8 @@ fun DepositMoneyScreen(
 fun DepositMoneyCard(
     modifier: Modifier = Modifier,
     cards: List<String>,
-    onRecharge: (Double) -> Unit
+    onRecharge: (Double) -> Unit,
+    onNavigateToRoute: (String) -> Unit
 ) {
     // Uso de rememberSaveable para mantener el estado durante recreaciones de la pantalla
     var selectedPaymentMethod by rememberSaveable { mutableStateOf("") }
@@ -202,6 +208,7 @@ fun DepositMoneyCard(
                 onClick = {
                     if (amount.isNotEmpty() && amount.toDoubleOrNull() != null) {
                         onRecharge(amount.toDouble())
+                        onNavigateToRoute(AppDestinations.HOME.route)
                     }
                 },
                 modifier = Modifier
@@ -228,6 +235,6 @@ fun DepositMoneyCard(
 @Composable
 fun DepositMoneyScreenPreview() {
     AppTheme(darkTheme = false) {
-        DepositMoneyScreen(onNavigateBack = {})
+        //DepositMoneyScreen(onNavigateBack = {})
     }
 }

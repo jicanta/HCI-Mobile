@@ -85,7 +85,7 @@ class HomeViewModel(
         { state, response -> state.copy(cards = response) }
     )
 
-    fun addCard(card: Card) = runOnViewModelScope(
+    fun addCard(card: Card, onSucessfullAdd: () -> Unit) = runOnViewModelScope(
         {
             walletRepository.addCard(card)
         },
@@ -94,7 +94,8 @@ class HomeViewModel(
                 currentCard = response,
                 cards = null
             )
-        }
+        },
+        callback = onSucessfullAdd
     )
 
     fun deleteCard(cardId: Int) = runOnViewModelScope(
@@ -112,12 +113,13 @@ class HomeViewModel(
         { state, response -> state.copy(balance = response) }
     )
 
-    fun recharge(amount: Double) = runOnViewModelScope(
+    fun recharge(amount: Double, onSucessfullRecharge: () -> Unit) = runOnViewModelScope(
         { walletRepository.recharge(amount)},
-        {state, _ -> state}
+        {state, _ -> state},
+        callback = onSucessfullRecharge
     )
 
-    fun makePayment(amount: Double, description: String, type: PaymentType, cardId: Int? = null, receiverEmail: String? = null) =
+    fun makePayment(amount: Double, description: String, type: PaymentType, cardId: Int? = null, receiverEmail: String? = null, onSucessfullPayment: () -> Unit) =
         runOnViewModelScope(
             { 
                 val result = paymentRepository.makePayment(amount, description, type, cardId, receiverEmail)
@@ -125,7 +127,8 @@ class HomeViewModel(
             },
             { state, success ->
                 state.copy(callSuccess = success)
-            }
+            },
+            callback = onSucessfullPayment
         )
 
     fun getWalletDetails() = runOnViewModelScope(

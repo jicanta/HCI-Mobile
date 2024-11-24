@@ -35,6 +35,7 @@ import com.example.hci_mobile.components.home_screen.getCardColor
 import com.example.hci_mobile.components.home_screen.getCardIcon
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.example.hci_mobile.components.navigation.AppDestinations
 
 // Función para formatear el número de tarjeta
 private fun formatCardNumber(number: String): String {
@@ -60,7 +61,8 @@ private fun isValidName(text: String): Boolean {
 @Composable
 fun AddPaymentMethodScreen(
     onNavigateBack: () -> Unit = {},
-    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
+    onNavigateToRoute: (String) -> Unit
 ) {
     var cardType by rememberSaveable { mutableStateOf("") }
     var displayCardType by rememberSaveable { mutableStateOf("") }
@@ -392,8 +394,10 @@ fun AddPaymentMethodScreen(
                         // Botón Guardar
                         Button(
                             onClick = {
-                                viewModel.addCard(card)
-                                onNavigateBack()
+                                viewModel.addCard(card){
+                                    onNavigateToRoute(AppDestinations.HOME.route)
+                                }
+                                //onNavigateBack()
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = AppTheme.colorScheme.primary),
                             shape = AppTheme.shape.button,
@@ -427,7 +431,7 @@ fun AddPaymentMethodScreen(
 @Composable
 fun AddPaymentMethodScreenPreview() {
     AppTheme(darkTheme = false){
-        AddPaymentMethodScreen()
+        //AddPaymentMethodScreen()
     }
 }
 
