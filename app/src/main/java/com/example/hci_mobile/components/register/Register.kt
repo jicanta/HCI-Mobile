@@ -25,6 +25,26 @@ import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.navigation.AppDestinations
 import com.example.hci_mobile.components.top_bar.TopBar
 import com.example.hci_mobile.ui.theme.AppTheme
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.TextRange
+
+private fun formatBirthDate(text: String): String {
+    val digitsOnly = text.filter { it.isDigit() }
+    val groups = mutableListOf<String>()
+    
+    var currentIndex = 0
+    while (currentIndex < digitsOnly.length && currentIndex < 8) {
+        val endIndex = when {
+            currentIndex == 0 -> minOf(4, digitsOnly.length)  // YYYY
+            currentIndex == 4 -> minOf(6, digitsOnly.length)  // MM
+            else -> digitsOnly.length  // DD
+        }
+        groups.add(digitsOnly.substring(currentIndex, endIndex))
+        currentIndex = endIndex
+    }
+    
+    return groups.joinToString("-")
+}
 
 @Composable
 fun RegisterScreen(
@@ -34,6 +54,8 @@ fun RegisterScreen(
     val uiState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
     var errorShown by remember { mutableStateOf(false) }
+    var birthDate by remember { mutableStateOf("") }
+    var birthDateField by remember { mutableStateOf(TextFieldValue()) }
 
     // Observar el estado de la API
     LaunchedEffect(uiState.error) {
@@ -74,7 +96,8 @@ fun RegisterScreen(
             RegisterCard(
                 onRegister = { firstName, lastName, birthDate, email, password ->
                     viewModel.register(firstName, lastName, birthDate, email, password)
-                }
+                },
+                onNavigateToRoute = onNavigateToRoute
             )
         }
     }
@@ -83,13 +106,15 @@ fun RegisterScreen(
 @Composable
 fun RegisterCard(
     modifier: Modifier = Modifier,
-    onRegister: (String, String, String, String, String) -> Unit
+    onRegister: (String, String, String, String, String) -> Unit,
+    onNavigateToRoute: (String) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var birthDate by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var birthDateField by remember { mutableStateOf(TextFieldValue()) }
 
     Card(
         modifier = Modifier
@@ -170,16 +195,23 @@ fun RegisterCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedTextField(
-                value = birthDate,
-                onValueChange = { input ->
-                    val formattedInput = when {
-                        input.length == 4 && birthDate.length == 3 -> "$input-"
-                        input.length == 7 && birthDate.length == 6 -> "$input-"
-                        else -> input
-                    }
-                    
-                    if (formattedInput.isEmpty() || formattedInput.matches(Regex("^\\d{0,4}(-\\d{0,2}(-\\d{0,2})?)?$"))) {
-                        birthDate = formattedInput
+                value = birthDateField,
+                onValueChange = { newValue ->
+                    val cleanText = newValue.text.replace("-", "")
+                    if (cleanText.all { it.isDigit() } && cleanText.length <= 8) {
+                        birthDate = cleanText
+                        val formatted = formatBirthDate(cleanText)
+                        
+                        // Calculate new cursor position
+                        val cursorOffset = newValue.selection.start
+                        val previousHyphens = birthDateField.text.take(cursorOffset).count { it == '-' }
+                        val newHyphens = formatted.take(cursorOffset).count { it == '-' }
+                        val cursorShift = newHyphens - previousHyphens
+                        
+                        birthDateField = TextFieldValue(
+                            text = formatted,
+                            selection = TextRange(newValue.selection.start + cursorShift)
+                        )
                     }
                 },
                 label = { Text(
@@ -231,6 +263,27 @@ fun RegisterCard(
                 Text(
                     text = stringResource(R.string.register),
                     color = AppTheme.colorScheme.onPrimary,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    style = AppTheme.typography.body
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = { onNavigateToRoute(AppDestinations.LOGIN.route) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = AppTheme.shape.button,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = AppTheme.colorScheme.secondary,
+                    contentColor = AppTheme.colorScheme.primary
+                )
+            ) {
+                Text(
+                    text = stringResource(R.string.login),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     style = AppTheme.typography.body
