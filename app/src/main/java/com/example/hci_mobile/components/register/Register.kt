@@ -25,26 +25,6 @@ import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.navigation.AppDestinations
 import com.example.hci_mobile.components.top_bar.TopBar
 import com.example.hci_mobile.ui.theme.AppTheme
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.TextRange
-
-private fun formatBirthDate(text: String): String {
-    val digitsOnly = text.filter { it.isDigit() }
-    val groups = mutableListOf<String>()
-    
-    var currentIndex = 0
-    while (currentIndex < digitsOnly.length && currentIndex < 8) {
-        val endIndex = when {
-            currentIndex == 0 -> minOf(4, digitsOnly.length)  // YYYY
-            currentIndex == 4 -> minOf(6, digitsOnly.length)  // MM
-            else -> digitsOnly.length  // DD
-        }
-        groups.add(digitsOnly.substring(currentIndex, endIndex))
-        currentIndex = endIndex
-    }
-    
-    return groups.joinToString("-")
-}
 
 @Composable
 fun RegisterScreen(
@@ -54,10 +34,9 @@ fun RegisterScreen(
     val uiState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
     var errorShown by remember { mutableStateOf(false) }
-    var birthDate by remember { mutableStateOf("") }
-    var birthDateField by remember { mutableStateOf(TextFieldValue()) }
 
     // Observar el estado de la API
+    /*
     LaunchedEffect(uiState.error) {
         if (uiState.error != null && !errorShown) {
             // Mostrar el mensaje de error en el Snackbar
@@ -75,14 +54,15 @@ fun RegisterScreen(
             errorShown = false
         }
     }
-
+*/
+    /*
     // Navegación separada del error
     LaunchedEffect(uiState.currentUser) {
         if (uiState.currentUser != null) {
             onNavigateToRoute(AppDestinations.VERIFY.route)
         }
     }
-
+*/
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
@@ -114,7 +94,6 @@ fun RegisterCard(
     var birthDate by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var birthDateField by remember { mutableStateOf(TextFieldValue()) }
 
     Card(
         modifier = Modifier
@@ -195,23 +174,16 @@ fun RegisterCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedTextField(
-                value = birthDateField,
-                onValueChange = { newValue ->
-                    val cleanText = newValue.text.replace("-", "")
-                    if (cleanText.all { it.isDigit() } && cleanText.length <= 8) {
-                        birthDate = cleanText
-                        val formatted = formatBirthDate(cleanText)
-                        
-                        // Calculate new cursor position
-                        val cursorOffset = newValue.selection.start
-                        val previousHyphens = birthDateField.text.take(cursorOffset).count { it == '-' }
-                        val newHyphens = formatted.take(cursorOffset).count { it == '-' }
-                        val cursorShift = newHyphens - previousHyphens
-                        
-                        birthDateField = TextFieldValue(
-                            text = formatted,
-                            selection = TextRange(newValue.selection.start + cursorShift)
-                        )
+                value = birthDate,
+                onValueChange = { input ->
+                    val formattedInput = when {
+                        input.length == 4 && birthDate.length == 3 -> "$input-"
+                        input.length == 7 && birthDate.length == 6 -> "$input-"
+                        else -> input
+                    }
+                    
+                    if (formattedInput.isEmpty() || formattedInput.matches(Regex("^\\d{0,4}(-\\d{0,2}(-\\d{0,2})?)?$"))) {
+                        birthDate = formattedInput
                     }
                 },
                 label = { Text(
@@ -253,6 +225,7 @@ fun RegisterCard(
             Button(
                 onClick = {
                     onRegister(name, lastName, birthDate, email, password)
+                    onNavigateToRoute(AppDestinations.VERIFY.route)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -268,7 +241,7 @@ fun RegisterCard(
                     style = AppTheme.typography.body
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
