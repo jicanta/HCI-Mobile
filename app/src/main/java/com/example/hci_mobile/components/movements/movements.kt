@@ -34,6 +34,9 @@ import com.example.hci_mobile.ui.theme.AppTheme
 import com.example.hci_mobile.api.data.model.Movement
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.ui.platform.LocalConfiguration
+import android.content.res.Configuration
+import com.example.hci_mobile.components.navigation.ResponsiveNavigation
 
 @Composable
 fun MovementsScreen(
@@ -44,6 +47,9 @@ fun MovementsScreen(
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
     val uiState = viewModel.uiState
+    val configuration = LocalConfiguration.current
+    val isTablet = configuration.screenWidthDp >= 600
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     LaunchedEffect(Unit) {
         viewModel.getPayments()
@@ -52,28 +58,50 @@ fun MovementsScreen(
     Log.d("MovementsScreen", "Payments: ${uiState.payments?.size}")
 
     Scaffold(
+        containerColor = AppTheme.colorScheme.background,
         topBar = { TopBarWithBack(R.string.movements, onNavigateBack = onNavigateBack) },
-        bottomBar = { BottomBar(currentRoute = currentRoute, onNavigateToRoute = onNavigateToRoute) }
+        bottomBar = {
+            if (!isTablet || !isLandscape) {
+                ResponsiveNavigation(
+                    currentRoute = currentRoute,
+                    onNavigateToRoute = onNavigateToRoute,
+                    modifier = Modifier
+                )
+            }
+        }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(AppTheme.colorScheme.background)
-                .padding(paddingValues)
+        Row(
+            modifier = Modifier.fillMaxSize()
         ) {
-            if (uiState.payments.isNullOrEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.available_movements),
-                        style = AppTheme.typography.body,
-                        color = AppTheme.colorScheme.textColor
-                    )
+            if (isTablet && isLandscape) {
+                ResponsiveNavigation(
+                    currentRoute = currentRoute,
+                    onNavigateToRoute = onNavigateToRoute,
+                    modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
+                )
+            }
+            
+            Column(
+                modifier = modifier
+                    .weight(1f)
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .fillMaxHeight()
+            ) {
+                if (uiState.payments.isNullOrEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.available_movements),
+                            style = AppTheme.typography.body,
+                            color = AppTheme.colorScheme.textColor
+                        )
+                    }
+                } else {
+                    MovementList(movements = uiState.payments)
                 }
-            } else {
-                MovementList(movements = uiState.payments)
             }
         }
     }

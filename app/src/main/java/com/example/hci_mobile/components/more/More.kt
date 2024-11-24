@@ -25,6 +25,7 @@ import com.example.hci_mobile.api.data.model.User
 import com.example.hci_mobile.components.bottom_bar.BottomBar
 import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.navigation.AppDestinations
+import com.example.hci_mobile.components.navigation.ResponsiveNavigation
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.components.verticalBar.VerticalBar
 import com.example.hci_mobile.ui.theme.AppTheme
@@ -47,8 +48,9 @@ fun SettingsScreen(
     var showLanguageDialog by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
 
-    // Detectar orientación
-    val isPortrait = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+    val configuration = LocalConfiguration.current
+    val isTablet = configuration.screenWidthDp >= 600
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     LaunchedEffect(Unit) {
         viewModel.getCurrentUser()
@@ -57,149 +59,143 @@ fun SettingsScreen(
     }
 
     Scaffold(
+        containerColor = AppTheme.colorScheme.background,
         topBar = { TopBarWithBack(R.string.configuration, onNavigateBack = onNavigateBack) },
         bottomBar = {
-            if (isPortrait) {
-                BottomBar(currentRoute = currentRoute, onNavigateToRoute = onNavigateToRoute)
+            if (!isTablet || !isLandscape) {
+                ResponsiveNavigation(
+                    currentRoute = currentRoute,
+                    onNavigateToRoute = onNavigateToRoute,
+                    modifier = Modifier
+                )
             }
         }
     ) { paddingValues ->
         Row(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
-            // Mostrar la barra vertical solo en modo horizontal
-            if (!isPortrait) {
-                VerticalBar(
+            if (isTablet && isLandscape) {
+                ResponsiveNavigation(
                     currentRoute = currentRoute,
                     onNavigateToRoute = onNavigateToRoute,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(paddingValues) // Aplicar el padding calculado por el Scaffold
-                        .width(80.dp) // Ancho fijo para la barra lateral
+                    modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
                 )
             }
 
-            // Contenido principal
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
+            // Main content
+            Box(
+                modifier = modifier
                     .weight(1f)
                     .padding(paddingValues)
-                    .background(AppTheme.colorScheme.background)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
+                Card(
                     modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                        .widthIn(max = 600.dp)
+                        .fillMaxWidth(0.9f),
+                    shape = AppTheme.shape.container,
+                    colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                 ) {
-                    Card(
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .wrapContentHeight(),
-                        shape = AppTheme.shape.container,
-                        colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            if (isLoading) {
-                                LoadingIndicator()
-                            } else {
-                                // Información del usuario
-                                AccountItem(
-                                    label = stringResource(R.string.full_name),
-                                    value = "${uiState.currentUser?.firstName} ${uiState.currentUser?.lastName}",
-                                    style = AppTheme.typography.body
-                                )
-                                
-                                Divider(color = AppTheme.colorScheme.onSecondary)
-                                
-                                AccountItem(
-                                    label = stringResource(R.string.email),
-                                    value = uiState.currentUser?.email ?: "",
-                                    style = AppTheme.typography.body
-                                )
-                                
-                                Divider(color = AppTheme.colorScheme.onSecondary)
-                                
-                                AccountItem(
-                                    label = stringResource(R.string.birth_date_without_format),
-                                    value = uiState.currentUser?.birthDate?.let {
-                                        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it)
-                                    } ?: "",
-                                    style = AppTheme.typography.body
-                                )
+                        if (isLoading) {
+                            LoadingIndicator()
+                        } else {
+                            // Información del usuario
+                            AccountItem(
+                                label = stringResource(R.string.full_name),
+                                value = "${uiState.currentUser?.firstName} ${uiState.currentUser?.lastName}",
+                                style = AppTheme.typography.body
+                            )
+                            
+                            Divider(color = AppTheme.colorScheme.onSecondary)
+                            
+                            AccountItem(
+                                label = stringResource(R.string.email),
+                                value = uiState.currentUser?.email ?: "",
+                                style = AppTheme.typography.body
+                            )
+                            
+                            Divider(color = AppTheme.colorScheme.onSecondary)
+                            
+                            AccountItem(
+                                label = stringResource(R.string.birth_date_without_format),
+                                value = uiState.currentUser?.birthDate?.let {
+                                    SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it)
+                                } ?: "",
+                                style = AppTheme.typography.body
+                            )
 
-                                Divider(color = AppTheme.colorScheme.onSecondary)
+                            Divider(color = AppTheme.colorScheme.onSecondary)
 
-                                // Dark Mode
-                                AccountItem(
-                                    label = stringResource(R.string.dark_mode),
-                                    trailing = {
-                                        Switch(
-                                            checked = darkTheme,
-                                            onCheckedChange = onThemeUpdated,
-                                            colors = SwitchDefaults.colors(
-                                                checkedThumbColor = AppTheme.colorScheme.primary,
-                                                checkedTrackColor = AppTheme.colorScheme.primary.copy(alpha = 0.5f),
-                                                uncheckedThumbColor = AppTheme.colorScheme.textColor,
-                                                uncheckedTrackColor = AppTheme.colorScheme.textColor.copy(alpha = 0.5f)
-                                            )
+                            // Dark Mode
+                            AccountItem(
+                                label = stringResource(R.string.dark_mode),
+                                trailing = {
+                                    Switch(
+                                        checked = darkTheme,
+                                        onCheckedChange = onThemeUpdated,
+                                        colors = SwitchDefaults.colors(
+                                            checkedThumbColor = AppTheme.colorScheme.primary,
+                                            checkedTrackColor = AppTheme.colorScheme.primary.copy(alpha = 0.5f),
+                                            uncheckedThumbColor = AppTheme.colorScheme.textColor,
+                                            uncheckedTrackColor = AppTheme.colorScheme.textColor.copy(alpha = 0.5f)
+                                        )
+                                    )
+                                }
+                            )
+
+                            Divider(color = AppTheme.colorScheme.onSecondary)
+
+                            // Language
+                            AccountItem(
+                                label = stringResource(R.string.language),
+                                value = when (currentLocale.language) {
+                                    "es" -> "Español"
+                                    "en" -> "English"
+                                    else -> "Español"
+                                },
+                                trailing = {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Text(
+                                            text = when (currentLocale.language) {
+                                                "es" -> "Español"
+                                                "en" -> "English"
+                                                else -> "Español"
+                                            },
+                                            style = AppTheme.typography.body,
+                                            color = AppTheme.colorScheme.textColor
+                                        )
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                            contentDescription = null,
+                                            tint = AppTheme.colorScheme.textColor
                                         )
                                     }
-                                )
+                                },
+                                onClick = { showLanguageDialog = true }
+                            )
 
-                                Divider(color = AppTheme.colorScheme.onSecondary)
+                            Divider(color = AppTheme.colorScheme.onSecondary)
 
-                                // Language
-                                AccountItem(
-                                    label = stringResource(R.string.language),
-                                    value = when (currentLocale.language) {
-                                        "es" -> "Español"
-                                        "en" -> "English"
-                                        else -> "Español"
-                                    },
-                                    trailing = {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                        ) {
-                                            Text(
-                                                text = when (currentLocale.language) {
-                                                    "es" -> "Español"
-                                                    "en" -> "English"
-                                                    else -> "Español"
-                                                },
-                                                style = AppTheme.typography.body,
-                                                color = AppTheme.colorScheme.textColor
-                                            )
-                                            Icon(
-                                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                                contentDescription = null,
-                                                tint = AppTheme.colorScheme.textColor
-                                            )
-                                        }
-                                    },
-                                    onClick = { showLanguageDialog = true }
-                                )
-
-                                Divider(color = AppTheme.colorScheme.onSecondary)
-
-                                // Logout
-                                AccountItem(
-                                    label = stringResource(R.string.logout),
-                                    textColor = AppTheme.colorScheme.tertiary,
-                                    onClick = {
-                                        viewModel.logout()
-                                        onNavigateToRoute(AppDestinations.LOGIN.route)
-                                    }
-                                )
-                            }
+                            // Logout
+                            AccountItem(
+                                label = stringResource(R.string.logout),
+                                textColor = AppTheme.colorScheme.tertiary,
+                                onClick = {
+                                    viewModel.logout()
+                                    onNavigateToRoute(AppDestinations.LOGIN.route)
+                                }
+                            )
                         }
                     }
                 }
