@@ -56,4 +56,8 @@ class WalletRepository(
         return result.asModel()
     }
 
+    suspend fun updateAlias(alias: String){
+        remoteDataSource.updateAlias(alias)
+    }
+
 }

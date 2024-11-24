@@ -1,4 +1,5 @@
 package com.example.hci_mobile.components.register
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,28 +31,66 @@ fun RegisterScreen(
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
     onNavigateToRoute: (String) -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppTheme.colorScheme.background),
-        contentAlignment = Alignment.Center
-    ) {
-        RegisterCard(
-            onRegister = {
-                firstName, lastName, birthDate, email, password ->
-                viewModel.register(firstName, lastName, birthDate, email, password)
-            },
-            onNavigateToRoute = onNavigateToRoute
-        )
+    val uiState = viewModel.uiState
+    val snackbarHostState = remember { SnackbarHostState() }
+    var errorShown by remember { mutableStateOf(false) }
+
+    // Observar el estado de la API
+    LaunchedEffect(uiState.error) {
+        if (uiState.error != null && !errorShown) {
+            // Mostrar el mensaje de error en el Snackbar
+            snackbarHostState.showSnackbar(
+                message = when (uiState.error!!.code) {
+                    400 -> "Datos inválidos"
+                    409 -> "El email ya está registrado"
+                    else -> uiState.error!!.message
+                },
+                duration = SnackbarDuration.Short
+            )
+            errorShown = true
+            viewModel.clearError()
+        } else if (uiState.error == null) {
+            errorShown = false
+        }
+    }
+
+    // Navegación separada del error
+    LaunchedEffect(uiState.currentUser) {
+        if (uiState.currentUser != null) {
+            onNavigateToRoute(AppDestinations.VERIFY.route)
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(AppTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
+        ) {
+            RegisterCard(
+                onRegister = { firstName, lastName, birthDate, email, password ->
+                    viewModel.register(firstName, lastName, birthDate, email, password)
+                }
+            )
+        }
     }
 }
 
 @Composable
 fun RegisterCard(
     modifier: Modifier = Modifier,
-    onNavigateToRoute: (String) -> Unit,
     onRegister: (String, String, String, String, String) -> Unit
 ) {
+    var name by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var birthDate by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
     Card(
         modifier = Modifier
             .fillMaxWidth(0.9f)
@@ -74,12 +113,6 @@ fun RegisterCard(
                 style = AppTheme.typography.body,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
-            var name by remember { mutableStateOf("") }
-            var lastName by remember { mutableStateOf("") }
-            var birthDate by remember { mutableStateOf("") }
-            var email by remember { mutableStateOf("") }
-            var password by remember { mutableStateOf("") }
 
             OutlinedTextField(
                 value = name,
@@ -188,8 +221,6 @@ fun RegisterCard(
             Button(
                 onClick = {
                     onRegister(name, lastName, birthDate, email, password)
-                    //TODO: hacer algo para ver si no dio error
-                    onNavigateToRoute(AppDestinations.VERIFY.route)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -201,20 +232,6 @@ fun RegisterCard(
                     text = stringResource(R.string.register),
                     color = AppTheme.colorScheme.onPrimary,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    style = AppTheme.typography.body
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            TextButton(
-                onClick = { onNavigateToRoute(AppDestinations.LOGIN.route) }
-            ) {
-                Text(
-                    text = stringResource(R.string.login),
-                    color = AppTheme.colorScheme.primary,
-                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     style = AppTheme.typography.body
                 )

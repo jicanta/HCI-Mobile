@@ -94,5 +94,7 @@
     <string name="copied_to_clipboard">Copiado al portapapeles</string>
     <string name="view_all_payment_methods">Ver todos</string>
     <string name="delete_card">Eliminar método de pago</string>
-    <string name="expires">Vence el</string>
+    <string name="expires">Vence en</string>
+    <string name="confirm">Confirmar</string>
+    <string name="enter_new_alias">Ingrese un nuevo alias</string>
 </resources>

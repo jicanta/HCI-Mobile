@@ -1,6 +1,7 @@
 package com.example.hci_mobile.api.data.network
 
 import com.example.hci_mobile.api.data.network.api.WalletApiService
+import com.example.hci_mobile.api.data.network.model.NetworkAlias
 import com.example.hci_mobile.api.data.network.model.NetworkAmount
 import com.example.hci_mobile.api.data.network.model.NetworkBalance
 import com.example.hci_mobile.api.data.network.model.NetworkCard
@@ -43,5 +44,9 @@ class WalletRemoteDataSource(
         return handleApiResponse {
             walletApiService.getWalletDetails()
         }
+    }
+
+    suspend fun updateAlias(alias: String){
+        walletApiService.updateAlias(NetworkAlias(alias))
     }
 }

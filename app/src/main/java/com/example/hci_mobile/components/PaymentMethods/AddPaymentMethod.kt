@@ -114,7 +114,6 @@ fun AddPaymentMethodScreen(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Preview Card
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -122,7 +121,7 @@ fun AddPaymentMethodScreen(
                         .padding(bottom = 24.dp),
                     shape = AppTheme.shape.container,
                     colors = CardDefaults.cardColors(
-                        containerColor = if (cardNumber.isEmpty()) AppTheme.colorScheme.primary 
+                        containerColor = if (cardNumber.isEmpty()) AppTheme.colorScheme.primary
                                         else getCardColor(getCardType(cardNumber))
                     )
                 ) {

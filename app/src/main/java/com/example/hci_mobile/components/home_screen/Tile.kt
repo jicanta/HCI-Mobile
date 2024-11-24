@@ -54,7 +54,8 @@ fun Tile(
         Text(
             text = stringResource(id = dataIcon.label),
             style = AppTheme.typography.body,
-            modifier = Modifier.padding(top = 4.dp)
+            modifier = Modifier.padding(top = 4.dp),
+            color = AppTheme.colorScheme.textColor
         )
     }
 }

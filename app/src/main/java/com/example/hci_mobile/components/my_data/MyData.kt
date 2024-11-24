@@ -10,6 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,7 +55,7 @@ fun AccountDataScreen(
         ) {
             AccountCard(
                 wallet = uiState.wallet,
-                onModifyAlias = { /* TODO: Implementar modificación de alias */ }
+                onModifyAlias = { alias -> viewModel.updateAlias(alias) }
             )
         }
     }
@@ -60,8 +64,11 @@ fun AccountDataScreen(
 @Composable
 fun AccountCard(
     wallet: Wallet?,
-    onModifyAlias: () -> Unit
+    onModifyAlias: (String) -> Unit
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+    var newAlias by remember { mutableStateOf("") }
+
     Card(
         modifier = Modifier
             .fillMaxWidth(0.9f)
@@ -76,13 +83,6 @@ fun AccountCard(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Balance
-            AccountItem(
-                label = stringResource(R.string.account_balance),
-                value = wallet?.balance?.toString() ?: "0.0",
-                style = AppTheme.typography.body
-            )
-            
             // CBU
             AccountItem(
                 label = stringResource(R.string.cbu),
@@ -100,10 +100,9 @@ fun AccountCard(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Botón Modificar Alias
+            
             Button(
-                onClick = onModifyAlias,
+                onClick = { showDialog = true },
                 colors = ButtonDefaults.buttonColors(containerColor = AppTheme.colorScheme.primary),
                 shape = AppTheme.shape.button,
                 modifier = Modifier
@@ -119,6 +118,64 @@ fun AccountCard(
                 )
             }
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { 
+                Text(
+                    text = stringResource(R.string.change_alias),
+                    style = AppTheme.typography.title,
+                    color = AppTheme.colorScheme.textColor
+                ) 
+            },
+            text = {
+                TextField(
+                    value = newAlias,
+                    onValueChange = { newAlias = it },
+                    placeholder = { 
+                        Text(
+                            text = stringResource(R.string.enter_new_alias),
+                            color = AppTheme.colorScheme.textColor.copy(alpha = 0.6f)
+                        ) 
+                    },
+                    singleLine = true,
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedTextColor = AppTheme.colorScheme.textColor,
+                        unfocusedTextColor = AppTheme.colorScheme.textColor,
+                        focusedIndicatorColor = AppTheme.colorScheme.primary,
+                        unfocusedIndicatorColor = AppTheme.colorScheme.primary.copy(alpha = 0.6f)
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onModifyAlias(newAlias)
+                        showDialog = false
+                        newAlias = ""
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.confirm),
+                        color = AppTheme.colorScheme.tertiary
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        color = AppTheme.colorScheme.tertiary
+                    )
+                }
+            },
+            containerColor = AppTheme.colorScheme.secondary,
+            shape = AppTheme.shape.container
+        )
     }
 }
 
@@ -170,8 +227,7 @@ private fun copyToClipboard(context: Context, text: String, label: String) {
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText(label, text)
     clipboard.setPrimaryClip(clip)
-    
-    // Mostrar mensaje de confirmación
+
     Toast.makeText(
         context,
         context.getString(R.string.copied_to_clipboard).replace("{label}", label),

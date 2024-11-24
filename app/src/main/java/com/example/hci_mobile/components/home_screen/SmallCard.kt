@@ -54,12 +54,13 @@ fun SmallCard(
     }
 }
 
+@Composable
 fun getCardColor(type: String): Color {
     return when (type.lowercase()) {
         "visa" -> Color(0xFF000000)
         "mastercard" -> Color(0xFF2196F3)
         "american express" -> Color(0xFFEF6C00)
-        else -> Color(0xFF9E9E9E)
+        else -> AppTheme.colorScheme.primary
     }
 }
 

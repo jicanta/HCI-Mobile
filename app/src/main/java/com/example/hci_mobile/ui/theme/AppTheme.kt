@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,15 +24,23 @@ private val lightColorScheme = AppColorScheme(
     onTertiary = LightPink
 )
 
+private val DarkNavy = Color(0xFF1A1B2E)      // Azul muy oscuro para el fondo
+private val DeepBlue = Color(0xFF2D3250)      // Azul profundo para superficies
+private val Orange = Color(0xFFFF8C42)        // Naranja vibrante para acentos
+private val LightOrange = Color(0xFFFFB088)   // Naranja claro para elementos secundarios
+private val DarkGrey2 = Color(0xFF2C2C2C)      // Gris oscuro para superficies secundarias
+private val OffWhite = Color(0xFFF5F5F5)      // Blanco apagado para texto
+private val BrightOrange = Color(0xFFFF9F5A)   // Naranja más brillante y vibrante
+
 private val darkColorScheme = AppColorScheme(
-    background = LightBlueGrey,
-    primary = DarkBlue,
-    secondary = LightBlue,
-    onPrimary = White,
-    textColor = White,
-    tertiary = Pink,
-    onSecondary = Black,
-    onTertiary = LightPink
+    background = DarkNavy,        // Fondo principal de la app
+    primary = DarkPurple,
+    secondary = DeepBlue,         // Color para tarjetas y superficies elevadas
+    onPrimary = OffWhite,        // Color del texto sobre elementos primary
+    textColor = OffWhite,        // Color general del texto
+    tertiary = BrightOrange,     // Color más brillante para "View all" y otros enlaces
+    onSecondary = OffWhite,      // Color del texto sobre elementos secondary
+    onTertiary = DarkGrey2
 )
 
 private val typography = AppTypography(

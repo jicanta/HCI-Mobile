@@ -1,6 +1,7 @@
 package com.example.hci_mobile.api.data.network.api
 
 
+import com.example.hci_mobile.api.data.network.model.NetworkAlias
 import com.example.hci_mobile.api.data.network.model.NetworkAmount
 import com.example.hci_mobile.api.data.network.model.NetworkBalance
 import com.example.hci_mobile.api.data.network.model.NetworkCard
@@ -10,6 +11,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface WalletApiService {
@@ -33,4 +35,8 @@ interface WalletApiService {
 
     @GET("wallet/details")
     suspend fun getWalletDetails(): Response<NetworkWallet>
+
+    @PUT("wallet/update-alias")
+    suspend fun updateAlias(@Body alias: NetworkAlias): Response<Unit>
+
 }

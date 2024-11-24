@@ -35,7 +35,10 @@ class HomeViewModel(
         private set
 
     fun register(firstName: String, lastName: String, birthDate: String , email: String, password: String) = runOnViewModelScope(
-        { userRepository.register(firstName, lastName, birthDate, email, password) },
+        { 
+            clearError()  //TODO: limpia el error
+            userRepository.register(firstName, lastName, birthDate, email, password) 
+        },
         { state, response -> state.copy(currentUser = response) }
     )
 
@@ -113,6 +116,15 @@ class HomeViewModel(
     fun getWalletDetails() = runOnViewModelScope(
         { walletRepository.getWalletDetails() },
         { state, response -> state.copy(wallet = response) }
+    )
+
+    fun clearError() {
+        uiState = uiState.copy(error = null)
+    }
+
+    fun updateAlias(alias: String) = runOnViewModelScope(
+        {walletRepository.updateAlias(alias)},
+        { state, _ -> state }
     )
 
     private fun <R> runOnViewModelScope(

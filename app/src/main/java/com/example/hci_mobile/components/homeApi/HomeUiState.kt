@@ -13,7 +13,7 @@ data class HomeUiState(
     val currentUser: User? = null,
     val cards: List<Card>? = null,
     val currentCard: Card? = null,
-    val error: ApiError? = null,
+    var error: ApiError? = null,  //TODO: chequear si esta bien que sea asi
     val balance: Balance? = null,
     val wallet: Wallet? = null
 )
