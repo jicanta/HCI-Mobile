@@ -97,4 +97,7 @@
     <string name="expires">Expires in</string>
     <string name="confirm">Confirm</string>
     <string name="enter_new_alias">Enter a new alias</string>
+    <string name="available_movements">There are no available movements</string>
+    <string name="birth_date_without_format">Birth date</string>
+
 </resources>

@@ -35,9 +35,9 @@ class HomeViewModel(
         private set
 
     fun register(firstName: String, lastName: String, birthDate: String , email: String, password: String) = runOnViewModelScope(
-        { 
+        {
             clearError()  //TODO: limpia el error
-            userRepository.register(firstName, lastName, birthDate, email, password) 
+            userRepository.register(firstName, lastName, birthDate, email, password)
         },
         { state, response -> state.copy(currentUser = response) }
     )
@@ -106,12 +106,23 @@ class HomeViewModel(
         {state, _ -> state}
     )
 
-    fun makePayment(amount: Double, description: String, type: PaymentType, cardId: Int? = null, receiverEmail: String? = null) {
+    fun makePayment(amount: Double, description: String, type: PaymentType, cardId: Int? = null, receiverEmail: String? = null) = 
         runOnViewModelScope(
-            { paymentRepository.makePayment(amount, description, type, cardId, receiverEmail) },
-            {state, _ -> state}
+            { 
+                Log.d(TAG, "Iniciando makePayment")
+                paymentRepository.makePayment(amount, description, type, cardId, receiverEmail)
+                Log.d(TAG, "Pago completado exitosamente")
+                setCallSuccess()
+                Log.d(TAG, "CallSuccess establecido a: ${uiState.callSuccess}")
+                true
+            },
+            { state, success -> 
+                Log.d(TAG, "Actualizando estado después del pago")
+                state.copy(callSuccess = true).also {
+                    Log.d(TAG, "Nuevo estado callSuccess: ${it.callSuccess}")
+                }
+            }
         )
-    }
 
     fun getWalletDetails() = runOnViewModelScope(
         { walletRepository.getWalletDetails() },
@@ -126,6 +137,27 @@ class HomeViewModel(
         {walletRepository.updateAlias(alias)},
         { state, _ -> state }
     )
+
+    fun getPayments() = runOnViewModelScope(
+        { paymentRepository.getPayments() },
+        { state, response -> state.copy(payments = response) }
+    )
+
+    fun setError(e: ApiError){
+        uiState = uiState.copy(error = e)
+    }
+
+    fun setCallSuccess() {
+        Log.d(TAG, "setCallSuccess llamado")
+        uiState = uiState.copy(callSuccess = true)
+        Log.d(TAG, "Nuevo valor de callSuccess: ${uiState.callSuccess}")
+    }
+
+    fun clearCallSuccess() {
+        Log.d(TAG, "clearCallSuccess llamado")
+        uiState = uiState.copy(callSuccess = false)
+        Log.d(TAG, "Valor de callSuccess después de clear: ${uiState.callSuccess}")
+    }
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,

@@ -39,4 +39,6 @@ interface WalletApiService {
     @PUT("wallet/update-alias")
     suspend fun updateAlias(@Body alias: NetworkAlias): Response<Unit>
 
+
+
 }

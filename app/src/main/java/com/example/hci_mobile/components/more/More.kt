@@ -15,11 +15,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hci_mobile.MyApplication
 import com.example.hci_mobile.R
+import com.example.hci_mobile.api.data.model.User
 import com.example.hci_mobile.components.bottom_bar.BottomBar
 import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.navigation.AppDestinations
@@ -83,135 +85,119 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
-                    .padding(paddingValues) // Aplica el padding general para evitar superposición
+                    .padding(paddingValues)
+                    .background(AppTheme.colorScheme.background)
             ) {
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = stringResource(R.string.dark_mode),
-                        color = AppTheme.colorScheme.textColor,
-                        style = AppTheme.typography.body
-                    )
-                    Switch(
-                        checked = darkTheme,
-                        onCheckedChange = onThemeUpdated,
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = AppTheme.colorScheme.primary,
-                            uncheckedThumbColor = AppTheme.colorScheme.background
-                        )
-                    )
-                }
-                Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { showLanguageDialog = true }
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = stringResource(R.string.language),
-                        color = AppTheme.colorScheme.textColor,
-                        style = AppTheme.typography.body
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = when (currentLocale.language) {
-                                "es" -> "Español"
-                                "en" -> "English"
-                                else -> "Español"
-                            },
-                            color = AppTheme.colorScheme.textColor,
-                            style = AppTheme.typography.body
-                        )
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = null,
-                            tint = AppTheme.colorScheme.primary
-                        )
-                    }
-                }
-                Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            viewModel.logout()
-                            onNavigateToRoute(AppDestinations.LOGIN.route)
-                        }
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = stringResource(R.string.logout),
-                        color = AppTheme.colorScheme.tertiary,
-                        style = AppTheme.typography.body
-                    )
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = null,
-                        tint = AppTheme.colorScheme.tertiary
-                    )
-                }
-                Divider(color = AppTheme.colorScheme.onSecondary, thickness = 1.dp)
-
-                if (isLoading) {
-                    CircularProgressIndicator(
+                    Card(
                         modifier = Modifier
-                            .padding(16.dp)
-                            .align(Alignment.CenterHorizontally),
-                        color = AppTheme.colorScheme.primary
-                    )
-                } else if (uiState.currentUser == null) {
-                    Text(
-                        text = "No se pudieron cargar los datos del usuario",
-                        modifier = Modifier.padding(16.dp),
-                        color = AppTheme.colorScheme.tertiary
-                    )
-                } else {
-                    uiState.currentUser?.let { user ->
-                        Card(
+                            .fillMaxWidth(0.9f)
+                            .wrapContentHeight(),
+                        shape = AppTheme.shape.container,
+                        colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                    ) {
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = AppTheme.colorScheme.secondary
-                            )
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            Column(
-                                modifier = Modifier.padding(16.dp)
-                            ) {
-                                UserInfoItem(
+                            if (isLoading) {
+                                LoadingIndicator()
+                            } else {
+                                // Información del usuario
+                                AccountItem(
                                     label = stringResource(R.string.full_name),
-                                    value = "${user.firstName} ${user.lastName}"
+                                    value = "${uiState.currentUser?.firstName} ${uiState.currentUser?.lastName}",
+                                    style = AppTheme.typography.body
                                 )
-                                Divider(
-                                    modifier = Modifier.padding(vertical = 8.dp),
-                                    color = AppTheme.colorScheme.onSecondary
-                                )
-                                UserInfoItem(
+                                
+                                Divider(color = AppTheme.colorScheme.onSecondary)
+                                
+                                AccountItem(
                                     label = stringResource(R.string.email),
-                                    value = user.email
+                                    value = uiState.currentUser?.email ?: "",
+                                    style = AppTheme.typography.body
                                 )
-                                Divider(
-                                    modifier = Modifier.padding(vertical = 8.dp),
-                                    color = AppTheme.colorScheme.onSecondary
+                                
+                                Divider(color = AppTheme.colorScheme.onSecondary)
+                                
+                                AccountItem(
+                                    label = stringResource(R.string.birth_date_without_format),
+                                    value = uiState.currentUser?.birthDate?.let {
+                                        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it)
+                                    } ?: "",
+                                    style = AppTheme.typography.body
                                 )
-                                UserInfoItem(
-                                    label = stringResource(R.string.birth_date),
-                                    value = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(user.birthDate)
+
+                                Divider(color = AppTheme.colorScheme.onSecondary)
+
+                                // Dark Mode
+                                AccountItem(
+                                    label = stringResource(R.string.dark_mode),
+                                    trailing = {
+                                        Switch(
+                                            checked = darkTheme,
+                                            onCheckedChange = onThemeUpdated,
+                                            colors = SwitchDefaults.colors(
+                                                checkedThumbColor = AppTheme.colorScheme.primary,
+                                                checkedTrackColor = AppTheme.colorScheme.primary.copy(alpha = 0.5f),
+                                                uncheckedThumbColor = AppTheme.colorScheme.textColor,
+                                                uncheckedTrackColor = AppTheme.colorScheme.textColor.copy(alpha = 0.5f)
+                                            )
+                                        )
+                                    }
+                                )
+
+                                Divider(color = AppTheme.colorScheme.onSecondary)
+
+                                // Language
+                                AccountItem(
+                                    label = stringResource(R.string.language),
+                                    value = when (currentLocale.language) {
+                                        "es" -> "Español"
+                                        "en" -> "English"
+                                        else -> "Español"
+                                    },
+                                    trailing = {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                        ) {
+                                            Text(
+                                                text = when (currentLocale.language) {
+                                                    "es" -> "Español"
+                                                    "en" -> "English"
+                                                    else -> "Español"
+                                                },
+                                                style = AppTheme.typography.body,
+                                                color = AppTheme.colorScheme.textColor
+                                            )
+                                            Icon(
+                                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                                contentDescription = null,
+                                                tint = AppTheme.colorScheme.textColor
+                                            )
+                                        }
+                                    },
+                                    onClick = { showLanguageDialog = true }
+                                )
+
+                                Divider(color = AppTheme.colorScheme.onSecondary)
+
+                                // Logout
+                                AccountItem(
+                                    label = stringResource(R.string.logout),
+                                    textColor = AppTheme.colorScheme.tertiary,
+                                    onClick = {
+                                        viewModel.logout()
+                                        onNavigateToRoute(AppDestinations.LOGIN.route)
+                                    }
                                 )
                             }
                         }
@@ -255,31 +241,56 @@ fun SettingsScreen(
     }
 }
 
-
-
 @Composable
-private fun UserInfoItem(
+private fun AccountItem(
     label: String,
-    value: String
+    value: String = "",
+    textColor: Color = AppTheme.colorScheme.textColor,
+    style: TextStyle = AppTheme.typography.body,
+    trailing: @Composable (() -> Unit)? = null,
+    onClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = label,
-            style = AppTheme.typography.body,
-            color = AppTheme.colorScheme.secondary,
-            modifier = Modifier.weight(1f)
+            style = style,
+            color = textColor
         )
-        Text(
-            text = value,
-            style = AppTheme.typography.body,
-            color = AppTheme.colorScheme.secondary,
-            modifier = Modifier.weight(2f)
+        if (trailing != null) {
+            trailing()
+        } else if (value.isNotEmpty()) {
+            Text(
+                text = value,
+                style = style,
+                color = textColor
+            )
+        }
+        if (onClick != null && trailing == null) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                contentDescription = null,
+                tint = textColor
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoadingIndicator() {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.padding(16.dp),
+            color = AppTheme.colorScheme.primary
         )
     }
 }

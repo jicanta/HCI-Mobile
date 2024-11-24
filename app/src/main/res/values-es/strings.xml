@@ -70,7 +70,7 @@
     <string name="enter_amount">Ingrese el monto</string>
     <string name="enter_description">Ingrese una descripción</string>
     <string name="verify">Verificar</string>
-    <string name="birth_date">Fecha de Nacimiento (YYYY-MM-DD)</string>
+    <string name="birth_date">Fecha de nacimiento (YYYY-MM-DD)</string>
     <string name="money_in_account">Dinero en la cuenta</string>
     <string name="external_funds">Fuentes externas</string>
     <string name="verify_title">Verificá tu cuenta! Ingresa el token que recibiste en tu mail</string>
@@ -97,4 +97,6 @@
     <string name="expires">Vence en</string>
     <string name="confirm">Confirmar</string>
     <string name="enter_new_alias">Ingrese un nuevo alias</string>
+    <string name="available_movements">No hay movimientos disponibles</string>
+    <string name="birth_date_without_format">Fecha de nacimiento</string>
 </resources>

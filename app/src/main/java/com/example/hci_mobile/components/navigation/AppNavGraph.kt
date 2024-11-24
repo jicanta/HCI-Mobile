@@ -102,7 +102,7 @@ fun AppNavGraph(
             RegisterScreen(onNavigateToRoute = onNavigateToRoute)
         }
         composable(route = AppDestinations.SEND.route) {
-            SendScreen(onNavigateBack = onNavigateBack)
+            SendScreen(onNavigateBack = onNavigateBack, onNavigateToRoute = onNavigateToRoute)
         }
         composable(route = AppDestinations.VERIFY.route) {
             VerifyScreen(onNavigateToRoute = onNavigateToRoute)

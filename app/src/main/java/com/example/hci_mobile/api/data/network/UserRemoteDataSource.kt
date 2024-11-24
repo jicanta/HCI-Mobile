@@ -4,6 +4,8 @@ import com.example.hci_mobile.SessionManager
 import com.example.hci_mobile.api.data.network.api.UserApiService
 import com.example.hci_mobile.api.data.network.model.NetworkCode
 import com.example.hci_mobile.api.data.network.model.NetworkCredentials
+import com.example.hci_mobile.api.data.network.model.NetworkMovement
+import com.example.hci_mobile.api.data.network.model.NetworkMovementUser
 import com.example.hci_mobile.api.data.network.model.NetworkToken
 import com.example.hci_mobile.api.data.network.model.NetworkUser
 
@@ -40,7 +42,7 @@ class UserRemoteDataSource(
         sessionManager.removeAuthToken()
     }
 
-    suspend fun getCurrentUser(): NetworkUser {
+    suspend fun getCurrentUser(): NetworkMovementUser {
         return handleApiResponse { userApiService.getCurrentUser() }
     }
 }

@@ -35,34 +35,6 @@ fun RegisterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var errorShown by remember { mutableStateOf(false) }
 
-    // Observar el estado de la API
-    /*
-    LaunchedEffect(uiState.error) {
-        if (uiState.error != null && !errorShown) {
-            // Mostrar el mensaje de error en el Snackbar
-            snackbarHostState.showSnackbar(
-                message = when (uiState.error!!.code) {
-                    400 -> "Datos inválidos"
-                    409 -> "El email ya está registrado"
-                    else -> uiState.error!!.message
-                },
-                duration = SnackbarDuration.Short
-            )
-            errorShown = true
-            viewModel.clearError()
-        } else if (uiState.error == null) {
-            errorShown = false
-        }
-    }
-*/
-    /*
-    // Navegación separada del error
-    LaunchedEffect(uiState.currentUser) {
-        if (uiState.currentUser != null) {
-            onNavigateToRoute(AppDestinations.VERIFY.route)
-        }
-    }
-*/
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
