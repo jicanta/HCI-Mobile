@@ -173,7 +173,7 @@ fun PaymentMethodList(
                 exit = fadeOut() + shrinkVertically()
             ) {
                 Text(
-                    text = "No tienes tarjetas registradas",
+                    text = stringResource( R.string.no_registered_cards),
                     style = AppTheme.typography.body,
                     modifier = Modifier
                         .fillMaxWidth()
