@@ -22,6 +22,8 @@ import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
 import androidx.compose.runtime.LaunchedEffect
+import android.content.res.Configuration
+import androidx.compose.ui.platform.LocalConfiguration
 
 // Función auxiliar para formatear la información de la tarjeta
 private fun formatCardInfo(card: Card): String {
@@ -83,10 +85,16 @@ fun DepositMoneyCard(
     var selectedPaymentMethod by remember { mutableStateOf("") }
     var isDropdownExpanded by remember { mutableStateOf(false) }
     var amount by remember { mutableStateOf("") }
+    
+    val configuration = LocalConfiguration.current
+    val isTablet = configuration.screenWidthDp >= 600
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    
+    val cardWidth = if (isTablet && isLandscape) 0.6f else 0.9f
 
     Card(
         modifier = Modifier
-            .fillMaxWidth(0.9f)
+            .fillMaxWidth(cardWidth)
             .wrapContentHeight(),
         shape = AppTheme.shape.container,
         colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary),
@@ -121,7 +129,9 @@ fun DepositMoneyCard(
                     unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                     disabledContainerColor = AppTheme.colorScheme.onTertiary,
                     focusedTextColor = AppTheme.colorScheme.textColor,
-                    unfocusedTextColor = AppTheme.colorScheme.textColor
+                    unfocusedTextColor = AppTheme.colorScheme.textColor,
+                    focusedBorderColor = AppTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = AppTheme.colorScheme.tertiary
                 )
             )
 
@@ -153,12 +163,15 @@ fun DepositMoneyCard(
                         unfocusedContainerColor = AppTheme.colorScheme.onTertiary,
                         disabledContainerColor = AppTheme.colorScheme.onTertiary,
                         focusedTextColor = AppTheme.colorScheme.textColor,
-                        unfocusedTextColor = AppTheme.colorScheme.textColor
+                        unfocusedTextColor = AppTheme.colorScheme.textColor,
+                        focusedBorderColor = AppTheme.colorScheme.tertiary,
+                        unfocusedBorderColor = AppTheme.colorScheme.tertiary
                     )
                 )
                 ExposedDropdownMenu(
                     expanded = isDropdownExpanded,
-                    onDismissRequest = { isDropdownExpanded = false }
+                    onDismissRequest = { isDropdownExpanded = false },
+                    modifier = Modifier.background(AppTheme.colorScheme.onTertiary)
                 ) {
                     cards.forEach { paymentMethod ->
                         DropdownMenuItem(
