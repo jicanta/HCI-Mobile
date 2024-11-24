@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +38,11 @@ fun RegisterScreen(
         onNavigateToRoute(AppDestinations.HOME.route)
     }
 
+    if(uiState.callSuccess){
+        viewModel.clearCallSuccess()
+        onNavigateToRoute(AppDestinations.VERIFY.route)
+    }
+
     val snackbarHostState = remember { SnackbarHostState() }
     var errorShown by remember { mutableStateOf(false) }
 
@@ -52,7 +58,11 @@ fun RegisterScreen(
         ) {
             RegisterCard(
                 onRegister = { firstName, lastName, birthDate, email, password ->
-                    viewModel.register(firstName, lastName, birthDate, email, password)
+                    viewModel.register(firstName, lastName, birthDate, email, password) {
+                        onNavigateToRoute(
+                            AppDestinations.VERIFY.route
+                        )
+                    }
                 },
                 onNavigateToRoute = onNavigateToRoute
             )
@@ -64,13 +74,30 @@ fun RegisterScreen(
 fun RegisterCard(
     modifier: Modifier = Modifier,
     onRegister: (String, String, String, String, String) -> Unit,
-    onNavigateToRoute: (String) -> Unit
+    onNavigateToRoute: (String) -> Unit,
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
-    var name by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var birthDate by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+
+    val uiState = viewModel.uiState
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let { error ->
+            error.message?.let {
+                snackbarHostState.showSnackbar(
+                    message = it,
+                    duration = SnackbarDuration.Short
+                )
+            }
+            viewModel.clearError()
+        }
+    }
+
+    var name by rememberSaveable { mutableStateOf("") }
+    var lastName by rememberSaveable { mutableStateOf("") }
+    var birthDate by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
 
     Card(
         modifier = Modifier
@@ -218,7 +245,7 @@ fun RegisterCard(
             Button(
                 onClick = {
                     onRegister(name, lastName, birthDate, email, password)
-                    onNavigateToRoute(AppDestinations.VERIFY.route)
+                    //onNavigateToRoute(AppDestinations.VERIFY.route)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

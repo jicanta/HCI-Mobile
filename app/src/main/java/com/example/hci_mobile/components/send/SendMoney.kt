@@ -79,16 +79,16 @@ fun SendScreen(
                                 amount = amount, 
                                 description = description, 
                                 type = PaymentType.BALANCE, 
-                                receiverEmail = email,
-                                onSucessfullPayment = { onNavigateToRoute(AppDestinations.HOME.route) }
+                                receiverEmail = email
+
                             )
                         }
                         paymentMethod == paymentLinkString -> {
                             viewModel.makePayment(
                                 amount = amount, 
                                 description = description, 
-                                type = PaymentType.LINK,
-                                onSucessfullPayment = { onNavigateToRoute(AppDestinations.HOME.route) }
+                                type = PaymentType.LINK
+
                             )
                         }
                         else -> {
@@ -100,8 +100,7 @@ fun SendScreen(
                                 description = description, 
                                 type = PaymentType.CARD, 
                                 cardId = selectedCard?.id, 
-                                receiverEmail = email,
-                                onSucessfullPayment = { onNavigateToRoute(AppDestinations.HOME.route) }
+                                receiverEmail = email
                             )
                         }
                     }

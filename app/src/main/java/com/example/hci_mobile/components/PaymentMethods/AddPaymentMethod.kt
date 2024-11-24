@@ -64,13 +64,13 @@ fun AddPaymentMethodScreen(
 ) {
     var cardType by rememberSaveable { mutableStateOf("") }
     var displayCardType by rememberSaveable { mutableStateOf("") }
-    var isDropdownExpanded by remember { mutableStateOf(false) }
+    var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var ownerName by rememberSaveable { mutableStateOf("") }
     var cardNumber by rememberSaveable { mutableStateOf("") }
     var expirationMonth by rememberSaveable { mutableStateOf("") }
     var expirationYear by rememberSaveable { mutableStateOf("") }
     var securityCode by rememberSaveable { mutableStateOf("") }
-    var cardNumberField by remember { mutableStateOf(TextFieldValue()) }
+    var cardNumberField by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue()) }
     
     // Variable para ir construyendo la tarjeta
     var card by remember { mutableStateOf(

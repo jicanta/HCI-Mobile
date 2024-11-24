@@ -183,7 +183,7 @@ fun MovementItem(movement: Movement) {
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Nombre: ${movement.receiver.firstName} ${movement.receiver.lastName}",
+                    text = "${movement.receiver.firstName} ${movement.receiver.lastName}",
                     style = AppTheme.typography.body,
                     color = AppTheme.colorScheme.tertiary,
                     maxLines = 1,

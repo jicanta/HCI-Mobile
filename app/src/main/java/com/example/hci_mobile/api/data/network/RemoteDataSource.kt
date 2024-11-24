@@ -54,7 +54,6 @@ abstract class RemoteDataSource {
 
         const val UNAUTHORIZED_ERROR_CODE = 1
         const val DATA_ERROR = 2
-        // TODO
         const val CONNECTION_ERROR_CODE = 98
         const val UNEXPECTED_ERROR_CODE = 99
     }

@@ -34,23 +34,33 @@ class HomeViewModel(
     var uiState by mutableStateOf(HomeUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
         private set
 
-    fun register(firstName: String, lastName: String, birthDate: String , email: String, password: String) = runOnViewModelScope(
+    fun register(firstName: String, lastName: String, birthDate: String , email: String, password: String, onSucessfullRegister: () -> Unit) = runOnViewModelScope(
         {
             clearError()  //TODO: limpia el error
             userRepository.register(firstName, lastName, birthDate, email, password)
         },
-        { state, response -> state.copy(currentUser = response) }
+        { state, response -> state.copy(currentUser = response, callSuccess = true) },
+        callback = onSucessfullRegister
     )
 
-    fun verify(token: String) = runOnViewModelScope(
-        { userRepository.verify(token) },
-        { state, response -> state.copy(currentUser = response) }
+    fun verify(token: String, onSucessfullVerify: () -> Unit) = runOnViewModelScope(
+        { 
+            //clearError()
+            userRepository.verify(token)
+        },
+        { state, response -> 
+            state.copy(
+                currentUser = response, 
+                callSuccess = true
+            ) 
+        },
+        callback = onSucessfullVerify
     )
 
     fun login(username: String, password: String /*, onSucessfullLogin: () -> Unit*/) = runOnViewModelScope(
         { userRepository.login(username, password) },
-        { state, _ -> state.copy(isAuthenticated = true) }
-        //onSucessfullLogin
+        { state, _ -> state.copy(isAuthenticated = true, callSuccess = true)  }
+
     )
 
     fun logout() = runOnViewModelScope(
@@ -107,16 +117,13 @@ class HomeViewModel(
         {state, _ -> state}
     )
 
-    fun makePayment(amount: Double, description: String, type: PaymentType, cardId: Int? = null, receiverEmail: String? = null, onSucessfullPayment: () -> Unit) =
+    fun makePayment(amount: Double, description: String, type: PaymentType, cardId: Int? = null, receiverEmail: String? = null) =
         runOnViewModelScope(
             { 
                 val result = paymentRepository.makePayment(amount, description, type, cardId, receiverEmail)
                 result != null
             },
-            { state, success -> 
-                if (success) {
-                    onSucessfullPayment()
-                }
+            { state, success ->
                 state.copy(callSuccess = success)
             }
         )
@@ -160,7 +167,9 @@ class HomeViewModel(
             block()
         }.onSuccess { response ->
             uiState = updateState(uiState, response).copy(isFetching = false)
+            Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAA")
             callback()
+            Log.d(TAG, "BBBBBBBBBBBBBBBBBBBBBBBB")
         }.onFailure { e ->
             uiState = uiState.copy(isFetching = false, error = handleError(e))
             Log.e(TAG, "Coroutine execution failed", e)
