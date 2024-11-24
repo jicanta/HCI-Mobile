@@ -23,6 +23,7 @@ import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
 import androidx.compose.runtime.LaunchedEffect
 import android.content.res.Configuration
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalConfiguration
 
 
@@ -82,14 +83,15 @@ fun DepositMoneyCard(
     cards: List<String>,
     onRecharge: (Double) -> Unit
 ) {
-    var selectedPaymentMethod by remember { mutableStateOf("") }
-    var isDropdownExpanded by remember { mutableStateOf(false) }
-    var amount by remember { mutableStateOf("") }
-    
+    // Uso de rememberSaveable para mantener el estado durante recreaciones de la pantalla
+    var selectedPaymentMethod by rememberSaveable { mutableStateOf("") }
+    var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
+    var amount by rememberSaveable { mutableStateOf("") }
+
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-    
+
     val cardWidth = if (isTablet && isLandscape) 0.6f else 0.9f
 
     Card(
@@ -106,6 +108,7 @@ fun DepositMoneyCard(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Campo para ingresar el monto
             OutlinedTextField(
                 value = amount,
                 onValueChange = { newValue ->
@@ -113,12 +116,12 @@ fun DepositMoneyCard(
                         amount = newValue
                     }
                 },
-                label = { 
+                label = {
                     Text(
                         text = stringResource(id = R.string.enter_amount),
                         style = AppTheme.typography.body,
                         color = AppTheme.colorScheme.textColor
-                    ) 
+                    )
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal
@@ -137,6 +140,7 @@ fun DepositMoneyCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Menú desplegable para seleccionar el método de pago
             ExposedDropdownMenuBox(
                 expanded = isDropdownExpanded,
                 onExpandedChange = { isDropdownExpanded = it }
@@ -145,12 +149,12 @@ fun DepositMoneyCard(
                     value = selectedPaymentMethod,
                     onValueChange = { },
                     readOnly = true,
-                    label = { 
+                    label = {
                         Text(
                             text = stringResource(R.string.payment_methods),
                             style = AppTheme.typography.body,
                             color = AppTheme.colorScheme.textColor
-                        ) 
+                        )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -175,12 +179,12 @@ fun DepositMoneyCard(
                 ) {
                     cards.forEach { paymentMethod ->
                         DropdownMenuItem(
-                            text = { 
+                            text = {
                                 Text(
                                     text = paymentMethod,
                                     style = AppTheme.typography.body,
                                     color = AppTheme.colorScheme.textColor
-                                ) 
+                                )
                             },
                             onClick = {
                                 selectedPaymentMethod = paymentMethod
@@ -193,8 +197,9 @@ fun DepositMoneyCard(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            // Botón para realizar la recarga
             Button(
-                onClick = { 
+                onClick = {
                     if (amount.isNotEmpty() && amount.toDoubleOrNull() != null) {
                         onRecharge(amount.toDouble())
                     }
@@ -217,6 +222,7 @@ fun DepositMoneyCard(
         }
     }
 }
+
 
 @Preview
 @Composable
