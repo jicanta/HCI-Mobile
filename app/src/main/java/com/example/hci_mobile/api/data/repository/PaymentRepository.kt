@@ -1,6 +1,5 @@
 package com.example.hci_mobile.api.data.repository
 
-import com.example.hci_mobile.api.data.model.Card
 import com.example.hci_mobile.api.data.model.Movement
 import com.example.hci_mobile.api.data.network.PaymentRemoteDataSource
 import com.example.hci_mobile.api.data.network.model.PaymentType

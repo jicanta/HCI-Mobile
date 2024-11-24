@@ -16,7 +16,6 @@ import retrofit2.http.Path
 
 interface WalletApiService {
 
-    //antes de llamar a algun metodo hacer: RetrofitClient.getWalletApiService(context)
 
     @GET("wallet/cards")
     suspend fun getCards(): Response<List<NetworkCard>>
@@ -25,7 +24,7 @@ interface WalletApiService {
     suspend fun addCard(@Body card: NetworkCard): Response<NetworkCard>
 
     @DELETE("wallet/cards/{cardId}")
-    suspend fun deleteCard(@Path("cardId") cardId: Int): Response<Unit>  //si hago delete(4) borra la tarjeta con id = 4
+    suspend fun deleteCard(@Path("cardId") cardId: Int): Response<Unit>
 
     @GET("wallet/balance")
     suspend fun getBalance(): Response<NetworkBalance>

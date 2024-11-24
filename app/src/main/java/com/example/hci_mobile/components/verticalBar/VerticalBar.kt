@@ -22,7 +22,7 @@ import com.example.hci_mobile.ui.theme.AppTheme
 fun VerticalBar(
     currentRoute: String? = null,
     onNavigateToRoute: (String) -> Unit = {},
-    modifier: Modifier = Modifier // Aquí agregamos el parámetro modifier
+    modifier: Modifier = Modifier
 ) {
     val items = listOf(
         AppDestinations.HOME,
@@ -32,9 +32,9 @@ fun VerticalBar(
     )
     NavigationRail(
         containerColor = AppTheme.colorScheme.secondary,
-        modifier = modifier // Ahora se aplica el modificador pasado desde afuera
+        modifier = modifier
             .fillMaxHeight()
-            .width(80.dp) // Ancho adecuado para la barra vertical
+            .width(80.dp)
             .shadow(8.dp)
     ) {
         items.forEach { item ->

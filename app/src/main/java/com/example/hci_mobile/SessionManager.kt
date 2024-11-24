@@ -3,7 +3,7 @@ package com.example.hci_mobile
 import android.content.Context
 import android.content.SharedPreferences
 
-class SessionManager(context: Context) {    //aca almaceno toda la config del usuario
+class SessionManager(context: Context) {
 
     private var preferences: SharedPreferences =
         context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)

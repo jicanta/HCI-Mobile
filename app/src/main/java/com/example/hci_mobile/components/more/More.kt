@@ -1,7 +1,6 @@
 package com.example.hci_mobile.components.more
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -21,17 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hci_mobile.MyApplication
 import com.example.hci_mobile.R
-import com.example.hci_mobile.api.data.model.User
-import com.example.hci_mobile.components.bottom_bar.BottomBar
 import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.navigation.AppDestinations
 import com.example.hci_mobile.components.navigation.ResponsiveNavigation
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
-import com.example.hci_mobile.components.verticalBar.VerticalBar
 import com.example.hci_mobile.ui.theme.AppTheme
 import kotlinx.coroutines.delay
 import java.util.Locale
 import java.text.SimpleDateFormat
+
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
@@ -82,7 +79,7 @@ fun SettingsScreen(
                 )
             }
 
-            // Main content
+
             Box(
                 modifier = modifier
                     .weight(1f)
@@ -107,7 +104,7 @@ fun SettingsScreen(
                         if (isLoading) {
                             LoadingIndicator()
                         } else {
-                            // Información del usuario
+
                             AccountItem(
                                 label = stringResource(R.string.full_name),
                                 value = "${uiState.currentUser?.firstName} ${uiState.currentUser?.lastName}",
@@ -134,7 +131,7 @@ fun SettingsScreen(
 
                             Divider(color = AppTheme.colorScheme.onSecondary)
 
-                            // Dark Mode
+
                             AccountItem(
                                 label = stringResource(R.string.dark_mode),
                                 trailing = {
@@ -153,7 +150,7 @@ fun SettingsScreen(
 
                             Divider(color = AppTheme.colorScheme.onSecondary)
 
-                            // Language
+
                             AccountItem(
                                 label = stringResource(R.string.language),
                                 value = when (currentLocale.language) {
@@ -187,7 +184,7 @@ fun SettingsScreen(
 
                             Divider(color = AppTheme.colorScheme.onSecondary)
 
-                            // Logout
+
                             AccountItem(
                                 label = stringResource(R.string.logout),
                                 textColor = AppTheme.colorScheme.tertiary,

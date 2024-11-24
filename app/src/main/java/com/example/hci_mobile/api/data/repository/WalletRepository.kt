@@ -16,8 +16,8 @@ class WalletRepository(
     private var cards: List<Card> = emptyList()
 
     suspend fun getCards(refresh: Boolean = false): List<Card> {
-        if (refresh || cards.isEmpty()) { //el refresh indica que tengo q pedir devuelta a la API las tarjetas, en caso que sea false
-            val result = remoteDataSource.getCards() //devuelve la lista que esta guardada local
+        if (refresh || cards.isEmpty()) {
+            val result = remoteDataSource.getCards()
             // Thread-safe write to sports
             cardsMutex.withLock {
                 this.cards = result.map { it.asModel() }

@@ -13,8 +13,6 @@ import retrofit2.http.POST
 
 interface UserApiService {
 
-    //antes de llamar a algun metodo hacer: RetrofitClient.getUserApiService(context)
-
     @POST("user")
     suspend fun register(@Body credentials: NetworkUser): Response<NetworkUser>
 
@@ -23,7 +21,7 @@ interface UserApiService {
 
     @POST("user/login")
     suspend fun login(@Body credentials: NetworkCredentials): Response<NetworkToken>
-                                                                       //tiene @Body xq lo recibe la API en formato JSON
+
     @POST("user/logout")
     suspend fun logout(): Response<Unit>
 

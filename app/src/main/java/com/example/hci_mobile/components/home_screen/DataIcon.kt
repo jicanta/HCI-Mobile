@@ -1,10 +1,6 @@
 package com.example.hci_mobile.components.home_screen
 
 import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.hci_mobile.R
 import com.example.hci_mobile.components.navigation.AppDestinations

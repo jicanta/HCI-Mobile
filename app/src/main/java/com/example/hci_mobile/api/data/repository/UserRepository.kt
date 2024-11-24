@@ -21,8 +21,8 @@ class UserRepository(
     }
 
     suspend fun verify(token: String): User {
-        val result = remoteDataSource.verify(token)  //obtiene el usuario
-        return result.asModel()  //lo "parsea"
+        val result = remoteDataSource.verify(token)
+        return result.asModel()
     }
 
     suspend fun login(username: String, password: String) {
@@ -36,7 +36,7 @@ class UserRepository(
     suspend fun getCurrentUser(refresh: Boolean) : User? {
         if (refresh || currentUser == null) {
             val result = remoteDataSource.getCurrentUser()
-            // Thread-safe write to latestNews
+
             currentUserMutex.withLock {
                 this.currentUser = result.asModel()
             }

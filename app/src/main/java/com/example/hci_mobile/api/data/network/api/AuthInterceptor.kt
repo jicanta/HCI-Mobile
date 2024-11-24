@@ -12,7 +12,7 @@ class AuthInterceptor(context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
 
-        sessionManager.loadAuthToken()?.let {    //te guarda el token de manera persistente ( a pesar de cerrar la app lo guarda )
+        sessionManager.loadAuthToken()?.let {
             requestBuilder.addHeader("Authorization", "Bearer $it")
         }
 

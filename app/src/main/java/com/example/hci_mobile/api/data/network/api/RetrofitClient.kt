@@ -28,11 +28,11 @@ object RetrofitClient {
             .setLevel(HttpLoggingInterceptor.Level.BODY)
 
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor(context))  //tiene la autorizacion (el token)
+            .addInterceptor(AuthInterceptor(context))
             .addInterceptor(httpLoggingInterceptor)
             .build()
 
-        val json = Json { ignoreUnknownKeys = true }  //parser de JSON
+        val json = Json { ignoreUnknownKeys = true }
 
         return Retrofit.Builder()
             .baseUrl(BASE_URL)

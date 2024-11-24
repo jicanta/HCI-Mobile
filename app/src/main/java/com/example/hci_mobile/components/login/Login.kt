@@ -1,13 +1,11 @@
 package com.example.hci_mobile.components.login
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -20,10 +18,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hci_mobile.MyApplication
 import com.example.hci_mobile.R
+import com.example.hci_mobile.api.data.model.ApiError
 import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.navigation.AppDestinations
-import com.example.hci_mobile.components.register.RegisterCard
-import com.example.hci_mobile.components.top_bar.TopBar
 import com.example.hci_mobile.ui.theme.AppTheme
 @Composable
 fun LoginScreen(
@@ -42,11 +39,11 @@ fun LoginScreen(
             .background(AppTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
-        val isTablet = maxWidth > 600.dp // Detectar pantallas más anchas
+        val isTablet = maxWidth > 600.dp
         LoginCard(
             modifier = if (isTablet) {
                 Modifier
-                    .fillMaxWidth(0.5f) // Más ancho en tablets
+                    .fillMaxWidth(0.5f)
                     .wrapContentHeight()
             } else {
                 Modifier
@@ -65,13 +62,14 @@ fun LoginScreen(
 fun LoginCard(
     modifier: Modifier = Modifier,
     onLogin: (String, String) -> Unit,
-    onNavigateToRoute: (String) -> Unit
+    onNavigateToRoute: (String) -> Unit,
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Card(
-        modifier = modifier, // Modificador dinámico para diferentes dispositivos
+        modifier = modifier,
         shape = AppTheme.shape.container,
         colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -79,7 +77,7 @@ fun LoginCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp), // Padding aumentado para tablets
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -154,8 +152,17 @@ fun LoginCard(
 
             Button(
                 onClick = {
-                    onLogin(email, password)
-                    onNavigateToRoute(AppDestinations.HOME.route)
+                    try {
+                        onLogin(email, password)
+                        onNavigateToRoute(AppDestinations.HOME.route)
+                    } catch (e: Exception) {
+                        viewModel.setError(
+                            ApiError(
+                            code = 400,
+                            message = e.message ?: "Error al iniciar sesión"
+                        )
+                        )
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()

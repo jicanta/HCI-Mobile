@@ -25,7 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import android.content.res.Configuration
 import androidx.compose.ui.platform.LocalConfiguration
 
-// Función auxiliar para formatear la información de la tarjeta
+
 private fun formatCardInfo(card: Card): String {
     val digitsOnly = card.number.filter { it.isDigit() }
     val lastFourDigits = digitsOnly.takeLast(4)
@@ -41,19 +41,19 @@ fun DepositMoneyScreen(
     val uiState = viewModel.uiState
     val externalFundsString = stringResource(R.string.external_funds)
 
-    // Cargar las tarjetas al iniciar la pantalla
+
     LaunchedEffect(Unit) {
         viewModel.getCards()
     }
 
-    // Crear lista de opciones de pago
+
     val paymentOptions = listOf(externalFundsString) + 
         (uiState.cards?.map { formatCardInfo(it) } ?: emptyList())
 
     Scaffold(
         topBar = {
             TopBarWithBack(
-                title = R.string.add_money,
+                title = R.string.deposit,
                 onNavigateBack = onNavigateBack
             )
         }
@@ -221,7 +221,6 @@ fun DepositMoneyCard(
 @Preview
 @Composable
 fun DepositMoneyScreenPreview() {
-    val cards = listOf("Tarjeta 1", "Tarjeta 2", "Tarjeta 3")
     AppTheme(darkTheme = false) {
         DepositMoneyScreen(onNavigateBack = {})
     }

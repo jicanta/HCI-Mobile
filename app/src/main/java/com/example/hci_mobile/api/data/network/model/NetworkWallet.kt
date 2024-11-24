@@ -1,10 +1,8 @@
 package com.example.hci_mobile.api.data.network.model
 
-import com.example.hci_mobile.api.data.model.User
 import com.example.hci_mobile.api.data.model.Wallet
 import kotlinx.serialization.Serializable
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 @Serializable
