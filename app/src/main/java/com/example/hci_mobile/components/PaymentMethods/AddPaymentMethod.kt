@@ -395,7 +395,8 @@ fun AddPaymentMethodScreen(
                         Button(
                             onClick = {
                                 viewModel.addCard(card){
-                                    onNavigateToRoute(AppDestinations.HOME.route)
+                                    onNavigateBack()
+                                    //onNavigateToRoute(AppDestinations.HOME.route)
                                 }
                                 //onNavigateBack()
                             },

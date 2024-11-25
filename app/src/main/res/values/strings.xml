@@ -102,4 +102,6 @@
     <string name="card_holder">CARD HOLDER</string>
     <string name="mm_yy">MM/YY</string>
     <string name="no_registered_cards">No registered cards</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

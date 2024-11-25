@@ -115,7 +115,7 @@ class HomeViewModel(
 
     fun recharge(amount: Double, onSucessfullRecharge: () -> Unit) = runOnViewModelScope(
         { walletRepository.recharge(amount)},
-        {state, _ -> state},
+        {state, _ -> state.copy()},
         callback = onSucessfullRecharge
     )
 
@@ -146,7 +146,7 @@ class HomeViewModel(
 
     fun updateAlias(alias: String) = runOnViewModelScope(
         {walletRepository.updateAlias(alias)},
-        { state, _ -> state }
+        { state, _ -> state.copy() }
     )
 
     fun getPayments() = runOnViewModelScope(
@@ -170,9 +170,7 @@ class HomeViewModel(
             block()
         }.onSuccess { response ->
             uiState = updateState(uiState, response).copy(isFetching = false)
-            Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAA")
             callback()
-            Log.d(TAG, "BBBBBBBBBBBBBBBBBBBBBBBB")
         }.onFailure { e ->
             uiState = uiState.copy(isFetching = false, error = handleError(e))
             Log.e(TAG, "Coroutine execution failed", e)

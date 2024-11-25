@@ -102,4 +102,6 @@
     <string name="card_holder">TITULAR</string>
     <string name="mm_yy">MM/AA</string>
     <string name="no_registered_cards">No tienes tarjetas registradas</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
 </resources>

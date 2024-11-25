@@ -1,22 +1,15 @@
 package com.example.hci_mobile.components.PaymentMethods
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,16 +26,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hci_mobile.MyApplication
 import com.example.hci_mobile.R
 import com.example.hci_mobile.api.data.model.Card
-import com.example.hci_mobile.components.bottom_bar.BottomBar
 import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.home_screen.getCardColor
 import com.example.hci_mobile.components.home_screen.getCardIcon
 import com.example.hci_mobile.components.navigation.AppDestinations
-import com.example.hci_mobile.components.top_bar.TopBar
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material3.Button
@@ -55,8 +43,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.animation.*
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.layout.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.platform.LocalConfiguration
 import android.content.res.Configuration
@@ -143,12 +129,10 @@ fun PaymentMethodList(
     val uiState = viewModel.uiState
     var cards by remember { mutableStateOf<List<Card>>(emptyList()) }
 
-    // Initial load of cards
     LaunchedEffect(Unit) {
         viewModel.getCards()
     }
 
-    // Update local cards list when uiState.cards changes
     LaunchedEffect(uiState.cards) {
         uiState.cards?.let {
             cards = it
@@ -308,7 +292,7 @@ fun PaymentMethodItem(
     }
 }
 
-// Función para formatear el número de tarjeta
+
 private fun formatCardNumber(number: String): String {
     val digitsOnly = number.filter { it.isDigit() }
     return if (digitsOnly.length >= 4) {
@@ -319,7 +303,7 @@ private fun formatCardNumber(number: String): String {
     }
 }
 
-// Función para determinar el tipo de tarjeta basado en el BIN
+
 fun getCardType(number: String): String {
     val prefix = number.take(2)
     return when {

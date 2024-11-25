@@ -35,12 +35,11 @@ fun MoneyDisplay(
     availableMoney: Double = 0.0
 ){
     var isMoneyVisible by remember { mutableStateOf(true) }
-    val gain = 37.2
 
     val locale = LocalContext.current.resources.configuration.locales[0]
     val numberFormatter = NumberFormat.getNumberInstance(locale).apply {
-        maximumFractionDigits = 0
-        minimumFractionDigits = 0
+        maximumFractionDigits = 2
+        minimumFractionDigits = 2
     }
     val formattedMoney = numberFormatter.format(availableMoney)
 
@@ -64,12 +63,6 @@ fun MoneyDisplay(
                     text = stringResource(R.string.available),
                     color = AppTheme.colorScheme.textColor, 
                     style = AppTheme.typography.body
-                )
-                Text(
-                    text = stringResource(R.string.gain_percentage, gain),
-                    color = Color(0xFF4CAF50),
-                    style = AppTheme.typography.body,
-                    fontSize = 14.sp
                 )
             }
             Row(

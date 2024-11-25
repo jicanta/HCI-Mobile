@@ -61,7 +61,9 @@ fun SendScreen(
                 title = R.string.send,
                 onNavigateBack = onNavigateBack
             )
-        }
+        },
+        containerColor = AppTheme.colorScheme.background,
+        modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -144,15 +146,18 @@ fun SendMoneyCard(
 
     val paymentLinkString = stringResource(R.string.payment_link)
 
+    val scope = rememberCoroutineScope()
+    val confirmMessage = stringResource(R.string.confirm, amount)
+
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center  // Esto centrará el contenido
+        contentAlignment = Alignment.Center
     ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .wrapContentHeight()
-                .align(Alignment.Center),  // Esto asegura que la Card esté centrada
+                .align(Alignment.Center),
             shape = AppTheme.shape.container,
             colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.secondary),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -287,28 +292,13 @@ fun SendMoneyCard(
 
                 Button(
                     onClick = {
-                       /* try {
-                            onSendMoney(
-                                amount.toDouble(),
-                                description,
-                                selectedPaymentMethod,
-                                if (selectedPaymentMethod != paymentLinkString) email else null,
-                                { onNavigateToRoute(AppDestinations.HOME.route) }
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "",
+                                actionLabel = "",
+                                duration = SnackbarDuration.Long
                             )
-                            //onNavigateToRoute(AppDestinations.HOME.route)
-                        } catch (e: Exception) {
-                            viewModel.setError(ApiError(
-                                code = 400,
-                                message = e.message ?: "Error al procesar el pago"
-                            ))
-                        }*/
-                        onSendMoney(
-                            amount.toDouble(),
-                            description,
-                            selectedPaymentMethod,
-                            if (selectedPaymentMethod != paymentLinkString) email else null
-                        )
-                        onNavigateToRoute(AppDestinations.HOME.route)
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -332,7 +322,6 @@ fun SendMoneyCard(
             }
         }
 
-        // Snackbar host
         SnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier
@@ -342,9 +331,38 @@ fun SendMoneyCard(
             Snackbar(
                 containerColor = AppTheme.colorScheme.primary,
                 contentColor = AppTheme.colorScheme.onPrimary,
+                action = {
+                    Row {
+                        TextButton(
+                            onClick = { 
+                                onSendMoney(
+                                    amount.toDouble(),
+                                    description,
+                                    selectedPaymentMethod,
+                                    if (selectedPaymentMethod != paymentLinkString) email else null
+                                )
+                                onNavigateToRoute(AppDestinations.HOME.route)
+                                snackbarHostState.currentSnackbarData?.dismiss()
+                            }
+                        ) {
+                            Text(
+                                stringResource(R.string.yes),
+                                color = AppTheme.colorScheme.onPrimary
+                            )
+                        }
+                        TextButton(
+                            onClick = { snackbarHostState.currentSnackbarData?.dismiss() }
+                        ) {
+                            Text(
+                                stringResource(R.string.no),
+                                color = AppTheme.colorScheme.onPrimary
+                            )
+                        }
+                    }
+                }
             ) {
                 Text(
-                    text = data.visuals.message,
+                    text = confirmMessage,
                     style = AppTheme.typography.body
                 )
             }
