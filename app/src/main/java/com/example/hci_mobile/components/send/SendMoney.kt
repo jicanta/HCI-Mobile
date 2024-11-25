@@ -1,6 +1,5 @@
 package com.example.hci_mobile.components.send
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -9,8 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,7 +30,6 @@ import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.navigation.AppDestinations
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,44 +70,44 @@ fun SendScreen(
         ) {
             SendMoneyCard(
                 cards = paymentOptions,
-                onSendMoney = { amount, description, paymentMethod, email -> // Corregida la sintaxis de la lambda
+                onSendMoney = { amount, description, paymentMethod, email ->
                     when {
                         paymentMethod == accountBalanceString -> {
-                        viewModel.makePayment(
-                            amount = amount,
-                            description = description,
-                            type = PaymentType.BALANCE,
-                            receiverEmail = email
-                    ){
-                        onNavigateToRoute(AppDestinations.HOME.route)
+                            viewModel.makePayment(
+                                amount = amount,
+                                description = description,
+                                type = PaymentType.BALANCE,
+                                receiverEmail = email
+                            ){
+                                onNavigateToRoute(AppDestinations.HOME.route)
+                            }
+                        }
+                        paymentMethod == paymentLinkString -> {
+                            viewModel.makePayment(
+                                amount = amount,
+                                description = description,
+                                type = PaymentType.LINK
+                            ){
+                                onNavigateToRoute(AppDestinations.HOME.route)
+                            }
+                        }
+                        else -> {
+                            val selectedCard = uiState.cards?.find {
+                                formatCardInfo(it) == paymentMethod
+                            }
+                            viewModel.makePayment(
+                                amount = amount,
+                                description = description,
+                                type = PaymentType.CARD,
+                                cardId = selectedCard?.id,
+                                receiverEmail = email
+                            ){
+                                onNavigateToRoute(AppDestinations.HOME.route)
+                            }
+                        }
                     }
-                }
-                paymentMethod == paymentLinkString -> {
-                    viewModel.makePayment(
-                        amount = amount,
-                        description = description,
-                        type = PaymentType.LINK
-                    ){
-                        onNavigateToRoute(AppDestinations.HOME.route)
-                    }
-                }
-                else -> {
-                    val selectedCard = uiState.cards?.find {
-                        formatCardInfo(it) == paymentMethod
-                    }
-                    viewModel.makePayment(
-                        amount = amount,
-                        description = description,
-                        type = PaymentType.CARD,
-                        cardId = selectedCard?.id,
-                        receiverEmail = email
-                    ){
-                        onNavigateToRoute(AppDestinations.HOME.route)
-                    }
-            }
-        }
-    },
-    onNavigateToRoute = onNavigateToRoute
+                },
+                onNavigateToRoute = onNavigateToRoute
             )
         }
     }
@@ -135,8 +131,6 @@ fun SendMoneyCard(
     onNavigateToRoute: (String) -> Unit
 ) {
     val uiState = viewModel.uiState
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
 
     var selectedPaymentMethod by rememberSaveable  { mutableStateOf("") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
@@ -145,9 +139,6 @@ fun SendMoneyCard(
     var email by rememberSaveable { mutableStateOf("") }
 
     val paymentLinkString = stringResource(R.string.payment_link)
-
-    val scope = rememberCoroutineScope()
-    val confirmMessage = stringResource(R.string.confirm, amount)
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -292,13 +283,13 @@ fun SendMoneyCard(
 
                 Button(
                     onClick = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "",
-                                actionLabel = "",
-                                duration = SnackbarDuration.Long
-                            )
-                        }
+                        onSendMoney(
+                            amount.toDouble(),
+                            description,
+                            selectedPaymentMethod,
+                            if (selectedPaymentMethod != paymentLinkString) email else null
+                        )
+                        onNavigateToRoute(AppDestinations.HOME.route)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -321,52 +312,6 @@ fun SendMoneyCard(
                 }
             }
         }
-
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp)
-        ) { data ->
-            Snackbar(
-                containerColor = AppTheme.colorScheme.primary,
-                contentColor = AppTheme.colorScheme.onPrimary,
-                action = {
-                    Row {
-                        TextButton(
-                            onClick = { 
-                                onSendMoney(
-                                    amount.toDouble(),
-                                    description,
-                                    selectedPaymentMethod,
-                                    if (selectedPaymentMethod != paymentLinkString) email else null
-                                )
-                                onNavigateToRoute(AppDestinations.HOME.route)
-                                snackbarHostState.currentSnackbarData?.dismiss()
-                            }
-                        ) {
-                            Text(
-                                stringResource(R.string.yes),
-                                color = AppTheme.colorScheme.onPrimary
-                            )
-                        }
-                        TextButton(
-                            onClick = { snackbarHostState.currentSnackbarData?.dismiss() }
-                        ) {
-                            Text(
-                                stringResource(R.string.no),
-                                color = AppTheme.colorScheme.onPrimary
-                            )
-                        }
-                    }
-                }
-            ) {
-                Text(
-                    text = confirmMessage,
-                    style = AppTheme.typography.body
-                )
-            }
-        }
     }
 }
 
@@ -377,4 +322,5 @@ fun SendScreenPreview() {
         //SendScreen(onNavigateBack = {})
     }
 }
+
 
