@@ -158,7 +158,19 @@ fun MovementList(movements: List<Movement>) {
 }
 
 @Composable
-fun MovementItem(movement: Movement) {
+fun MovementItem(
+    movement: Movement,
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
+) {
+    val uiState = viewModel.uiState
+    viewModel.getCurrentUser()
+    val currentUser = uiState.currentUser
+
+    val isExpense = currentUser?.id == movement.payer.id
+    val amountText = if (isExpense) "-$${movement.amount}" else "+$${movement.amount}"
+    
+    val userToShow = if (isExpense) movement.receiver else movement.payer
+    
     Card(
         shape = AppTheme.shape.container,
         modifier = Modifier
@@ -179,14 +191,14 @@ fun MovementItem(movement: Movement) {
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "${movement.receiver.firstName} ${movement.receiver.lastName}",
+                    text = "${userToShow.firstName} ${userToShow.lastName}",
                     style = AppTheme.typography.body,
                     color = AppTheme.colorScheme.tertiary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = movement.receiver.email,
+                    text = userToShow.email,
                     style = AppTheme.typography.body,
                     color = AppTheme.colorScheme.textColor,
                     maxLines = 1,
@@ -194,10 +206,10 @@ fun MovementItem(movement: Movement) {
                 )
             }
             Text(
-                text = "$ ${movement.amount}",
+                text = amountText,
                 style = AppTheme.typography.body,
                 fontWeight = FontWeight.Bold,
-                color = if (movement.amount > 0) Color.Green else Color.Red
+                color = if (isExpense) Color.Red else Color.Green
             )
         }
     }
