@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,7 @@ import com.example.hci_mobile.api.data.model.Wallet
 import com.example.hci_mobile.components.homeApi.HomeViewModel
 import com.example.hci_mobile.components.top_bar.TopBarWithBack
 import com.example.hci_mobile.ui.theme.AppTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun AccountDataScreen(
@@ -35,7 +37,14 @@ fun AccountDataScreen(
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
     val uiState = viewModel.uiState
-    viewModel.getWalletDetails()
+
+    LaunchedEffect(Unit) {
+        viewModel.getWalletDetails()
+        while(true) {
+            delay(60000)
+            viewModel.getWalletDetails()
+        }
+    }
 
     Scaffold(
         topBar = { TopBarWithBack(R.string.data, onNavigateBack = onNavigateBack) }

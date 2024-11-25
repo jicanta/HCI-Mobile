@@ -1,6 +1,5 @@
 package com.example.hci_mobile.components.movements
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -49,8 +48,6 @@ fun MovementsScreen(
     LaunchedEffect(Unit) {
         viewModel.getPayments()
     }
-
-    Log.d("MovementsScreen", "Payments: ${uiState.payments?.size}")
 
     Scaffold(
         containerColor = AppTheme.colorScheme.background,
@@ -132,7 +129,6 @@ fun MovementList(movements: List<Movement>) {
             }
         }
 
-        // Paginación
         Row(
             modifier = Modifier
                 .fillMaxWidth()
