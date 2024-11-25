@@ -3,6 +3,8 @@ package com.example.hci_mobile.components.more
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Check
@@ -79,7 +81,6 @@ fun SettingsScreen(
                 )
             }
 
-
             Box(
                 modifier = modifier
                     .weight(1f)
@@ -98,29 +99,29 @@ fun SettingsScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(24.dp),
+                            .padding(24.dp)
+                            .verticalScroll(rememberScrollState()), // Agregamos verticalScroll
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         if (isLoading) {
                             LoadingIndicator()
                         } else {
-
                             AccountItem(
                                 label = stringResource(R.string.full_name),
                                 value = "${uiState.currentUser?.firstName} ${uiState.currentUser?.lastName}",
                                 style = AppTheme.typography.body
                             )
-                            
+
                             Divider(color = AppTheme.colorScheme.onSecondary)
-                            
+
                             AccountItem(
                                 label = stringResource(R.string.email),
                                 value = uiState.currentUser?.email ?: "",
                                 style = AppTheme.typography.body
                             )
-                            
+
                             Divider(color = AppTheme.colorScheme.onSecondary)
-                            
+
                             AccountItem(
                                 label = stringResource(R.string.birth_date_without_format),
                                 value = uiState.currentUser?.birthDate?.let {
@@ -130,7 +131,6 @@ fun SettingsScreen(
                             )
 
                             Divider(color = AppTheme.colorScheme.onSecondary)
-
 
                             AccountItem(
                                 label = stringResource(R.string.dark_mode),
@@ -149,7 +149,6 @@ fun SettingsScreen(
                             )
 
                             Divider(color = AppTheme.colorScheme.onSecondary)
-
 
                             AccountItem(
                                 label = stringResource(R.string.language),
@@ -184,7 +183,6 @@ fun SettingsScreen(
 
                             Divider(color = AppTheme.colorScheme.onSecondary)
 
-
                             AccountItem(
                                 label = stringResource(R.string.logout),
                                 textColor = AppTheme.colorScheme.tertiary,
@@ -203,12 +201,12 @@ fun SettingsScreen(
     if (showLanguageDialog) {
         AlertDialog(
             onDismissRequest = { showLanguageDialog = false },
-            title = { 
+            title = {
                 Text(
                     text = stringResource(R.string.select_language),
                     style = AppTheme.typography.body,
                     color = AppTheme.colorScheme.textColor
-                ) 
+                )
             },
             text = {
                 Column(
@@ -253,6 +251,7 @@ fun SettingsScreen(
         )
     }
 }
+
 
 @Composable
 private fun AccountItem(
