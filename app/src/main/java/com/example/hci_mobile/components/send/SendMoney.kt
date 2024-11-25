@@ -78,18 +78,14 @@ fun SendScreen(
                                 description = description,
                                 type = PaymentType.BALANCE,
                                 receiverEmail = email
-                            ){
-                                onNavigateToRoute(AppDestinations.HOME.route)
-                            }
+                            )
                         }
                         paymentMethod == paymentLinkString -> {
                             viewModel.makePayment(
                                 amount = amount,
                                 description = description,
                                 type = PaymentType.LINK
-                            ){
-                                onNavigateToRoute(AppDestinations.HOME.route)
-                            }
+                            )
                         }
                         else -> {
                             val selectedCard = uiState.cards?.find {
@@ -101,13 +97,12 @@ fun SendScreen(
                                 type = PaymentType.CARD,
                                 cardId = selectedCard?.id,
                                 receiverEmail = email
-                            ){
-                                onNavigateToRoute(AppDestinations.HOME.route)
-                            }
+                            )
                         }
                     }
                 },
-                onNavigateToRoute = onNavigateToRoute
+                onNavigateToRoute = onNavigateToRoute,
+                onNavigateBack = onNavigateBack
             )
         }
     }
@@ -128,7 +123,8 @@ fun SendMoneyCard(
     cards: List<String>,
     onSendMoney: (Double, String, String, String?) -> Unit,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
-    onNavigateToRoute: (String) -> Unit
+    onNavigateToRoute: (String) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val uiState = viewModel.uiState
 
@@ -289,7 +285,7 @@ fun SendMoneyCard(
                             selectedPaymentMethod,
                             if (selectedPaymentMethod != paymentLinkString) email else null
                         )
-                        onNavigateToRoute(AppDestinations.HOME.route)
+                        onNavigateBack()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
